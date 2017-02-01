@@ -10,7 +10,7 @@ public class Frame
 	/**
 	 * Frame
 	 */
-	public Frame(){ /* Brand new empty frame */}
+	public Frame(){ /* Brand new empty frame */ }
 	
 	/* === GETTERS AND SETTERS === */
 	
