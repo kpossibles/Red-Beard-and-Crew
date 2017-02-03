@@ -117,10 +117,10 @@ public class ScoreSheetTest {
 		assertEquals(210, testSheet.getScore());
 		// Frame 9
 		testSheet.advanceThrow(10);
-		assertEquals(250, testSheet.getScore());
+		assertEquals(240, testSheet.getScore());
 		// Frame 10
 		testSheet.advanceThrow(5);
-		assertEquals(265, testSheet.getScore());
+		assertEquals(255, testSheet.getScore());
 	}
 	
 	// Test throwing a spare on the 10th frame
