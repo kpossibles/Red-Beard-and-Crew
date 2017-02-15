@@ -5,7 +5,8 @@ public class Account {
 	private double balance;
 	
 	public Account(){
-		
+		accountNumber = pinCode = 0;
+		balance = 0;
 	}
 	
 	public Account(int aN, int pC, int b){
@@ -14,18 +15,29 @@ public class Account {
 		balance = b;
 	}
 	
-	public boolean validate(Card c, int pin){
-		
+	public boolean validate(int pin){
+		if(pin == pinCode)
+			return true;
+		return false;
+	}
+	
+	public boolean deposit(int cash){
+		balance += cash;
 		return true;
 	}
 	
-	public boolean deposit(Card c, int pin, int dep){
-		
-		return true;
+	public boolean withdraw(int cash){
+		if(cash < balance){
+			balance -= cash;
+			return true;
+		}
+		return false;
 	}
 	
-	public boolean withdraw(Card c, int pin, int with){
-		
-		return true;
+	public int getAccountID(){
+		return accountNumber;
+	}
+	public double getBalance(){
+		return balance;
 	}
 }
