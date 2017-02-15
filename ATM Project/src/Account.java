@@ -14,7 +14,7 @@ public class Account {
 		balance = b;
 	}
 	
-	public boolean validate(){
+	public boolean validate(Card c, int pin){
 		
 		return true;
 	}
@@ -24,7 +24,7 @@ public class Account {
 		return true;
 	}
 	
-	public boolean withdraw(Card c, int pin, int dep){
+	public boolean withdraw(Card c, int pin, int with){
 		
 		return true;
 	}
