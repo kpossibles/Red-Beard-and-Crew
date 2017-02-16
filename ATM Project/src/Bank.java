@@ -9,13 +9,11 @@ public class Bank {
 		accounts.add(new Account(6789, 4321, 60.0));
 	}
 	
-	public boolean validate(Account a)
+	public boolean validate(Card c, int pin)
 	{
-		for(int i = 0; i < accounts.size(); i++){
-			if(accounts.get(i).getAccountID() == a.getAccountID()){
-				return true;
-			}   
-		}
+		for(int i = 0; i < accounts.size(); i++)
+			if(accounts.get(i).getAccountID() == c.getAccountID())
+				 return accounts.get(i).validate(pin);
 		return false;
 	}
 	
@@ -28,8 +26,7 @@ public class Bank {
 				found = true; 
 			}
 		} 
-		return (accounts.get(index).validate(pin) 
-				&& found 
+		return found &&(accounts.get(index).validate(pin) 
 				&& accounts.get(index).withdraw(with));
 	}
 	
@@ -42,8 +39,7 @@ public class Bank {
 				found = true; 
 			}
 		} 
-		return (accounts.get(index).validate(pin) 
-				&& found 
+		return found && (accounts.get(index).validate(pin) 
 				&& accounts.get(index).deposit(dep));
 	}
 }

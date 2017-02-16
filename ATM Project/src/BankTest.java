@@ -27,7 +27,7 @@ public class BankTest {
 	@Test
 	public void testC() {
 		Card card = new Card(6789);
-		assertFalse(BankTest.withdraw(card, 0000, 0.00));
+		assertFalse(BankTest.validate(card, 0000));
 	}
 	
 	@Test

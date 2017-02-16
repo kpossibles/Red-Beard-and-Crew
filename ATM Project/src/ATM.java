@@ -1,5 +1,8 @@
 import java.util.Scanner;
 
+
+
+
 public class ATM 
 {
 	Bank bank;
@@ -19,30 +22,39 @@ public class ATM
 		while(account_number != 0){
 			System.out.print("Enter your PIN: " );
 			int pin = reader.nextInt();
-			System.out.print("Choose your Operations: W: Withdraw  D:Deposit");
-			String operation = reader.next();
-			if(operation == "W"){
-				System.out.print("Enter the amount to withdrawel: ");
-				double amount = reader.nextDouble();
-				if (bank.withdraw(card, pin, amount))
-					System.out.println("Withdrawel Sucessful! Take your money and have a nice day.");
-				else
-					System.out.println("Withdrawel failed.");
+			if (bank.validate(card, pin)){
+				System.out.println("Choose your Operations: (W:Withdraw D:Deposit):");
+				String operation = reader.next();
+				if(operation.equals("W")){
+					System.out.print("Enter the amount to withdraw: ");
+					double amount = reader.nextDouble();
+					if (bank.withdraw(card, pin, amount))
+						System.out.printf("Withdraw of %s from account %s sucessful!\n\n", amount, card.getAccountID());
+					else
+						System.out.println("Withdraw failed.\n");
+				}
+				else if(operation.equals("D")){
+					System.out.print("Enter the amount to Deposit: ");
+					double amount = reader.nextDouble();
+					if (bank.deposit(card, pin, amount))
+						System.out.printf("Deposit of %s into account %s successful.\n", amount, card.getAccountID());
+					else
+						System.out.println("Deposit Failed.\n");
+				}
+				else{
+					System.out.println("Invalid Operation.\n");
+				}
 			}
-			else if(operation == "D"){
-				System.out.print("Enter the amount to Deposit: ");
-				double amount = reader.nextDouble();
-				if (bank.deposit(card, pin, amount))
-					System.out.println("Deposit Successful.");
-				else
-					System.out.println("Deposit Failed");
-			}
-			else{
-				System.out.println("Invalid Operation");
+			else {
+				System.out.println("Failed to validate. \n");
 			}
 			System.out.print("Enter your account number: " );
 			account_number = reader.nextInt();
 		}
 		reader.close();
+	}
+	
+	public static void main(String[] args){
+		ATM testATM = new ATM();
 	}
 }
