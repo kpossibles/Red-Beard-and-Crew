@@ -4,12 +4,7 @@ public class Account {
 	private int pinCode;
 	private double balance;
 	
-	public Account(){
-		accountNumber = pinCode = 0;
-		balance = 0;
-	}
-	
-	public Account(int aN, int pC, int b){
+	public Account(int aN, int pC, double b){
 		accountNumber = aN;
 		pinCode = pC;
 		balance = b;
@@ -21,13 +16,13 @@ public class Account {
 		return false;
 	}
 	
-	public boolean deposit(int cash){
+	public boolean deposit(double cash){
 		balance += cash;
 		return true;
 	}
 	
-	public boolean withdraw(int cash){
-		if(cash < balance){
+	public boolean withdraw(double cash){
+		if(cash <= balance){
 			balance -= cash;
 			return true;
 		}

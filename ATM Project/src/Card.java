@@ -1,10 +1,12 @@
 
 public class Card {
-	int accountNumber;
-	public Card(int i){
-		i = accountNumber;
+	private int account_number;
+	public Card(int account_num){
+		account_number = account_num;
 	}
+	
 	public int getAccountID(){
-		return accountNumber;
+		return account_number;
 	}
+
 }
