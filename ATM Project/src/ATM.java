@@ -1,106 +1,100 @@
 import java.util.Scanner;
 
 
-
-
 public class ATM 
 {
-	private Bank bank;
-	private Printer print;
-	private String state;
+	// These should not change while the ATM is in operation. 
+	private final Bank bank;
+	private final Printer print;
+	private final Display display;
+	private final Dispensor dispensor;
 	
+	//These are per transaction
+	private String state; // Valid states are 'card', 'pin', 'transaction', 'withdraw'
 	private int accountNumber;
 	private int pin;
-	private int amt;
 	
-	private String transactionType = "none";
-	
-	public ATM(Printer p){
+	public ATM(Printer _printer, Display _display, Dispensor _dispensor){
 		bank = new Bank();
-		print = p;
+		print = _printer;
+		display = _display;
+		dispensor = _dispensor;
+		state = "card";
 	}
 	
-	/*public void start(){
-		bank = new Bank();
-		Scanner reader = new Scanner(System.in);
-		
-		System.out.println("ATM Startup");
-		System.out.print("Enter your account number: " );
-		int account_number = reader.nextInt();
-		Card card = new Card(account_number);
-		while(account_number != 0){
-			System.out.print("Enter your PIN: " );
-			int pin = reader.nextInt();
-			if (bank.validate(card, pin)){
-				System.out.println("Choose your Operations: (W:Withdraw D:Deposit):");
-				String operation = reader.next();
-				if(operation.equals("W")){
-					System.out.print("Enter the amount to withdraw: ");
-					double amount = reader.nextDouble();
-					if (bank.withdraw(card, pin, amount))
-						System.out.printf("Withdraw of %s from account %s sucessful!\n\n", amount, card.getAccountID());
-					else
-						System.out.println("Withdraw failed.\n");
-				}
-				else if(operation.equals("D")){
-					System.out.print("Enter the amount to Deposit: ");
-					double amount = reader.nextDouble();
-					if (bank.deposit(card, pin, amount))
-						System.out.printf("Deposit of %s into account %s successful.\n", amount, card.getAccountID());
-					else
-						System.out.println("Deposit Failed.\n");
-				}
-				else{
-					System.out.println("Invalid Operation.\n");
-				}
-			}
-			else {
-				System.out.println("Failed to validate. \n");
-			}
-			System.out.print("Enter your account number: " );
-			account_number = reader.nextInt();
+	private void displayState() {
+		switch(state){
+		case "card":
+			display.display("Please Insert Your Card, or enter your account number on the keypad.");
+			break;
+		case "pin":
+			display.display("Please Enter your pin.");
+			break;
+		case "transaction":
+			display.display("Please choose your transaction type.");
+			break;
+		case "withdraw":
+			display.display("Please enter an amount to withdraw.");;
+			break;
+		default: //If the state is not one of the above, something is wrong! 
+			display.display("This ATM is currently out of order. ");
 		}
-		reader.close();
-	}*/
+	}
 
 	public void withdraw() {
-		// TODO Auto-generated method stub
-		
+		state = "withdraw";
+		displayState();
 	}
 
 	public void checkBalance() {
-		// TODO Auto-generated method stub
-		
+		double amount = bank.getBalance(accountNumber, pin);
+		display.display("Your Balance will be printed below");
+		print.print(getReceipt(amount));
 	}
 
 	public void cancel() {
-		// TODO Auto-generated method stub
-		
+		state = "card";
+		accountNumber = 0;
+		pin = 0;
+		displayState();
 	}
 
-	public void inputNum(int parseInt) {
-		// TODO Auto-generated method stub
-		if(state.equalsIgnoreCase("none")){
-			
+	public void inputNum(int value) {
+		if(state.equalsIgnoreCase("card")){
+			accountNumber = value;
+			state = "pin";
 		}
+		else if(state.equalsIgnoreCase("pin"))
+			if (bank.validate(accountNumber, value)){
+				pin = value;
+				state = "transaction";
+			}
+			else
+				display.display("Invalid Pin.  Please Try again. ");
+		else if(state.equalsIgnoreCase("withdraw")){
+			if (bank.withdraw(accountNumber, pin, value)){
+				state = "transaction";
+				display.display("Withdrawl Sucessful");
+				dispensor.dispense(value);
+				print.print(getReceipt(value));
+			}
+			else
+				display.display("Invalid Amount Selected.");
+		}
+		displayState();
+	}
+
+	private String getReceipt(double value) {
+		// TODO This should generate a receipt in the format TIME TRANSACTION AMOUNT
 		
-		else if(state.equalsIgnoreCase("pin")){
-			
-		}
-		
-		else if(state.equalsIgnoreCase("with")){
-			
-		}
-		
-		else{
-			
-		}
+		return "TIME TRANSACTION AMOUNT";
 	}
 
 	public void insertCard(Card card) {
-		// TODO Auto-generated method stub
-		
-		accountNumber = card.getAccountID();
-		state = "pin";
+		if (state.equalsIgnoreCase("card")){
+			accountNumber = card.getAccountID();
+			state = "pin";
+		}
+		displayState();
 	}
 }

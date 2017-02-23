@@ -3,14 +3,14 @@ import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-public class Console implements Printer
+public class Console implements Printer, Display, Dispensor
 {
 	private Scanner in;
 	private ATM atm;
 	
 	public Console(){
 		in = new Scanner(System.in);
-		atm = new ATM(this);
+		atm = new ATM(this, this, this);
 	}
 	
 	public boolean input(String line){
@@ -56,11 +56,31 @@ public class Console implements Printer
 	}
 
 	@Override
-	public void print(String s) {
-		System.out.println(s);
+	public void print(String text) {
+		input(String.format("PRINT \"%s\"", text));
+	}
+
+	@Override
+	public void dispense(int amount) {
+		// Does nothing in simulator.
+	}
+
+	@Override
+	public void display(String text) {
+		input(String.format("DISP \"%s\"", text));
+	}
+	
+	public static void main(String[] args){
+		//TODO: If an arguement is passed in with a file name, read from file, otherwise loop through receiving input until cancel. 
 	}
 }
 
 interface Printer{
-	public void print(String s);
+	public void print(String text);
+}
+interface Display{
+	public void display(String text);
+}
+interface Dispensor{
+	public void dispense(int amount);
 }
