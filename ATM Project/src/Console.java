@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Scanner;
+
 
 public class Console implements Printer, Display, Dispensor
 {
@@ -75,12 +75,15 @@ public class Console implements Printer, Display, Dispensor
 	}
 }
 
+
 interface Printer{
 	public void print(String text);
 }
+
 interface Display{
 	public void display(String text);
 }
+
 interface Dispensor{
 	public void dispense(int amount);
 }

@@ -42,6 +42,7 @@ public class Bank {
 		return found && (accounts.get(index).validate(pin) 
 				&& accounts.get(index).deposit(amount));
 	}
+	
 	public double getBalance(int acct_number, int pin){
 		for(int i = 0; i < accounts.size(); i++)
 			if(accounts.get(i).getAccountID() == acct_number)

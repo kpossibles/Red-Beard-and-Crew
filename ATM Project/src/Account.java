@@ -32,6 +32,7 @@ public class Account {
 	public int getAccountID(){
 		return accountNumber;
 	}
+	
 	public double getBalance(){
 		return balance;
 	}
