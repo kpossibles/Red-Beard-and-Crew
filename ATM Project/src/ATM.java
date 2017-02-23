@@ -5,13 +5,22 @@ import java.util.Scanner;
 
 public class ATM 
 {
-	Bank bank;
+	private Bank bank;
+	private Printer print;
+	private String state;
 	
-	public ATM(){
-		start();
+	private int accountNumber;
+	private int pin;
+	private int amt;
+	
+	private String transactionType = "none";
+	
+	public ATM(Printer p){
+		bank = new Bank();
+		print = p;
 	}
 	
-	public void start(){
+	/*public void start(){
 		bank = new Bank();
 		Scanner reader = new Scanner(System.in);
 		
@@ -52,9 +61,46 @@ public class ATM
 			account_number = reader.nextInt();
 		}
 		reader.close();
+	}*/
+
+	public void withdraw() {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	public static void main(String[] args){
-		ATM testATM = new ATM();
+
+	public void checkBalance() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void cancel() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void inputNum(int parseInt) {
+		// TODO Auto-generated method stub
+		if(state.equalsIgnoreCase("none")){
+			
+		}
+		
+		else if(state.equalsIgnoreCase("pin")){
+			
+		}
+		
+		else if(state.equalsIgnoreCase("with")){
+			
+		}
+		
+		else{
+			
+		}
+	}
+
+	public void insertCard(Card card) {
+		// TODO Auto-generated method stub
+		
+		accountNumber = card.getAccountID();
+		state = "pin";
 	}
 }
