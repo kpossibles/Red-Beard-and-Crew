@@ -71,8 +71,12 @@ public class Console implements Printer, Display, Dispensor
 	}
 	
 	public static void main(String[] args){
-		//TODO: If an arguement is passed in with a file name, read from file, otherwise loop through receiving input until cancel. 
+		//TODO: If an argument is passed in with a file name, read from file, otherwise loop through receiving input until cancel. 
+		Console simulator = new Console();
+		simulator.readFromText("transactions.txt");
 	}
+	
+	
 }
 
 

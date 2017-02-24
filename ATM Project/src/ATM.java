@@ -1,3 +1,4 @@
+import java.time.LocalTime;
 
 public class ATM 
 {
@@ -22,20 +23,20 @@ public class ATM
 	
 	private void displayState() {
 		switch(state){
-		case "card":
-			display.display("Please Insert Your Card, or enter your account number on the keypad.");
-			break;
-		case "pin":
-			display.display("Please Enter your pin.");
-			break;
-		case "transaction":
-			display.display("Please choose your transaction type.");
-			break;
-		case "withdraw":
-			display.display("Please enter an amount to withdraw.");;
-			break;
-		default: //If the state is not one of the above, something is wrong! 
-			display.display("This ATM is currently out of order. ");
+			case "card":
+				display.display("Please Insert Your Card, or enter your account number on the keypad.");
+				break;
+			case "pin":
+				display.display("Please Enter your pin.");
+				break;
+			case "transaction":
+				display.display("Please choose your transaction type.");
+				break;
+			case "withdraw":
+				display.display("Please enter an amount to withdraw.");;
+				break;
+			default: //If the state is not one of the above, something is wrong! 
+				display.display("This ATM is currently out of order. ");
 		}
 	}
 
@@ -84,8 +85,8 @@ public class ATM
 
 	private String getReceipt(double value) {
 		// TODO This should generate a receipt in the format TIME TRANSACTION AMOUNT
-		
-		return "TIME TRANSACTION AMOUNT";
+		LocalTime time = LocalTime.now();
+		return String.format("%tr %s %d", time, state, value);
 	}
 
 	public void insertCard(Card card) {
