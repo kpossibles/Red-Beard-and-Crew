@@ -46,9 +46,11 @@ public class ATM
 	}
 
 	public void checkBalance() {
+		state = "balance";
 		double amount = bank.getBalance(accountNumber, pin);
-		display.display("Your Balance will be printed below");
+		display.display("Your Balance will be printed below.");
 		print.print(getReceipt(amount));
+		state = "transaction";
 	}
 
 	public void cancel() {
@@ -72,10 +74,10 @@ public class ATM
 				display.display("Invalid Pin.  Please Try again. ");
 		else if(state.equalsIgnoreCase("withdraw")){
 			if (bank.withdraw(accountNumber, pin, value)){
-				state = "transaction";
-				display.display("Withdrawl Sucessful");
+				display.display("Withdraw Sucessful");
 				dispensor.dispense(value);
 				print.print(getReceipt(value));
+				state = "transaction";
 			}
 			else
 				display.display("Invalid Amount Selected.");
@@ -84,9 +86,8 @@ public class ATM
 	}
 
 	private String getReceipt(double value) {
-		// TODO This should generate a receipt in the format TIME TRANSACTION AMOUNT
 		LocalTime time = LocalTime.now();
-		return String.format("%tr %s %d", time, state, value);
+		return time.toString() + " " +  state + " "+  value;
 	}
 
 	public void insertCard(Card card) {

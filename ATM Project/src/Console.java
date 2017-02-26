@@ -5,15 +5,15 @@ import java.util.Scanner;
 
 public class Console implements Printer, Display, Dispensor
 {
-	private Scanner in;
 	private ATM atm;
 	
 	public Console(){
-		in = new Scanner(System.in);
 		atm = new ATM(this, this, this);
 	}
 	
 	public boolean input(String line){
+		if (line.indexOf(' ') == -1)
+			line = "DIS \"INVALID INPUT\"";
 		String command = line.substring(0,line.indexOf(' '));
 		String argument = line.substring(line.indexOf(' ') + 1);
 		
@@ -22,7 +22,7 @@ public class Console implements Printer, Display, Dispensor
 		else if(command.equalsIgnoreCase("NUM"))
 			atm.inputNum(Integer.parseInt(argument));
 		else if(command.equalsIgnoreCase("DIS"))
-			System.out.println(argument.substring(0, argument.length()-2));
+			System.out.println(argument.substring(1, argument.length()-1));
 		else if(command.equalsIgnoreCase("PRINT"))
 			System.out.println(argument);
 		else if(command.equalsIgnoreCase("BUTTON"))
@@ -41,8 +41,8 @@ public class Console implements Printer, Display, Dispensor
 	}
 	
 	public boolean readFromText(String path){
-		File f = new File(path);
 		try{
+			File f = new File(path);
 			Scanner file_in = new Scanner(f);
 			while(file_in.hasNextLine()){
 				input(file_in.nextLine());
@@ -67,13 +67,26 @@ public class Console implements Printer, Display, Dispensor
 
 	@Override
 	public void display(String text) {
-		input(String.format("DISP \"%s\"", text));
+		input(String.format("DIS \"%s\"", text));
 	}
 	
 	public static void main(String[] args){
 		//TODO: If an argument is passed in with a file name, read from file, otherwise loop through receiving input until cancel. 
 		Console simulator = new Console();
-		simulator.readFromText("transactions.txt");
+		if (args.length>0){
+			simulator.readFromText(args[0]);
+		}
+		else{
+			Scanner input = new Scanner(System.in);
+			System.out.print(": ");
+			String nextLine = input.nextLine();
+			while(!nextLine.equals("EXIT")){
+				simulator.input(nextLine);
+				System.out.print(": ");
+				nextLine = input.nextLine();
+			}
+			input.close();
+		}
 	}
 	
 	
