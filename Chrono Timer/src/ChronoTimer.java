@@ -1,13 +1,18 @@
 
 public class ChronoTimer {
+	Event event;
+	Channel[] channels;
 
+	public ChronoTimer(){
+		reset();
+	}
 	public void power() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void reset() {
-		// TODO Auto-generated method stub
+		// This resets the ChronoTimer to initial state
 		
 	}
 
