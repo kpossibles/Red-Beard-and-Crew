@@ -1,10 +1,20 @@
 
 public class Channel {
-//a channel connects to 1 sensor.  in an if and only if relationship.  It may be closed or open.
+	Sensor sensor;
+	ChronoTimer timer;
+	boolean on;
+	public Channel(ChronoTimer t){
+		on = false;
+		timer = t;
+	}
+	public void setSensor(Sensor s){
+		sensor = s;
+	}
+	public void toggle(){
+		on = !on;
+	}
+	public void trigger(){
+		// I'm not exactly sure how this should work. 
+	}
 	
-	//open
-	
-//close
-	
-
 }
