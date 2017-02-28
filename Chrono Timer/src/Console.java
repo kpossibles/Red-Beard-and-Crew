@@ -13,7 +13,8 @@ public class Console
 	public boolean input(String line){
 		if (line.indexOf(' ') == -1)
 			line = "DIS \"INVALID INPUT\"";
-		String command = line.substring(0,line.indexOf(' '));
+		String timestamp = line.substring(0, line.indexOf('\t'));
+		String command = line.substring(line.indexOf('\t')+1,line.indexOf(' '));
 		String argument = "";
 		if (line.indexOf(' ') != -1)
 			argument = line.substring(line.indexOf(' ') + 1);
@@ -45,15 +46,19 @@ public class Console
 		} 
 		// EVENT <type> IND | PARIND | GRP | PARGRP
 		else if (command.equalsIgnoreCase("EVENT")){
-			// NOT IMPLEMENTED IN SPRINT 1
+			timer.setEvent(argument);
 		} 
 		// NEWRUN Create a new Run (must end a run first)
 		else if (command.equalsIgnoreCase("NEWRUN")){
-			// NOT IMPLEMENTED IN SPRINT 1
+			if(timer.runExist()){
+				timer.endRun();
+			}
+			timer.createRun();
+			
 		} 
 		// ENDRUN Done with a Run
 		else if (command.equalsIgnoreCase("ENDRUN")){
-			// NOT IMPLEMENTED IN SPRINT 1
+			
 		}
 		// PRINT <RUN> Print the run on stdout
 		else if (command.equalsIgnoreCase("PRINT")){
@@ -78,6 +83,11 @@ public class Console
 		// DNF The next competitor to finish will not finish
 		else if (command.equalsIgnoreCase("DNF")){
 			timer.didNotFinish();
+		}
+		// CANCEL Start isn't valid, competitor still in queue to start
+		else if (command.equalsIgnoreCase("CANCEL")){
+			// TODO
+			timer.discard();
 		}
 		// TRIG <num> Trigger channel <num>
 		else if (command.equalsIgnoreCase("TRIG")){
