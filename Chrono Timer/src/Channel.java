@@ -5,8 +5,9 @@ public class Channel {
 	public int id;
 	private boolean on;
 	
-	public Channel(ChronoTimer t){
+	public Channel(ChronoTimer t, int i){
 		on = false;
+		id = i;
 		chronotimer = t;
 	}
 	public void setSensor(String type){

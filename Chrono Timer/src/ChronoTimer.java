@@ -18,9 +18,10 @@ public class ChronoTimer {
 	public void reset() {
 		// This resets the ChronoTimer to initial state
 		event = new Event();
-		channels = new Channel[2];
-		channels[0] = new Channel(timer);
-		channels[1] = new Channel(timer);
+		channels = new Channel[8];
+		for(int i=0;i<8;i++){
+			channels[i] = new Channel(this, i);
+		}
 		run = null;
 		record = new LinkedList<>();
 	}
