@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Console
 {
-	private ChronoTimer timer;
+	private ChronoTimer chronotimer;
 	public Console(){
 		
 	}
@@ -22,23 +22,23 @@ public class Console
 		// POWER(if off) Create ChronoTimer, which should set to default state
 		// POWER(if on) Delete ChronoTimer
 		if (command.equalsIgnoreCase("POWER")){
-			if (timer != null)
-				timer = null;
+			if (chronotimer != null)
+				chronotimer = null;
 			else
-				timer = new ChronoTimer();
+				chronotimer = new ChronoTimer();
 		}
-		if (timer != null)
+		if (chronotimer != null)
 			// RESET Resets the System to initial state
 			if (command.equalsIgnoreCase("RESET")){
-				timer.reset();
+				chronotimer.reset();
 			}
 			// TIME <hour>:<min>:<sec> Set the current time
 			else if (command.equalsIgnoreCase("TIME")){
-				timer.setTime(argument);
+				chronotimer.setTime(argument);
 			}
 			// TOG <channel> Toggle the state of the channel <channel>
 			else if (command.equalsIgnoreCase("TOG")){
-				timer.toggle(argument);
+				chronotimer.toggle(argument);
 			}
 			// CONN <sensor><num> Connect a type of sensor to channel <num>
 			// <sensor> = {EYE, GATE, PAD}
@@ -51,14 +51,14 @@ public class Console
 			} 
 			// EVENT <type> IND | PARIND | GRP | PARGRP
 			else if (command.equalsIgnoreCase("EVENT")){
-				timer.setEvent(argument);
+				chronotimer.setEvent(argument);
 			} 
 			// NEWRUN Create a new Run (must end a run first)
 			else if (command.equalsIgnoreCase("NEWRUN")){
-				if(timer.runExist()){
-					timer.endRun();
+				if(chronotimer.runExist()){
+					chronotimer.endRun();
 				}
-				timer.createRun();
+				chronotimer.createRun();
 				
 			} 
 			// ENDRUN Done with a Run
@@ -79,7 +79,7 @@ public class Console
 			}
 			// CLR <number> Clear <number> the competitor from queue
 			else if (command.equalsIgnoreCase("CLR")){
-				timer.clear(argument);
+				chronotimer.clear(argument);
 			}
 			// SWAP exchange next two competitors to finish in IND
 			else if (command.equalsIgnoreCase("SWAP")){
@@ -87,16 +87,16 @@ public class Console
 			}
 			// DNF The next competitor to finish will not finish
 			else if (command.equalsIgnoreCase("DNF")){
-				timer.didNotFinish();
+				chronotimer.didNotFinish();
 			}
 			// CANCEL Start isn't valid, competitor still in queue to start
 			else if (command.equalsIgnoreCase("CANCEL")){
 				// TODO
-				timer.discard();
+				chronotimer.discard();
 			}
 			// TRIG <num> Trigger channel <num>
 			else if (command.equalsIgnoreCase("TRIG")){
-				timer.trigger(argument);
+				chronotimer.trigger(argument);
 			}
 			// START Start trigger channel 1 (shorthand for trig 1)
 			else if (command.equalsIgnoreCase("START")){
