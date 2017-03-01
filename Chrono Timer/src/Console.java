@@ -137,6 +137,7 @@ public class Console
 			System.out.print(": ");
 			String nextLine = input.nextLine();
 			while(!nextLine.equals("EXIT")){
+				//TODO Append the time before the command
 				simulator.input(nextLine);
 				System.out.print(": ");
 				nextLine = input.nextLine();
