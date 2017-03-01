@@ -17,9 +17,9 @@ public class ChronoTimer {
 
 	public void reset() {
 		// This resets the ChronoTimer to initial state
-		event = new Event();
+		event = new IndividualTimed();
 		channels = new Channel[8];
-		for(int i=0;i<8;i++){
+		for(int i = 0; i < 8; i++){
 			channels[i] = new Channel(this, i);
 		}
 		run = null;
@@ -34,19 +34,16 @@ public class ChronoTimer {
 	}
 
 	public void toggle(String number) {
-		// TODO Parse string to integer, then toggle the related channel
 		int index = Integer.valueOf(number);
-		channels[index].toggle();		
+		channels[index].toggle();
 	}
 
 	public void clear(String number) {
-		// TODO parse string to integer, then pass to event
 		int index = Integer.valueOf(number);
 		event.removeRacer(index);
 	}
 
 	public void didNotFinish() {
-		// TODO pass on to event
 		event.dnf();
 	}
 	
@@ -68,7 +65,6 @@ public class ChronoTimer {
 		run = null;
 	}
 	public void createRun() {
-		// TODO Auto-generated method stub
 		run = new Run();
 	}
 
