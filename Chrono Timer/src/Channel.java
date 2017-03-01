@@ -2,15 +2,11 @@ import java.util.*;
 
 public class Channel {
 	private Sensor sensor;
-	private Timer timer;
 	private boolean on;
-	private String[] times;
 	
 	public Channel(Timer t){
 		on = false;
-		timer = t;
-		times = new String[3];
-		sensor = new Sensor();
+		sensor = new Sensor(t);
 	}
 	public void setSensor(String type){
 		sensor = new Sensor(type);
@@ -24,10 +20,7 @@ public class Channel {
 	public void trigger(){
 		// I'm not exactly sure how this should work.
 		if(sensor.isActive()){
-			if(times[0] == null)
-				times[0] = timer.getTime();
-			else if (times[1] == null)
-				times[1] = timer.getTime();
+			sensor.trigger();
 		}
 	}
 	
