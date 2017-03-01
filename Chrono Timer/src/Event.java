@@ -22,7 +22,7 @@ public class Event{
 	public void addRacer(){
 		q.add(new Racer());
 	}
-	public void addRacer(String r){
+	public void addRacer(int r){
 		q.add(new Racer(r));
 	}
 	
