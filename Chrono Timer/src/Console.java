@@ -132,7 +132,6 @@ public class Console
 	}
 	
 	public static void main(String[] args){
-		//TODO: If an argument is passed in with a file name, read from file, otherwise loop through receiving input until cancel. 
 		Console simulator = new Console();
 		if (args.length>0){
 			simulator.readFromText(args[0]);
@@ -142,7 +141,6 @@ public class Console
 			System.out.print(": ");
 			String nextLine = input.nextLine();
 			while(!nextLine.equals("EXIT")){
-				//TODO Append the time before the command
 				nextLine = LocalTime.now().toString() + nextLine;
 				simulator.input(nextLine);
 				System.out.print(": ");

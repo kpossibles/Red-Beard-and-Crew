@@ -1,35 +1,36 @@
+import java.time.LocalTime;
 
 public class Racer {
-	private int start, finish;
-	private String name;
+	private long start, finish;
+	private int id; 
 	
 	public Racer(){
 		start = finish = 0;
-		name = "";
+		id = 0;
 	}
-	public Racer(String name){
+	public Racer(int _id){
 		start = finish = 0;
-		name = this.name;
+		id = _id;
 	}
 	
-	public void setStart(String time) {
+	public void setStart(long time) {
 		// TODO Auto-generated method stub
-		start = Integer.valueOf(time);
+		start = time;
 	}
 	
-	public void setFinish(String time) {
+	public void setFinish(long time) {
 		// TODO Auto-generated method stub
-		finish = Integer.valueOf(time);
+		finish = time;
 	}
 	
-	public int getTime(){
+	public long getTime(){
 		return finish - start;
 	}
 
-	public int getStart() {
+	public long getStart() {
 		return start;
 	}
-	public int getFinish() {
+	public long getFinish() {
 		return finish;
 	}
 	public void reset() {
