@@ -13,7 +13,7 @@ public class Channel {
 		if(type.equalsIgnoreCase("eye") || type.equalsIgnoreCase("gate") || type.equalsIgnoreCase("pad")){
 			new Sensor(this, type);
 			return true;
-		} return false;
+		} else return false;
 	}
 	public void toggle(){
 		on = !on;
