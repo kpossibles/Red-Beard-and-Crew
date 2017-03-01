@@ -9,8 +9,11 @@ public class Channel {
 		on = false;
 		chronotimer = t;
 	}
-	public void setSensor(String type){
-		new Sensor(this, type);
+	public boolean setSensor(String type){
+		if(type.equalsIgnoreCase("eye") || type.equalsIgnoreCase("gate") || type.equalsIgnoreCase("pad")){
+			new Sensor(this, type);
+			return true;
+		} return false;
 	}
 	public void toggle(){
 		on = !on;
