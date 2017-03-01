@@ -26,11 +26,9 @@ public class ChronoTimer {
 	}
 
 	public void setTime(String number) {
-		// TODO Parse String to time, then set time
 		timer.setTime(number);
 	}
 	public void setEvent(String type) {
-		// TODO Parse String to time, then set time
 		event = new Event(type);
 	}
 
@@ -50,17 +48,14 @@ public class ChronoTimer {
 		// TODO pass on to event
 		event.dnf();
 	}
+	
+	public void trigger(String id){
+		int index = Integer.valueOf(id);
+		trigger(index);
+	}
 
-	public void trigger(String number) {
-		// TODO parse string to integer, check that channel is on, then pass to event. 
-		int index = Integer.valueOf(number);
-		if(channels[index].isOn()){
-			channels[index].trigger();
-			event.start(timer.getTime());
-		}
-		else {
-			System.out.println("ERROR: Channel is off.");
-		}
+	public void trigger(int id) {
+		event.trigger(id);
 	}
 	public void discard() {
 		event.discard();

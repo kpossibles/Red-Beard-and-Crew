@@ -57,4 +57,9 @@ public class Event{
 		q.peek().setFinish("0");
 		q.remove();
 	}
+
+	public void trigger(int id) {
+		// Figures out what the channel type is, and then does the relevant function. 
+		
+	}
 }

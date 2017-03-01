@@ -1,15 +1,16 @@
 import java.util.*;
 
 public class Channel {
-	private Sensor sensor;
+	private ChronoTimer chronotimer;
+	public int id;
 	private boolean on;
 	
-	public Channel(Timer t){
+	public Channel(ChronoTimer t){
 		on = false;
-		sensor = new Sensor(t);
+		chronotimer = t;
 	}
 	public void setSensor(String type){
-		sensor = new Sensor(type);
+		new Sensor(this, type);
 	}
 	public void toggle(){
 		on = !on;
@@ -18,9 +19,8 @@ public class Channel {
 		return on;
 	}
 	public void trigger(){
-		// I'm not exactly sure how this should work.
-		if(sensor.isActive()){
-			sensor.trigger();
+		if(on){
+			chronotimer.trigger(id);
 		}
 	}
 	
