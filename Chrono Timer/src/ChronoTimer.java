@@ -6,13 +6,9 @@ public class ChronoTimer {
 	private Timer timer;
 	private Run run;
 	private LinkedList<Object> record;
-	boolean on;
 
 	public ChronoTimer(){
 		reset();
-	}
-	public void power() {
-		// TODO
 	}
 
 	public void reset() {
@@ -29,8 +25,17 @@ public class ChronoTimer {
 	public void setTime(String number) {
 		timer.setTime(number);
 	}
+	
 	public void setEvent(String type) {
-		event = new Event(type);
+		//IND | PARIND | GRP | PARGRP
+		if(type.equals("IND"))
+			event = new IndividualTimed();
+		else if(type.equals("PARIND"))
+			event = new ParallelTimed();
+		else if(type.equals("GRP"))
+			event = new GroupTimed();
+		else if(type.equals("PARGRP"))
+			event = new ParallelGroupTimed();
 	}
 
 	public void toggle(String number) {

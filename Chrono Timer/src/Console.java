@@ -1,6 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Scanner;
 
 
@@ -28,6 +31,7 @@ public class Console
 				chronotimer = new ChronoTimer();
 		}
 		if (chronotimer != null)
+			chronotimer.setTime(timestamp);
 			// RESET Resets the System to initial state
 			if (command.equalsIgnoreCase("RESET")){
 				chronotimer.reset();
@@ -141,7 +145,7 @@ public class Console
 			System.out.print(": ");
 			String nextLine = input.nextLine();
 			while(!nextLine.equals("EXIT")){
-				nextLine = LocalTime.now().toString() + nextLine;
+				nextLine = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) + nextLine;
 				simulator.input(nextLine);
 				System.out.print(": ");
 				nextLine = input.nextLine();
