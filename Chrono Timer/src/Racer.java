@@ -3,8 +3,10 @@ import java.time.LocalTime;
 public class Racer {
 	private long start, finish;
 	private int id; 
+	private boolean didNotFinish;
 	
 	public Racer(){
+		didNotFinish = false;
 		start = finish = 0;
 		id = 0;
 	}
@@ -14,16 +16,16 @@ public class Racer {
 	}
 	
 	public void setStart(long time) {
-		// TODO Auto-generated method stub
 		start = time;
 	}
 	
 	public void setFinish(long time) {
-		// TODO Auto-generated method stub
 		finish = time;
 	}
 	
 	public long getTime(){
+		if(didNotFinish)
+			return -1;
 		return finish - start;
 	}
 
@@ -35,5 +37,9 @@ public class Racer {
 	}
 	public void reset() {
 		start = finish = 0;		
+	}
+	public void didNotFinish() {
+		didNotFinish = true;
+		finish = 0;
 	}
 }

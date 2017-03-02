@@ -63,7 +63,6 @@ public class Console
 					chronotimer.endRun();
 				}
 				chronotimer.createRun();
-				
 			} 
 			// ENDRUN Done with a Run
 			else if (command.equalsIgnoreCase("ENDRUN")){

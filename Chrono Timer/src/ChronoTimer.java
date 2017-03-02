@@ -4,8 +4,7 @@ public class ChronoTimer {
 	private Event event;
 	private Channel[] channels;
 	private Timer timer;
-	private Run run;
-	private LinkedList<Object> record;
+	private LinkedList<Run> runs;
 
 	public ChronoTimer(){
 		reset();
@@ -13,13 +12,14 @@ public class ChronoTimer {
 
 	public void reset() {
 		// This resets the ChronoTimer to initial state
-		event = new IndividualTimed();
+		event = new IndividualTimed(timer);
 		channels = new Channel[8];
 		for(int i = 0; i < 8; i++){
 			channels[i] = new Channel(this, i);
 		}
-		run = null;
-		record = new LinkedList<>();
+		runs = new LinkedList<Run>();
+		runs.add(new Run(1));
+		event.setRun(runs.getFirst());
 	}
 
 	public void setTime(String number) {
@@ -29,13 +29,13 @@ public class ChronoTimer {
 	public void setEvent(String type) {
 		//IND | PARIND | GRP | PARGRP
 		if(type.equals("IND"))
-			event = new IndividualTimed();
-		else if(type.equals("PARIND"))
-			event = new ParallelTimed();
-		else if(type.equals("GRP"))
-			event = new GroupTimed();
-		else if(type.equals("PARGRP"))
-			event = new ParallelGroupTimed();
+			event = new IndividualTimed(timer);
+//		else if(type.equals("PARIND"))
+//			event = new ParallelTimed(timer);
+//		else if(type.equals("GRP"))
+//			event = new GroupTimed(timer);
+//		else if(type.equals("PARGRP"))
+//			event = new ParallelGroupTimed(timer);
 	}
 
 	public void toggle(String number) {
@@ -63,14 +63,17 @@ public class ChronoTimer {
 	public void discard() {
 		event.discard();
 	}
-	public boolean runExist() {
-		return run != null;
-	}
 	public void endRun() {
-		run = null;
+		runs.getLast().end();
 	}
 	public void createRun() {
-		run = new Run();
+		runs.add(new Run(runs.size() + 1));
+		event.setRun(runs.getLast());
+	}
+	public boolean runExist() {
+		if(runs.getLast().isActive())
+			return true;
+		return false;
 	}
 
 }
