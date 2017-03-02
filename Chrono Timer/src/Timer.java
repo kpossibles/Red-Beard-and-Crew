@@ -22,7 +22,7 @@ public class Timer {
 	 * @return unixTimestamp time equivalent on arbitrary date  
 	 */
 	public void setTime(String number){
-		String tempDate = "Jul 7 1996 " + number + " UTC"; // Set to random day for math reasons, must be constant.
+		String tempDate = "Jul 7 1996 " + number + " UTC"; // Set to arbitrary day (my birthday :]) for math reasons, must be constant.
         DateTimeFormatter dtf  = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss.SSS zzz");
         ZonedDateTime     zdt  = ZonedDateTime.parse(tempDate,dtf);        
         unixTimestamp = zdt.toInstant().toEpochMilli();
