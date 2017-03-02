@@ -22,4 +22,16 @@ public class Run {
 	public boolean isActive() {
 		return active;
 	}
+
+	public boolean remove(int id) {
+		// TODO Auto-generated method stub
+		if(active){
+			for(Racer r : racers){
+				if(r.getId() == id){
+					return racers.remove(r);
+				}
+			}
+		}
+		return false;
+	}
 }

@@ -40,6 +40,14 @@ public class IndividualTimed extends Event {
 		
 		public void removeRacer(int index){
 			//TODO: Implement!
+			if(currentRun.isActive()){
+				for(Racer r : racing){
+					if(r.getId() == index){
+						racing.remove(index); 
+						currentRun.remove(index);
+					}
+				}
+			}
 		}
 		
 		public void setRun(Run _run){

@@ -42,4 +42,8 @@ public class Racer {
 		didNotFinish = true;
 		finish = 0;
 	}
+	
+	public int getId() {
+		return id;
+	}
 }

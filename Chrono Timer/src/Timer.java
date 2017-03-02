@@ -35,4 +35,11 @@ public class Timer {
 	public long getTime(){
 		return unixTimestamp;
 	}
+	
+	/**
+	 * @return current time as string object
+	 */
+	public String getTimeString(){
+		return "" + unixTimestamp;
+	}
 }
