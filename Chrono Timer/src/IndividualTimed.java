@@ -86,9 +86,14 @@ public class IndividualTimed extends Event {
 
 		public void trigger(int id) {
 			// Figures out what the channel type is, and then does the relevant function. 
-			if (channelMode[id].equals("START"))
-				start();
-			else if (channelMode[id].equals("FINISH"))
-				finish();
+			if(channelMode[id-1] != null){
+				if (channelMode[id-1].equals("START"))
+					start();
+				else if (channelMode[id-1].equals("FINISH"))
+					finish();
+			}
+			else{
+				System.out.println(String.format("DEBUGGING: Sorry, Channel %d is not active", id));
+			}
 		}
 }
