@@ -28,12 +28,10 @@ public class Console
 		String command, argument = "";
 		if(line.indexOf(' ') == -1){
 			command = line.substring(line.indexOf('\t')+1,line.length());
-			System.out.println("DEBUGGING: INPUT > "+command);
 		}
 		else{
 			command = line.substring(line.indexOf('\t')+1,line.indexOf(' '));
 			argument = line.substring(line.indexOf(' ') + 1);
-			System.out.println("DEBUGGING: INPUT > "+command);
 		}	
 		// POWER(if off) Create ChronoTimer, which should set to default state
 		// POWER(if on) Delete ChronoTimer
@@ -142,7 +140,6 @@ public class Console
 			System.out.println("DEBUGGING: "+path);
 			while(file_in.hasNextLine()){
 				String nextline = file_in.nextLine();
-				System.out.println("DEBUGGING: "+nextline);
 				if(nextline.equals("EXIT"))
 					break;
 				input(file_in.nextLine());
