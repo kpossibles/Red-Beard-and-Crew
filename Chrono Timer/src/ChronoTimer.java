@@ -6,18 +6,11 @@ import java.util.*;
  */
 public class ChronoTimer {
 	
-	/** The event. */
 	private Event event;
-	
-	/** The channels. */
 	private Channel[] channels;
-	
-	/** The timer. */
 	private Timer timer;
-	
-	/** The runs. */
 	private LinkedList<Run> runs;
-
+	
 	/**
 	 * Instantiates a new ChronoTimer.
 	 */
@@ -154,6 +147,5 @@ public class ChronoTimer {
 	public void addToQueue(int num){
 		event.addRacer(num);
 	}
-	
 
 }

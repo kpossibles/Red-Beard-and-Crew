@@ -4,14 +4,16 @@ import java.time.LocalDateTime;
 //import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 //import java.time.format.FormatStyle;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Console
 {
 	private ChronoTimer chronotimer;
+	private Printer printer;
+	
 	public Console(){
-		
+		printer = new Printer();
 	}
 	
 	/**
@@ -21,7 +23,7 @@ public class Console
 	 * @return true, if successful
 	 */
 	public boolean input(String line){
-		System.out.println("DEBUGGING: INPUT > "+line);
+//		System.out.println("DEBUGGING: INPUT > "+line);
 		if (line.indexOf('\t') == -1)
 			line = "DIS \"INVALID INPUT\"";
 		String timestamp = line.substring(0, line.indexOf('\t'));
@@ -41,7 +43,7 @@ public class Console
 			else
 				chronotimer = new ChronoTimer();
 		}
-		if (chronotimer != null) {
+		else if (chronotimer != null) {
 			chronotimer.setTime(timestamp);
 			// RESET Resets the System to initial state
 			if (command.equalsIgnoreCase("RESET")){
@@ -81,7 +83,7 @@ public class Console
 			}
 			// PRINT <RUN> Print the run on stdout
 			else if (command.equalsIgnoreCase("PRINT")){
-				// NOT IMPLEMENTED IN SPRINT 1
+				System.out.println(printer.getRecord());
 			}
 			// EXPORT <RUN> Export run in XML to file "RUN<RUN>"
 			else if (command.equalsIgnoreCase("EXPORT")){
@@ -137,7 +139,7 @@ public class Console
 		try {
 			File f = new File(path);
 			Scanner file_in = new Scanner(f);
-			System.out.println("DEBUGGING: "+path);
+//			System.out.println("DEBUGGING: "+path);
 			while(file_in.hasNextLine()){
 				String nextline = file_in.nextLine();
 				if(nextline.equals("EXIT"))
@@ -191,6 +193,24 @@ public class Console
 	}
 	
 	/**
+	 * Adds the event changes to record.
+	 *
+	 * @param str the str
+	 */
+	public void addToRecord(String str){
+		printer.addToRecord(str);
+	}
+	
+	/**
+	 * Gets the record for printing.
+	 *
+	 * @return the record
+	 */
+	public String getRecord(){
+		return printer.getRecord();
+	}
+	
+	/**
 	 * The main method.
 	 *
 	 * @param args the textfile
@@ -213,10 +233,11 @@ public class Console
 				}
 				else {
 					nextLine = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+ nextLine;
-					System.out.println(nextLine);
 					if(!simulator.input(nextLine)){
-						System.out.print("ERROR");
+						System.out.println("Sorry, cannot accept that command.");
 					}
+					else
+						simulator.addToRecord(nextLine);
 					printCommands("waiting for command");
 					nextLine = input.nextLine();
 				}
