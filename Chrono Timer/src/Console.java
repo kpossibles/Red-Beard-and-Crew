@@ -142,7 +142,7 @@ public class Console
 				String nextline = file_in.nextLine();
 				if(nextline.equals("EXIT"))
 					break;
-				input(file_in.nextLine());
+				input(nextline);
 			}
 			file_in.close();
 		}
