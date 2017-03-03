@@ -21,16 +21,19 @@ public class Console
 	 * @return true, if successful
 	 */
 	public boolean input(String line){
+		System.out.println("DEBUGGING: INPUT > "+line);
 		if (line.indexOf('\t') == -1)
 			line = "DIS \"INVALID INPUT\"";
 		String timestamp = line.substring(0, line.indexOf('\t'));
 		String command, argument = "";
 		if(line.indexOf(' ') == -1){
 			command = line.substring(line.indexOf('\t')+1,line.length());
+			System.out.println("DEBUGGING: INPUT > "+command);
 		}
 		else{
 			command = line.substring(line.indexOf('\t')+1,line.indexOf(' '));
 			argument = line.substring(line.indexOf(' ') + 1);
+			System.out.println("DEBUGGING: INPUT > "+command);
 		}	
 		// POWER(if off) Create ChronoTimer, which should set to default state
 		// POWER(if on) Delete ChronoTimer
@@ -40,7 +43,7 @@ public class Console
 			else
 				chronotimer = new ChronoTimer();
 		}
-		if (chronotimer != null)
+		if (chronotimer != null) {
 			chronotimer.setTime(timestamp);
 			// RESET Resets the System to initial state
 			if (command.equalsIgnoreCase("RESET")){
@@ -118,6 +121,7 @@ public class Console
 			else if (command.equalsIgnoreCase("FINISH")){
 				input("TRIG 2");
 			} 
+		}
 			else {
 				return false;
 			}
@@ -135,8 +139,10 @@ public class Console
 		try {
 			File f = new File(path);
 			Scanner file_in = new Scanner(f);
+			System.out.println("DEBUGGING: "+path);
 			while(file_in.hasNextLine()){
 				String nextline = file_in.nextLine();
+				System.out.println("DEBUGGING: "+nextline);
 				if(nextline.equals("EXIT"))
 					break;
 				input(file_in.nextLine());
