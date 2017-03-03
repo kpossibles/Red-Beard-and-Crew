@@ -42,7 +42,7 @@ public class IndividualTimed extends Event {
 			//TODO: Implement!
 			if(currentRun.isActive()){
 				for(Racer r : racing){
-					if(r.getId() == index){
+					if(r.getId() == index && racing.size()>0){
 						racing.remove(index); 
 						currentRun.remove(index);
 					}
@@ -61,9 +61,10 @@ public class IndividualTimed extends Event {
 		
 		public void start(){
 			for (Racer r: racing){
-				if(r.getStart() == 0)
+				if(r.getStart() == 0) {
 					r.setStart(timer.getTime());
 					break;
+				}
 			}
 		}
 		
@@ -86,14 +87,17 @@ public class IndividualTimed extends Event {
 
 		public void trigger(int id) {
 			// Figures out what the channel type is, and then does the relevant function. 
-			if(channelMode[id-1] != null){
+			if(channelMode[id-1] != null && racing.size()>0){
 				if (channelMode[id-1].equals("START"))
 					start();
 				else if (channelMode[id-1].equals("FINISH"))
 					finish();
 			}
 			else{
-				System.out.println(String.format("DEBUGGING: Sorry, Channel %d is not active", id));
+				if(racing.size() == 0)
+					System.out.println("DEBUGGING: no racers in queue!");
+				else
+					System.out.println(String.format("DEBUGGING: Sorry, Channel %d is not active", id));
 			}
 		}
 }
