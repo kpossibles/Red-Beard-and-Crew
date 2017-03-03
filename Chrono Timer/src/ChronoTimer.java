@@ -1,10 +1,21 @@
 import java.util.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ChronoTimer.
+ */
 public class ChronoTimer {
 	
+	/** The event. */
 	private Event event;
+	
+	/** The channels. */
 	private Channel[] channels;
+	
+	/** The timer. */
 	private Timer timer;
+	
+	/** The runs. */
 	private LinkedList<Run> runs;
 
 	/**
@@ -134,5 +145,15 @@ public class ChronoTimer {
 			return true;
 		return false;
 	}
+	
+	/**
+	 * Adds the racer to queue.
+	 *
+	 * @param num the racer's ID number
+	 */
+	public void addToQueue(int num){
+		event.addRacer(num);
+	}
+	
 
 }

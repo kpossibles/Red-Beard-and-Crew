@@ -21,13 +21,17 @@ public class Console
 	 * @return true, if successful
 	 */
 	public boolean input(String line){
-		if (line.indexOf(' ') == -1)
+		if (line.indexOf('\t') == -1)
 			line = "DIS \"INVALID INPUT\"";
 		String timestamp = line.substring(0, line.indexOf('\t'));
-		String command = line.substring(line.indexOf('\t')+1,line.indexOf(' '));
-		String argument = "";
-		if (line.indexOf(' ') != -1)
+		String command, argument = "";
+		if(line.indexOf(' ') == -1){
+			command = line.substring(line.indexOf('\t')+1,line.length());
+		}
+		else{
+			command = line.substring(line.indexOf('\t')+1,line.indexOf(' '));
 			argument = line.substring(line.indexOf(' ') + 1);
+		}	
 		// POWER(if off) Create ChronoTimer, which should set to default state
 		// POWER(if on) Delete ChronoTimer
 		if (command.equalsIgnoreCase("POWER")){
@@ -72,7 +76,7 @@ public class Console
 			} 
 			// ENDRUN Done with a Run
 			else if (command.equalsIgnoreCase("ENDRUN")){
-				
+				chronotimer.endRun();
 			}
 			// PRINT <RUN> Print the run on stdout
 			else if (command.equalsIgnoreCase("PRINT")){
@@ -84,7 +88,7 @@ public class Console
 			}
 			// NUM <number> Set <number> as the next competitor to start.
 			else if (command.equalsIgnoreCase("NUM")){
-				// NOT IMPLEMENTED IN SPRINT 1
+				chronotimer.addToQueue(Integer.valueOf(argument));
 			}
 			// CLR <number> Clear <number> the competitor from queue
 			else if (command.equalsIgnoreCase("CLR")){
@@ -100,7 +104,6 @@ public class Console
 			}
 			// CANCEL Start isn't valid, competitor still in queue to start
 			else if (command.equalsIgnoreCase("CANCEL")){
-				// TODO
 				chronotimer.discard();
 			}
 			// TRIG <num> Trigger channel <num>
@@ -147,6 +150,44 @@ public class Console
 	}
 	
 	/**
+	 * Prints the prompt onto console.
+	 *
+	 * @param promptType the prompt type
+	 */
+	public static void printCommands(String promptType){
+		String commands="";
+		
+		if(promptType.equalsIgnoreCase("welcome"))
+			commands+=">WELCOME TO CHRONOTIMER\nStart the system by entering POWER or type HELP for list of commands (EXIT to quit): ";
+		else if(promptType.equalsIgnoreCase("help")){
+			commands+="\n*** List of all commands ***\n"
+					+ "POWER\n - Turns ChronoTimer on and off\n"
+					+ "EXIT\n - Exits ChronoTimer simulator\n"
+//					+ "RESET\n - Resets the system to the initial state\n"
+					+ "TIME <hour>:<min>:<sec>\n - Sets the current time\n"
+					+ "TOG <channel>\n - Toggle the state of the channel <CHANNEL>\n"
+//					+ "CONN <sensor> <NUM>\n - Connect a type of sensor to channel <NUM>, <sensor> = {EYE, GATE, PAD}\n"
+//					+ "DISC <NUM> EVENT <TYPE>\n - Disconnect a sensor from channel <NUM>\n"
+					+ "EVENT <TYPE>\n - <TYPE> = {IND, PARIND, GRP, PARGRP}\n"
+					+ "NEWRUN\n - Create a new Run (but must end a run first)\n"
+					+ "ENDRUN\n - End a Run\n"
+					+ "PRINT <RUN>\n - Print the run on stdout\n"
+//					+ "EXPORT <RUN>\n - Export run in XML to file “RUN<RUN>”\n"
+					+ "NUM <NUMBER>\n - Set <NUMBER> as the next competitor to start.\n"
+//					+ "CLR <NUMBER>\n - Clear <NUMBER> the competitor from queue\n"
+					+ "SWAP\n - Exchange next two competitors to finish in IND\n"
+					+ "DNF\n - The next competitor to finish will not finish\n"
+					+ "TRIG <NUM>\n - Triggers channel <NUM>\n"
+					+ "START\n - Trigger a start in channel 1\n"
+					+ "FINISH\n - Trigger a finish in channel 2";
+		}
+		else if(promptType.equalsIgnoreCase("waiting for command")){
+			commands += "\n>Please enter your command:";
+		}
+		System.out.println(commands);
+	}
+	
+	/**
 	 * The main method.
 	 *
 	 * @param args the textfile
@@ -157,16 +198,28 @@ public class Console
 			simulator.readFromText(args[0]);
 		}
 		else {
+			String nextLine = "";
+			printCommands("welcome");
 			Scanner input = new Scanner(System.in);
-			System.out.print(": ");
-			String nextLine = input.nextLine();
-			while(!nextLine.equals("EXIT")){
-				nextLine = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) + nextLine;
-				simulator.input(nextLine);
-				System.out.print(": ");
-				nextLine = input.nextLine();
+			nextLine = input.nextLine();
+			while(!nextLine.equalsIgnoreCase("EXIT")){
+				if(nextLine.equalsIgnoreCase("help")){
+					printCommands("help");
+					printCommands("waiting for command");
+					nextLine = input.nextLine();
+				}
+				else {
+					nextLine = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+ nextLine;
+					System.out.println(nextLine);
+					if(!simulator.input(nextLine)){
+						System.out.print("ERROR");
+					}
+					printCommands("waiting for command");
+					nextLine = input.nextLine();
+				}
 			}
 			input.close();
+			System.out.println("\nThank you for using ChronoTimer. GOODBYE");
 		}
 	}
 	
