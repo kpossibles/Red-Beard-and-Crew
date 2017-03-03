@@ -18,6 +18,7 @@ public class ChronoTimer {
 	 * This resets the ChronoTimer to initial state.
 	 */
 	public void reset() {
+		timer = new Timer();
 		event = new IndividualTimed(timer);
 		channels = new Channel[8];
 		for(int i = 0; i < 8; i++){
@@ -35,6 +36,7 @@ public class ChronoTimer {
 	 */
 	public void setTime(String number) {
 		timer.setTime(number);
+		event.setTimer(timer);
 	}
 	
 	/**
