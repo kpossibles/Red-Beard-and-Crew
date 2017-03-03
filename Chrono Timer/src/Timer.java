@@ -29,7 +29,8 @@ public class Timer {
 	}
 	
 	/**
-	 * 
+	 * Gets the time.
+	 *
 	 * @return current time
 	 */
 	public long getTime(){
@@ -37,6 +38,8 @@ public class Timer {
 	}
 	
 	/**
+	 * Gets the time string.
+	 *
 	 * @return current time as string object
 	 */
 	public String getTimeString(){

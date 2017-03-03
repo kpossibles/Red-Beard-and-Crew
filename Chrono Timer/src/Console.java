@@ -1,9 +1,9 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+//import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+//import java.time.format.FormatStyle;
 import java.util.Scanner;
 
 
@@ -14,6 +14,12 @@ public class Console
 		
 	}
 	
+	/**
+	 * Parses the input and converts the lines into commands for Chronotimer to execute.
+	 *
+	 * @param line the line
+	 * @return true, if successful
+	 */
 	public boolean input(String line){
 		if (line.indexOf(' ') == -1)
 			line = "DIS \"INVALID INPUT\"";
@@ -116,6 +122,12 @@ public class Console
 		return true;
 	}
 	
+	/**
+	 * Reads from text file.
+	 *
+	 * @param path the path
+	 * @return true, if successful
+	 */
 	public boolean readFromText(String path){
 		try {
 			File f = new File(path);
@@ -134,6 +146,11 @@ public class Console
 		return true;
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the textfile
+	 */
 	public static void main(String[] args){
 		Console simulator = new Console();
 		if (args.length>0){
