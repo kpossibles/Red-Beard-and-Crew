@@ -54,4 +54,11 @@ public abstract class Event{
 	 * @param _run the new run
 	 */
 	abstract public void setRun(Run _run);
+	
+	/**
+	 * Sets the timer when you assign a new timer for an Event.
+	 *
+	 * @param timer the new timer
+	 */
+	abstract public void setTimer(Timer timer);
 }

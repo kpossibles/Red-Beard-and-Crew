@@ -50,6 +50,10 @@ public class IndividualTimed extends Event {
 			}
 		}
 		
+		public void setTimer(Timer timer){
+			timer = this.timer;
+		}
+		
 		public void setRun(Run _run){
 			currentRun = _run;
 			racing = new LinkedList<Racer>();
