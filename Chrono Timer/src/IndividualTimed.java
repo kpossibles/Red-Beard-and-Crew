@@ -17,10 +17,11 @@ public class IndividualTimed extends Event {
 		
 		public IndividualTimed(Timer _timer){
 			racing = new LinkedList<Racer>();
-			channelMode = new String[8];
+			channelMode = new String[2];
 			channelMode[0] = "START";
 			channelMode[1] = "FINISH";
 			timer = _timer;
+			currentRun = new Run(1);
 		}
 
 		public void addRacer(){
@@ -31,10 +32,14 @@ public class IndividualTimed extends Event {
 			}
 		}
 		public void addRacer(int r){
-			if(currentRun.isActive()){
+//			debug("CURRENT RUN "+currentRun);
+			if(currentRun!=null && currentRun.isActive()){
 				Racer racer = new Racer(r);
 				currentRun.add(racer);
 				racing.add(racer);
+			}
+			else {
+				debug("error");
 			}
 		}
 		
@@ -66,12 +71,15 @@ public class IndividualTimed extends Event {
 					break;
 				}
 			}
+			racing.add(currentRun.getRacer());
+			System.out.println(String.format("Racer %d\t%s", racing.peek().getId(), timer.getTimeString()));
 		}
 		
 		public void finish(){
 			Racer racer = racing.remove();
 			racer.setFinish(timer.getTime());
-			System.out.println(racer.toString());
+			System.out.println(String.format("Racer %d\t%s", racer.getId(), timer.getTimeString()));
+			System.out.println(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
 		}
 		
 		// for CANCEL
@@ -87,17 +95,20 @@ public class IndividualTimed extends Event {
 
 		public void trigger(int id) {
 			// Figures out what the channel type is, and then does the relevant function. 
-			if(channelMode[id-1] != null && racing.size()>0){
+			if(id<=channelMode.length){
 				if (channelMode[id-1].equals("START"))
 					start();
 				else if (channelMode[id-1].equals("FINISH"))
 					finish();
 			}
-			else{
-				if(racing.size() == 0)
-					System.out.println("DEBUGGING: no racers in queue!");
-				else
-					System.out.println(String.format("DEBUGGING: Sorry, Channel %d is not active", id));
-			}
+//			else{
+//				if(racing.size() == 0)
+//					System.out.println("DEBUGGING: no racers in queue!");
+//				else
+//					System.out.println(String.format("DEBUGGING: Sorry, Channel %d is not active", id));
+//			}
+		}
+		public void debug(String str){
+			System.out.println("***DEBUG: "+str);
 		}
 }

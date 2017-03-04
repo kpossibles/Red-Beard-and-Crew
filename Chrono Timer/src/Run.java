@@ -58,4 +58,8 @@ public class Run {
 		}
 		return false;
 	}
+	
+	public Racer getRacer(){
+		return racers.get(0);
+	}
 }

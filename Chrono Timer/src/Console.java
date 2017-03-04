@@ -16,6 +16,10 @@ public class Console
 		printer = new Printer();
 	}
 	
+	public void debug(String str){
+		System.out.println("***DEBUG: "+str);
+	}
+	
 	/**
 	 * Parses the input and converts the lines into commands for Chronotimer to execute.
 	 *
@@ -23,7 +27,7 @@ public class Console
 	 * @return true, if successful
 	 */
 	public boolean input(String line){
-//		System.out.println("DEBUGGING: INPUT > "+line);
+//		debug("INPUT > "+line);
 		if (line.indexOf('\t') == -1)
 			line = "DIS \"INVALID INPUT\"";
 		String timestamp = line.substring(0, line.indexOf('\t'));
@@ -72,9 +76,6 @@ public class Console
 			} 
 			// NEWRUN Create a new Run (must end a run first)
 			else if (command.equalsIgnoreCase("NEWRUN")){
-				if(chronotimer.runExist()){
-					chronotimer.endRun();
-				}
 				chronotimer.createRun();
 			} 
 			// ENDRUN Done with a Run
@@ -145,6 +146,7 @@ public class Console
 				if(nextline.equals("EXIT"))
 					break;
 				input(nextline);
+				addToRecord(nextline);
 			}
 			file_in.close();
 		}

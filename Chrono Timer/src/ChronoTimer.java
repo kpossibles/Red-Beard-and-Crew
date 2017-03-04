@@ -24,8 +24,8 @@ public class ChronoTimer {
 	public void reset() {
 		timer = new Timer();
 		event = new IndividualTimed(timer);
-		channels = new Channel[8];
-		for(int i = 0; i < 8; i++){
+		channels = new Channel[2];
+		for(int i = 0; i < 2; i++){
 			channels[i] = new Channel(this, i);
 		}
 		runs = new LinkedList<Run>();
@@ -67,7 +67,8 @@ public class ChronoTimer {
 	 */
 	public void toggle(String number) {
 		int index = Integer.valueOf(number);
-		channels[index].toggle();
+		channels[index-1].toggle();
+		System.out.println(String.format("TOG %d\t\t%s", index, timer.getTimeString()));
 	}
 
 	/**
@@ -125,7 +126,7 @@ public class ChronoTimer {
 	 */
 	public void createRun() {
 		runs.add(new Run(runs.size() + 1));
-		event.setRun(runs.getLast());
+		event.setRun(runs.getFirst());
 	}
 	
 	/**

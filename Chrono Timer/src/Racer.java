@@ -1,3 +1,5 @@
+import java.util.concurrent.TimeUnit;
+
 //import java.time.LocalTime;
 
 public class Racer {
@@ -43,14 +45,23 @@ public class Racer {
 	}
 	
 	/**
-	 * Gets the time.
+	 * Gets the time by converting millisecond time to HH:mm:ss.S format.
 	 *
 	 * @return the time
 	 */
-	public long getTime(){
+	public String getTime(){
 		if(didNotFinish)
-			return -1;
-		return finish - start;
+			return "-1";
+		long sec = TimeUnit.MILLISECONDS.toSeconds(finish - start);
+		long min = TimeUnit.SECONDS.toMinutes(sec);
+		long hours = TimeUnit.MINUTES.toHours(min);
+		long remainMinute = min - TimeUnit.HOURS.toMinutes(min);
+		long remainSec = sec - TimeUnit.MINUTES.toSeconds(remainMinute);
+		long remainMilli = (finish - start) - TimeUnit.SECONDS.toMillis(remainSec);
+		
+		String result = String.format("%02d:%02d:%02d.%d", hours,remainMinute, remainSec, remainMilli);
+		
+		return result;
 	}
 
 	/**

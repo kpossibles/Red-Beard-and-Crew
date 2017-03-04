@@ -8,6 +8,7 @@ public class Timer {
 	//private Date timer;
 	//private SimpleDateFormat sdf = new SimpleDateFormat("sssss.SS");
 	private long unixTimestamp;
+	private String time="";
 	
 	/**
 	 * Timer() will start the time now and set it to unix time
@@ -22,6 +23,7 @@ public class Timer {
 	 * @return unixTimestamp time equivalent on arbitrary date  
 	 */
 	public void setTime(String number){
+		time = number;
 		String tempDate = "Jul 07 1996 " + number + " UTC"; // Set to arbitrary day (my birthday :]) for math reasons, must be constant.
         DateTimeFormatter dtf  = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss.S zzz");
         ZonedDateTime     zdt  = ZonedDateTime.parse(tempDate,dtf);        
@@ -43,6 +45,6 @@ public class Timer {
 	 * @return current time as string object
 	 */
 	public String getTimeString(){
-		return "" + unixTimestamp;
+		return "" + time;
 	}
 }

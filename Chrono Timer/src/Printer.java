@@ -25,10 +25,11 @@ public class Printer {
 	 * @return the record
 	 */
 	public String getRecord(){
-		String ret = "\nCHRONOTIMER RECORD:\n";
+		String ret = "\n***CHRONOTIMER RECORD:\n";
 		for(String str:record){
 			ret+=str+'\n';
 		}
-		return ret.substring(0, ret.length()-1);
+		ret+="***END RECORD\n";
+		return ret;
 	}
 }
