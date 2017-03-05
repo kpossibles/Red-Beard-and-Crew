@@ -59,7 +59,7 @@ public class Racer {
 		long remainSec = sec - TimeUnit.MINUTES.toSeconds(remainMinute);
 		long remainMilli = (finish - start) - TimeUnit.SECONDS.toMillis(remainSec);
 		
-		String result = String.format("%02d:%02d:%02d.%d", hours,remainMinute, remainSec, remainMilli);
+		String result = String.format("%02d:%02d:%02d.%d", hours,remainMinute, remainSec, remainMilli/100);
 		
 		return result;
 	}

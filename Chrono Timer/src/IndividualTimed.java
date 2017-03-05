@@ -36,6 +36,7 @@ public class IndividualTimed extends Event {
 				Racer racer = new Racer(r);
 				currentRun.add(racer);
 				racing.add(racer);
+				System.out.println(String.format("Racer %d added.", r));
 			}
 			else {
 				System.out.println("Could not add racer.  Either the current run is not active, or there is currently no run. ");
@@ -46,6 +47,7 @@ public class IndividualTimed extends Event {
 			if(currentRun.isActive()){
 				for(Racer r : racing){
 					if(r.getId() == index && racing.size()>0){
+						System.out.println(String.format("Racer %d removed.", r.getId()));
 						racing.remove(index); 
 						currentRun.remove(index);
 					}
@@ -74,7 +76,7 @@ public class IndividualTimed extends Event {
 			if (started != null)
 					System.out.println(String.format("Racer %d\t%s", started.getId(), timer.getTimeString()));
 			else
-				System.out.println("No racer queued to start");
+				System.out.println("No racer queued to start.");
 		}
 		
 		public void finish(){
@@ -85,12 +87,13 @@ public class IndividualTimed extends Event {
 				System.out.println(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
 			}
 			else
-				System.out.println("No racer queued to finish. ");
+				System.out.println("No racer queued to finish.");
 		}
 		
 		// for CANCEL
 		public void discard(){
 			racing.peek().reset();
+			System.out.println("Start was not valid. Racer will retry.");
 		}
 		
 		// for DNF
@@ -101,7 +104,7 @@ public class IndividualTimed extends Event {
 				System.out.println(String.format("Racer %d marked as Did Not Finish. ", racer.getId()));
 			}
 			else
-				System.out.println("No racer queued to finish. ");
+				System.out.println("No racer queued to finish.");
 		}
 
 		public void trigger(int id) {
@@ -112,11 +115,10 @@ public class IndividualTimed extends Event {
 				else if (channelMode[id-1].equals("FINISH"))
 					finish();
 			}
-//			else{
-//				if(racing.size() == 0)
-//					System.out.println("DEBUGGING: no racers in queue!");
-//				else
-//					System.out.println(String.format("DEBUGGING: Sorry, Channel %d is not active", id));
-//			}
+			else{
+				System.out.println(String.format("Sorry, Channel %d is not active", id));
+				if(racing.size() == 0)
+					System.out.println("No racer queued to start.");
+			}
 		}
 }

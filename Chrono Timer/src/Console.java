@@ -116,11 +116,11 @@ public class Console
 			}
 			// START Start trigger channel 1 (shorthand for trig 1)
 			else if (command.equalsIgnoreCase("START")){
-				input("TRIG 1");
+				input(timestamp+"\tTRIG 1");
 			}
 			// FINISH Finish trigger channel 2 (shorthand for trig 2)
 			else if (command.equalsIgnoreCase("FINISH")){
-				input("TRIG 2");
+				input(timestamp+"\tTRIG 2");
 			} 
 			else
 				return false;
