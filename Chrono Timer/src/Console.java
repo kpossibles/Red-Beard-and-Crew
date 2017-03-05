@@ -122,9 +122,11 @@ public class Console
 			else if (command.equalsIgnoreCase("FINISH")){
 				input("TRIG 2");
 			} 
+			else
+				return false;
 		}
 			else {
-				return false;
+				System.out.println("The Chronotimer is currently off.  Try 'POWER' to turn it on. ");
 			}
 		
 		return true;
@@ -179,7 +181,7 @@ public class Console
 					+ "NEWRUN\n - Create a new Run (but must end a run first)\n"
 					+ "ENDRUN\n - End a Run\n"
 					+ "PRINT <RUN>\n - Print the run on stdout\n"
-//					+ "EXPORT <RUN>\n - Export run in XML to file “RUN<RUN>”\n"
+//					+ "EXPORT <RUN>\n - Export run in XML to file “RUN<RUN>\n"
 					+ "NUM <NUMBER>\n - Set <NUMBER> as the next competitor to start.\n"
 //					+ "CLR <NUMBER>\n - Clear <NUMBER> the competitor from queue\n"
 					+ "SWAP\n - Exchange next two competitors to finish in IND\n"

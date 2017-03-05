@@ -32,19 +32,17 @@ public class IndividualTimed extends Event {
 			}
 		}
 		public void addRacer(int r){
-//			debug("CURRENT RUN "+currentRun);
 			if(currentRun!=null && currentRun.isActive()){
 				Racer racer = new Racer(r);
 				currentRun.add(racer);
 				racing.add(racer);
 			}
 			else {
-				debug("error");
+				System.out.println("Could not add racer.  Either the current run is not active, or there is currently no run. ");
 			}
 		}
 		
 		public void removeRacer(int index){
-			//TODO: Implement!
 			if(currentRun.isActive()){
 				for(Racer r : racing){
 					if(r.getId() == index && racing.size()>0){
@@ -65,21 +63,29 @@ public class IndividualTimed extends Event {
 		}
 		
 		public void start(){
+			Racer started = null;
 			for (Racer r: racing){
 				if(r.getStart() == 0) {
 					r.setStart(timer.getTime());
+					started = r;
 					break;
 				}
 			}
-			racing.add(currentRun.getRacer());
-			System.out.println(String.format("Racer %d\t%s", racing.peek().getId(), timer.getTimeString()));
+			if (started != null)
+					System.out.println(String.format("Racer %d\t%s", started.getId(), timer.getTimeString()));
+			else
+				System.out.println("No racer queued to start");
 		}
 		
 		public void finish(){
-			Racer racer = racing.remove();
-			racer.setFinish(timer.getTime());
-			System.out.println(String.format("Racer %d\t%s", racer.getId(), timer.getTimeString()));
-			System.out.println(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
+			Racer racer = racing.poll();
+			if (racer != null && racer.getStart() != 0){
+				racer.setFinish(timer.getTime());
+				System.out.println(String.format("Racer %d\t%s", racer.getId(), timer.getTimeString()));
+				System.out.println(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
+			}
+			else
+				System.out.println("No racer queued to finish. ");
 		}
 		
 		// for CANCEL
@@ -89,8 +95,13 @@ public class IndividualTimed extends Event {
 		
 		// for DNF
 		public void dnf(){
-			Racer r = racing.remove();
-			r.didNotFinish();
+			Racer racer = racing.poll();
+			if (racer != null && racer.getStart() != 0){
+				racer.didNotFinish();;
+				System.out.println(String.format("Racer %d marked as Did Not Finish. ", racer.getId()));
+			}
+			else
+				System.out.println("No racer queued to finish. ");
 		}
 
 		public void trigger(int id) {
@@ -107,8 +118,5 @@ public class IndividualTimed extends Event {
 //				else
 //					System.out.println(String.format("DEBUGGING: Sorry, Channel %d is not active", id));
 //			}
-		}
-		public void debug(String str){
-			System.out.println("***DEBUG: "+str);
 		}
 }
