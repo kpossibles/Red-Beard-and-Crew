@@ -1,5 +1,31 @@
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ParallelTimed extends Event {
+
+	@Override
+	public void addRacer() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addRacer(int r) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void trigger(int id) {
@@ -27,31 +53,6 @@ public class ParallelTimed extends Event {
 
 	@Override
 	public void setRun(Run _run) {
-		// TODO Auto-generated method stub
-		
-	}
-//not used in sprint 1
-
-	@Override
-	public void addRacer() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void addRacer(int r) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void start() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void finish() {
 		// TODO Auto-generated method stub
 		
 	}
