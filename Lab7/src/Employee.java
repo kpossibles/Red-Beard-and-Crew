@@ -1,4 +1,8 @@
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+
 public class Employee {
 	String fname;
 	String lname;
@@ -12,16 +16,8 @@ public class Employee {
 		phone = _phone;
 	}
 	
-	public Employee(String json){
-		//TODO
-	}
-	
-	public String toJSON(){
-		return "BLARG";
-	}
-	
 	public String toString(){
-		return "TODO";
+		return lname + ", " + fname + " " + dept + " " + phone;
 	}
 
 }
