@@ -17,11 +17,11 @@ public class Employee {
 	}
 	
 	public String toJSON(){
-		return "TODO";
+		return String.format("{'fname':'%s','lname':'%s','dept':'%s','phone':'%s'}", fname, lname, dept, phone);
 	}
 	
 	public String toString(){
-		return "TODO";
+		return lname + ", " + fname + " " + " " + dept + " " + phone;
 	}
 
 }
