@@ -18,19 +18,27 @@ public class MainDirectory {
 		Type type = new TypeToken<Collection<Employee>>(){}.getType();
 		Collection<Employee> list = g.fromJson(json, type);
 		for(Employee e: list){
-			employees.add(e);
+			//Insert in place to maintain sort
+			for (int i = 0; i < employees.size(); i++)
+			{
+				if (e.fname.compareTo(employees.get(i).fname) < 0){
+					employees.add(i, e);
+					break;
+				}
+			}
+			if (!employees.contains(e)){
+				employees.add(e);
+			}
 		}
 	}
 	
 	public void clear(){
-		// TODO
 		employees = new ArrayList<>();
 	}
 	
 	public void print(){
-		// TODO
 		if(employees.size() == 0) {
-			System.out.println("< empty string >");
+			System.out.println("<empty directory>");
 		}
 		else {
 			for(Employee e : employees){
