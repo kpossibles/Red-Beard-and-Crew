@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
@@ -7,7 +9,7 @@ import com.google.gson.*;
 public class Directory {
 	private Gson g = new Gson();
 	private DirectoryProxy proxy;
-	
+	static boolean isRec = false;
 	/**
 	 * Instantiates a new directory.
 	 */
@@ -59,6 +61,28 @@ public class Directory {
 		
 	}
 	
+	private static void parseText(String s, Directory dir, Collection<Employee> employees){
+		if(!isRec){
+			if(s.equalsIgnoreCase("CLR")){
+				// TODO
+				dir.clear();
+			}
+			if(s.equalsIgnoreCase("ADD")){
+				// TODO
+				isRec = true;
+			}
+			if(s.equalsIgnoreCase("PRINT")){
+				// TODO
+				dir.print();
+			}
+		}
+		// adding
+		else{
+			toCollection(s, employees);
+			dir.add(employees);
+			isRec = false;
+		}
+	}
 	/**
 	 * The main method.
 	 *
@@ -79,13 +103,39 @@ public class Directory {
 		while(!nextline.equalsIgnoreCase("E")){
 			// read from file
 			if(nextline.equalsIgnoreCase("f")){
-				// TODO
+				try {
+					String path = "TestData.txt";
+					File f = new File(path);
+					Scanner file_in = new Scanner(f);
+					while(file_in.hasNextLine()){
+						if(isRec){
+							String nextline1 = "";
+							String str = "";
+							while(!nextline1.equalsIgnoreCase("END") || nextline1.equalsIgnoreCase("EXIT")){
+								nextline1 = file_in.nextLine();
+								str += nextline1;
+							}
+							if(nextline.equalsIgnoreCase("Exit")){ break; };
+						}
+						else{
+							String nextline1 = file_in.nextLine();
+							if(nextline1.equals("EXIT"))
+								break;
+							parseText(nextline1,dir,employees);
+						}
+					}
+					file_in.close();
+				}
+				catch (FileNotFoundException e){
+					e.printStackTrace();
+				}
 			}
 			// Console
 			else if(nextline.equalsIgnoreCase("c")){
 				while(!nextline.equalsIgnoreCase("E")){
 					if(nextline.equalsIgnoreCase("CLR")){
 						// TODO
+						dir.clear();
 					}
 					if(nextline.equalsIgnoreCase("ADD")){
 						// TODO
@@ -103,6 +153,7 @@ public class Directory {
 					}
 					if(nextline.equalsIgnoreCase("PRINT")){
 						// TODO
+						dir.print();
 					}
 				}
 				input.close();
