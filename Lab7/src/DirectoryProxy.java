@@ -6,17 +6,14 @@ public class DirectoryProxy {
 	}
 	
 	public void add(String json){
-		// TODO
 		dir.add(json);
 	}
 	
 	public void clear(){
-		// TODO
 		dir.clear();
 	}
 	
 	public void print(){
-		// TODO
 		dir.print();
 	}
 }
