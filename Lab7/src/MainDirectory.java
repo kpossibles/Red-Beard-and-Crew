@@ -21,7 +21,7 @@ public class MainDirectory {
 			//Insert in place to maintain sort
 			for (int i = 0; i < employees.size(); i++)
 			{
-				if (e.fname.compareTo(employees.get(i).fname) < 0){
+				if (e.lname.compareTo(employees.get(i).lname) < 0){
 					employees.add(i, e);
 					break;
 				}
