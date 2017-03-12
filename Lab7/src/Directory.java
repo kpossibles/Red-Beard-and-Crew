@@ -97,8 +97,7 @@ public class Directory {
 		Scanner input = new Scanner(System.in);
 		System.out.println("WELCOME TO EMPLOYEE DIRECTORY!");
 		System.out.print("[f]ile source / [c]onsole / [e]xit: ");
-		nextline = input.next();
-		System.out.println();
+		nextline = input.nextLine();
 		
 		while(!nextline.equalsIgnoreCase("E")){
 			// read from file
@@ -110,6 +109,7 @@ public class Directory {
 					while(file_in.hasNextLine()){
 						if(isRec){
 							String nextline1 = "";
+							@SuppressWarnings("unused")
 							String str = "";
 							while(!nextline1.equalsIgnoreCase("END") || nextline1.equalsIgnoreCase("EXIT")){
 								nextline1 = file_in.nextLine();
@@ -132,29 +132,34 @@ public class Directory {
 			}
 			// Console
 			else if(nextline.equalsIgnoreCase("c")){
+				System.out.println("Welcome! Commands are CLR, ADD, PRINT, or [e]xit: ");
+				nextline = input.nextLine();
 				while(!nextline.equalsIgnoreCase("E")){
 					if(nextline.equalsIgnoreCase("CLR")){
-						// TODO
 						dir.clear();
+						System.out.println("cleared");
 					}
 					if(nextline.equalsIgnoreCase("ADD")){
 						// TODO
 						String str = "";
-						System.out.println("Enter below in this format: <FIRSTNAME> <LASTNAME> <DEPT> <PHONENUMBER>");
-						while(!nextline.equalsIgnoreCase("END")){
-							nextline = input.nextLine();
-							str += nextline;
+						System.out.println("Enter below in this format: <FIRSTNAME> <LASTNAME> <DEPT> <PHONENUMBER> or END to save");
+						nextline = input.nextLine();
+						while(!nextline.equalsIgnoreCase("END")){					
+							str += (nextline + "\n");
 							if(str.length() == 0){
 								System.out.println("Error. Please enter employee info in correct format.");
 							}
+							nextline = input.nextLine();
 						}
 						toCollection(str, employees);
 						dir.add(employees);
+						System.out.println("added!");
 					}
 					if(nextline.equalsIgnoreCase("PRINT")){
 						// TODO
 						dir.print();
 					}
+					nextline = input.nextLine();
 				}
 				input.close();
 			}
@@ -167,6 +172,6 @@ public class Directory {
 		}
 		
 		// exit
-		System.out.println("\n\nThank you for using the directory.");
+		System.out.println("\nThank you for using the directory.");
 	}
 }
