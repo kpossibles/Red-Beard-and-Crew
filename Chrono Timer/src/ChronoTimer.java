@@ -52,8 +52,8 @@ public class ChronoTimer {
 		//IND | PARIND | GRP | PARGRP
 		if(type.equals("IND"))
 			event = new IndividualTimed(timer);
-//		else if(type.equals("PARIND"))
-//			event = new ParallelTimed(timer);
+		else if(type.equals("PARIND"))
+			event = new ParallelTimed(timer);
 //		else if(type.equals("GRP"))
 //			event = new GroupTimed(timer);
 //		else if(type.equals("PARGRP"))

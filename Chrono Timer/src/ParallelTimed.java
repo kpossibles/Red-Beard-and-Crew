@@ -2,6 +2,19 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class ParallelTimed extends Event {
+	Queue<Racer> racing;
+	Run currentRun;
+	String channelMode[];
+	Timer timer;
+
+	public ParallelTimed(Timer _timer){
+		timer = _timer;
+		channelMode = new String[8];
+		channelMode[0] = "START1";
+		channelMode[1] = "FINISH1";
+		channelMode[2] = "START2";
+		channelMode[3] = "START3";
+	}
 
 	@Override
 	public void addRacer() {
