@@ -56,16 +56,16 @@ public class MainDirectory {
 		}
 	}
 
-	private static void parseText(String s){
+	private void parseText(String s){
 		if(s.length() > 3 && s.substring(0,3).equalsIgnoreCase("Add")){
-			self.add(s.substring(4));
+			this.add(s.substring(4));
 		}
 		if(s.equalsIgnoreCase("CLR")){
-			self.clear();
+			this.clear();
 			System.out.println("Database Cleared");
 		}
 		if(s.equalsIgnoreCase("PRINT")){
-			self.print();
+			this.print();
 		}
 	}
 
