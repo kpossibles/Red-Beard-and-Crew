@@ -1,15 +1,19 @@
 
 public class Employee {
+	String title;
 	String fname;
 	String lname;
+	String gender;
 	String dept;
 	String phone;
 	
-	public Employee(String _fname, String _lname, String _dept, String _phone){
+	public Employee(String _fname, String _lname, String _dept, String _phone, String _title, String _gender){
 		fname = toTitleCase(_fname);
 		lname =toTitleCase(_lname);
 		dept = _dept.toUpperCase();
 		phone = _phone;
+		title = _title;
+		gender = _gender;
 	}
 	
 	private String toTitleCase(String str){
@@ -19,7 +23,7 @@ public class Employee {
 	}
 	
 	public String toString(){
-		return lname + ", " + fname + " " + dept + " " + phone;
+		return title + " " + fname + " " + lname + " " + dept + " " + phone;
 	}
 
 }
