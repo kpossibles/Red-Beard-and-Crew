@@ -1,6 +1,7 @@
 	import java.awt.*;
-	import java.awt.event.*;
-	import javax.swing.*;
+import java.awt.event.*;
+
+import javax.swing.*;
 	
 public class ClientGui extends JFrame {
 	    JLabel firstNameLabel;
@@ -18,6 +19,7 @@ public class ClientGui extends JFrame {
 	     JList titleList;
 	     JButton submitButton;
 	     JButton exitButton;
+	     JButton printButton;
 	     
 	   public ClientGui()
 	   {
@@ -115,22 +117,30 @@ public class ClientGui extends JFrame {
 		titleList = new JList();
 		titleList.setLocation(291,19);
 		titleList.setSize(100,50);
+		
+		getContentPane().add(titleList);
+		
 		//String[] data = {"Mr.","Ms.","Mrs.","Dr.","Col.","Prof."};
 		//JList<String> myList = new JList<String>(data);
-		getContentPane().add(titleList);
 
 		submitButton = new JButton();
-		submitButton.setLocation(294,289);
+		submitButton.setLocation(300,300);
 		submitButton.setSize(100,50);
 		submitButton.setText("Submit");
 		getContentPane().add(submitButton);
 
 		exitButton = new JButton();
-		exitButton.setLocation(294,347);
+		exitButton.setLocation(300,350);
 		exitButton.setSize(100,50);
 		exitButton.setText("Exit");
 		getContentPane().add(exitButton);
 
+		printButton = new JButton();
+		printButton.setText("Print");
+		printButton.setLocation(300,400);
+		printButton.setSize(100,50);
+		getContentPane().add(printButton);
+		
 		setTitle("Lab 8");
 		setSize(564,536);
 		setVisible(true);
