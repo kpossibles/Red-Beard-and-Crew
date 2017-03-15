@@ -1,9 +1,6 @@
 	import javax.swing.*;
 	
 public class ClientGui extends JFrame {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	JLabel firstNameLabel, lastNameLabel, departmentLabel, phoneLabel, genderLabel;
 	JTextArea firstNameText, lastNameText, departmentText, phoneText;
@@ -58,7 +55,7 @@ public class ClientGui extends JFrame {
 			getContentPane().add(textbox);
 	}
 	/**
-		* Sets the JLabel.
+	 * Sets the JLabel.
 	 *
 	 * @param label the label
 	 * @param lx the location x
@@ -67,13 +64,13 @@ public class ClientGui extends JFrame {
 	 * @param height the height
 	 * @param name the name
 	 */
-	private void setJRadio(JRadioButton button, int lx, int ly, int width, int height, String name) {
-		button = new JRadioButton();
+	private void setJRadio(JRadioButton button, int lx, int ly, int width, int height, String name, boolean selected) {
+		button = new JRadioButton(name);
 		button.setLocation(lx,ly);
 		button.setSize(width, height);
-		button.setText(name);
-		button.setSelected(false);
+		button.setSelected(selected);
 		getContentPane().add(button);
+		radiobuttons.add(button);
 	}
 
 	public void setupGUI() {
@@ -88,13 +85,9 @@ public class ClientGui extends JFrame {
 		setJText(departmentText, 110, 80, 150, 20, 5, 5);
 		setJText(phoneText, 110, 110, 150, 20, 5, 5);
 		
-		setJRadio(maleRadio, 110, 140, 100, 20, "Male");
-		setJRadio(femaleRadio, 210, 140, 100, 20, "Female");
-		setJRadio(otherRadio, 310, 140, 100, 20, "Other");
-			
-		radiobuttons.add(maleRadio);
-		radiobuttons.add(femaleRadio);
-		radiobuttons.add(otherRadio);
+		setJRadio(maleRadio, 110, 140, 100, 20, "Male", true);
+		setJRadio(femaleRadio, 210, 140, 100, 20, "Female", false);
+		setJRadio(otherRadio, 310, 140, 100, 20, "Other", false);
 			
 		//TODO Review List Code
 			
