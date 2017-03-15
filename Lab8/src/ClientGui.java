@@ -1,156 +1,136 @@
-	import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.*;
+	import javax.swing.*;
 	
 public class ClientGui extends JFrame {
-	    JLabel firstNameLabel;
-	     JLabel lastNameLabel;
-	     JLabel departmentLabel;
-	     JLabel phoneLabel;
-	     JTextArea firstNameText;
-	     JTextArea lastNameText;
-	     JTextArea departmentText;
-	     JTextArea phoneText;
-	     JLabel genderLabel;
-	     JRadioButton maleRadio;
-	     JRadioButton femaleRadio;
-	     JRadioButton otherRadio;
-	     JList titleList;
-	     JButton submitButton;
-	     JButton exitButton;
-	     JButton printButton;
-	     
-	   public ClientGui()
-	   {
-	     getContentPane().setLayout(null);
-	     setupGUI();
-	     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	   }
-	   void setupGUI()
-	   {
-		   firstNameLabel = new JLabel();
-		firstNameLabel.setLocation(10,16);
-		firstNameLabel.setSize(100,50);
-		firstNameLabel.setText("First Name");
-		getContentPane().add(firstNameLabel);
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	JLabel firstNameLabel, lastNameLabel, departmentLabel, phoneLabel, genderLabel;
+	JTextArea firstNameText, lastNameText, departmentText, phoneText;
+	JRadioButton maleRadio, femaleRadio, otherRadio;
+	JList<String> titleList;
+	JButton submitButton, clrButton, printButton;
+	ButtonGroup radiobuttons = new ButtonGroup();
+	  
+	public ClientGui() {
+	  getContentPane().setLayout(null);
+	  setupGUI();
+	  setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	/**
+	 * Sets the JLabel.
+	 *
+	 * @param label the label
+	 * @param lx the location x
+	 * @param ly the location y
+	 * @param width the width
+	 * @param height the height
+	 * @param name the name
+	 */
+	private void setJLabel(JLabel label, int lx, int ly, int width, int height, String name){
+		label = new JLabel();
+		label.setLocation(lx,ly);
+		label.setSize(width, height);
+		label.setText(name);
+		getContentPane().add(label);
+	}
+	
+	/**
+	 * Sets the JTextArea.
+	 *
+	 * @param textbox the textbox
+	 * @param lx the location x
+	 * @param ly the location y
+	 * @param sx the size x
+	 * @param sy the size y
+	 * @param row the row
+	 * @param column the column
+	 */
+		private void setJText(JTextArea textbox, int lx, int ly, int width, int height, int row, int col) {
+			textbox = new JTextArea();
+			textbox.setText("");
+			textbox.setLocation(lx,ly);
+			textbox.setSize(width, height);
+			textbox.setRows(row);
+			textbox.setColumns(col);
+			
+			getContentPane().add(textbox);
+	}
+	/**
+		* Sets the JLabel.
+	 *
+	 * @param label the label
+	 * @param lx the location x
+	 * @param ly the location y
+	 * @param width the width
+	 * @param height the height
+	 * @param name the name
+	 */
+	private void setJRadio(JRadioButton button, int lx, int ly, int width, int height, String name) {
+		button = new JRadioButton();
+		button.setLocation(lx,ly);
+		button.setSize(width, height);
+		button.setText(name);
+		button.setSelected(false);
+		getContentPane().add(button);
+	}
 
-		lastNameLabel = new JLabel();
-		lastNameLabel.setLocation(10,70);
-		lastNameLabel.setSize(100,50);
-		lastNameLabel.setText("Last Name");
-		getContentPane().add(lastNameLabel);
-
-		departmentLabel = new JLabel();
-		departmentLabel.setLocation(10,123);
-		departmentLabel.setSize(100,50);
-		departmentLabel.setText("Department");
-		getContentPane().add(departmentLabel);
-
-		phoneLabel = new JLabel();
-		phoneLabel.setLocation(10,175);
-		phoneLabel.setSize(100,50);
-		phoneLabel.setText("Phone");
-		getContentPane().add(phoneLabel);
-
-		firstNameText = new JTextArea();
-		firstNameText.setLocation(117,16);
-		firstNameText.setSize(100,50);
-		firstNameText.setText("");
-		firstNameText.setRows(1);
-		firstNameText.setColumns(1);
-		getContentPane().add(firstNameText);
-
-		lastNameText = new JTextArea();
-		lastNameText.setLocation(117,71);
-		lastNameText.setSize(100,50);
-		lastNameText.setText("");
-		lastNameText.setRows(5);
-		lastNameText.setColumns(5);
-		getContentPane().add(lastNameText);
-
-		departmentText = new JTextArea();
-		departmentText.setLocation(117,124);
-		departmentText.setSize(100,50);
-		departmentText.setText("");
-		departmentText.setRows(5);
-		departmentText.setColumns(5);
-		getContentPane().add(departmentText);
-
-		phoneText = new JTextArea();
-		phoneText.setLocation(117,176);
-		phoneText.setSize(100,50);
-		phoneText.setText("");
-		phoneText.setRows(5);
-		phoneText.setColumns(5);
-		getContentPane().add(phoneText);
-
-		genderLabel = new JLabel();
-		genderLabel.setLocation(11,243);
-		genderLabel.setSize(100,50);
-		genderLabel.setText("Gender");
-		getContentPane().add(genderLabel);
-
-		maleRadio = new JRadioButton();
-		maleRadio.setLocation(11,295);
-		maleRadio.setSize(100,50);
-		maleRadio.setText("Male");
-		maleRadio.setSelected(false);
-		getContentPane().add(maleRadio);
-
-		femaleRadio = new JRadioButton();
-		femaleRadio.setLocation(11,348);
-		femaleRadio.setSize(100,50);
-		femaleRadio.setText("Female");
-		femaleRadio.setSelected(false);
-		getContentPane().add(femaleRadio);
-
-		otherRadio = new JRadioButton();
-		otherRadio.setLocation(11,400);
-		otherRadio.setSize(100,50);
-		otherRadio.setText("Other");
-		otherRadio.setSelected(false);
-		getContentPane().add(otherRadio);
-	//TODO Review List Code
+	public void setupGUI() {
+		setJLabel(firstNameLabel, 20, 20, 100, 20, "First Name");
+		setJLabel(lastNameLabel, 20, 50, 100, 20, "Last Name");
+		setJLabel(departmentLabel, 20, 80, 100, 20, "Department");
+		setJLabel(phoneLabel, 20, 110, 100, 20, "Phone");
+		setJLabel(phoneLabel, 20, 140, 100, 20, "Gender");
 		
+		setJText(firstNameText, 110, 20, 150, 20, 1, 1);
+		setJText(lastNameText, 110, 50, 150, 20, 5, 5);
+		setJText(departmentText, 110, 80, 150, 20, 5, 5);
+		setJText(phoneText, 110, 110, 150, 20, 5, 5);
 		
-		titleList = new JList();
+		setJRadio(maleRadio, 110, 140, 100, 20, "Male");
+		setJRadio(femaleRadio, 210, 140, 100, 20, "Female");
+		setJRadio(otherRadio, 310, 140, 100, 20, "Other");
+			
+		radiobuttons.add(maleRadio);
+		radiobuttons.add(femaleRadio);
+		radiobuttons.add(otherRadio);
+			
+		//TODO Review List Code
+			
+		String[] data = {"Mr.","Ms.","Mrs.","Dr.","Col.","Prof."};
+		titleList = new JList<String>(data);
 		titleList.setLocation(291,19);
-		titleList.setSize(100,50);
-		
+		titleList.setSize(100,100);
+		titleList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		getContentPane().add(titleList);
 		
-		//String[] data = {"Mr.","Ms.","Mrs.","Dr.","Col.","Prof."};
-		//JList<String> myList = new JList<String>(data);
-
 		submitButton = new JButton();
-		submitButton.setLocation(300,300);
+		submitButton.setLocation(20,200);
 		submitButton.setSize(100,50);
-		submitButton.setText("Submit");
+		submitButton.setText("SUBMIT");
 		getContentPane().add(submitButton);
-
-		exitButton = new JButton();
-		exitButton.setLocation(300,350);
-		exitButton.setSize(100,50);
-		exitButton.setText("Exit");
-		getContentPane().add(exitButton);
-
+		
+		clrButton = new JButton();
+		clrButton.setLocation(140,200);
+		clrButton.setSize(100,50);
+		clrButton.setText("CLR");
+		getContentPane().add(clrButton);
+		
 		printButton = new JButton();
-		printButton.setText("Print");
-		printButton.setLocation(300,400);
+		printButton.setText("PRINT");
+		printButton.setLocation(260,200);
 		printButton.setSize(100,50);
 		getContentPane().add(printButton);
 		
 		setTitle("Lab 8");
-		setSize(564,536);
+		setSize(500,350);
 		setVisible(true);
-		setResizable(true);
-		
-		
-	   }
-	    public static void main( String args[] )
-	   {
-	     new ClientGui();
-	   }
-	}  
+		setResizable(true);			
+	}
+	
+	public static void main( String args[] ) {
+		new ClientGui();
+	}
+}  
 

@@ -51,7 +51,7 @@ public class Directory {
 		String[] list = s.split("\n");
 		for(String e: list){
 			String[] val = e.split(" ");
-			Employee person = new Employee(val[0], val[1], val[2], val[3]);
+			Employee person = new Employee(val[0], val[1], val[2], val[3], val[4], val[5]);
 			c.add(person);
 		}
 		
@@ -61,7 +61,7 @@ public class Directory {
 		Collection<Employee> employees = new ArrayList<>();
 		if(s.equalsIgnoreCase("Add")){
 			if(isC){
-				System.out.println("Enter below in this format: <FIRSTNAME> <LASTNAME> <DEPT> <PHONENUMBER> or END to save");
+				System.out.println("Enter below in this format: <FIRSTNAME> <LASTNAME> <DEPT> <PHONENUMBER> <TITLE> <GENDER> or END to save");
 			}
 			s = file_in.nextLine();
 			String str = "";

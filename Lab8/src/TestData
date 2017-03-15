@@ -1,12 +1,12 @@
 CLR
 ADD
-Mary Smith ACCT 4147665644
-Bob Smith ACCT 4142024000
-Bill Atkinson ENG 4149909899
+Mary Smith ACCT 4147665644 ms. female
+Bob Smith ACCT 4142024000 mr.  other
+Bill Atkinson ENG 4149909899 mr. male
 END
 PRINT
 ADD
-Thurston Howell EXEC 4135567877
+Thurston Howell EXEC 4135567877 mr. male
 END
 PRINT
 CLR
