@@ -15,16 +15,6 @@ public abstract class Event{
 	abstract public void addRacer(int r);
 	
 	/**
-	 * Starts the race.
-	 */
-	abstract public void start();
-	
-	/**
-	 * Finishes the race.
-	 */
-	abstract public void finish();
-	
-	/**
 	 * Triggers a channel.
 	 *
 	 * @param id channel ID

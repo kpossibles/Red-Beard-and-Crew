@@ -17,7 +17,7 @@ public class IndividualTimed extends Event {
 		
 		public IndividualTimed(Timer _timer){
 			racing = new LinkedList<Racer>();
-			channelMode = new String[2];
+			channelMode = new String[8];
 			channelMode[0] = "START";
 			channelMode[1] = "FINISH";
 			timer = _timer;

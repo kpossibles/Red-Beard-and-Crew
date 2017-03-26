@@ -5,7 +5,9 @@ import java.util.concurrent.TimeUnit;
 public class Racer {
 	private long start, finish;
 	private int id; 
+	private int lane;
 	private boolean didNotFinish;
+
 	
 	/**
 	 * Instantiates a new racer.
@@ -14,6 +16,7 @@ public class Racer {
 		didNotFinish = false;
 		start = finish = 0;
 		id = 0;
+		lane = -1;
 	}
 	
 	/**
@@ -43,7 +46,15 @@ public class Racer {
 	public void setFinish(long time) {
 		finish = time;
 	}
-	
+
+	/**
+	 * Sets the lane.
+	 *
+	 * @param _lane the lane number
+	 */
+	public void setLane(int _lane) {
+		lane=_lane;
+	}
 	/**
 	 * Gets the time by converting millisecond time to HH:mm:ss.S format.
 	 *
@@ -74,6 +85,15 @@ public class Racer {
 	}
 	
 	/**
+	 * Gets the lane.
+	 *
+	 * @return the lane
+	 */
+	public long getLane() {
+		return lane;
+	}
+
+	/**
 	 * Gets the finish.
 	 *
 	 * @return the finish
@@ -81,7 +101,7 @@ public class Racer {
 	public long getFinish() {
 		return finish;
 	}
-	
+
 	/**
 	 * Reset.
 	 */
