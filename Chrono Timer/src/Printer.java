@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Printer {
@@ -31,5 +33,18 @@ public class Printer {
 		}
 		ret+="***END RECORD\n";
 		return ret;
+	}
+	
+	public void textFile(){
+		// TODO: Might have to add timestamp?
+		try{
+		    PrintWriter writer = new PrintWriter("saved.txt", "UTF-8");
+		    for(String s : record){
+		    	writer.println(s);
+		    }
+		    writer.close();
+		} catch (IOException e) {
+		   // do something
+		}
 	}
 }
