@@ -2,13 +2,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class ParallelTimed extends Event {
-	Queue<Racer> racing;
-	Run currentRun;
-	String channelMode[];
-	Timer timer;
+	private Queue<Racer> racing;
+	private Run currentRun;
+	private String channelMode[];
+	private Timer timer;
 
 	public ParallelTimed(Timer _timer){
-		racing = new LinkedList<Racer>();
+		racing = new LinkedList<>();
 		timer = _timer;
 		channelMode = new String[8];
 		channelMode[0] = "START1";
@@ -39,7 +39,7 @@ public class ParallelTimed extends Event {
 		}
 	}
 
-	public void start(int lane){
+	private void start(int lane){
 		if (currentRun.isActive()) {
 			Racer started = null;
 			for (Racer r : racing) {
@@ -59,7 +59,7 @@ public class ParallelTimed extends Event {
 			System.out.println("Current Run is not active. ");
 	}
 
-	public void finish(int lane) {
+	private void finish(int lane) {
 		Racer racer = null;
 		for (Racer r: racing){
 			if (r.getLane() == lane){
