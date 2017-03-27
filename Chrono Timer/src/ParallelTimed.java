@@ -35,7 +35,7 @@ public class ParallelTimed extends Event {
 			System.out.println(String.format("Racer %d added.", r));
 		}
 		else {
-			System.out.println("Could not add racer.  Either the current run is not active, or there is currently no run. ");
+			System.out.println("Could not add racer. Either the current run is not active, or there is currently no run. ");
 		}
 	}
 
@@ -117,7 +117,7 @@ public class ParallelTimed extends Event {
 		Racer racer = racing.poll();
 		if (racer != null && racer.getStart() != 0){
 			racer.didNotFinish();;
-			System.out.println(String.format("Racer %d marked as Did Not Finish. ", racer.getId()));
+			System.out.println(String.format("Racer %d marked as Did Not Finish.", racer.getId()));
 		}
 		else
 			System.out.println("No racer queued to finish.");

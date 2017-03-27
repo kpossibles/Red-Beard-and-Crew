@@ -45,18 +45,6 @@ public class ParallelGroupTimed extends Event {
 	}
 
 	@Override
-	public void start() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void finish() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void setTimer(Timer timer) {
 		// TODO Auto-generated method stub
 		

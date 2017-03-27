@@ -1,9 +1,11 @@
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
 public class Printer {
 	private Queue<String> record;
+	private PrintWriter writer = null;
 	
 	/**
 	 * Instantiates a new printer.
@@ -35,16 +37,16 @@ public class Printer {
 		return ret;
 	}
 	
-	public void textFile(){
+	public void saveData(){
 		// TODO: Might have to add timestamp?
+		String data = getRecord();
 		try{
-		    PrintWriter writer = new PrintWriter("saved.txt", "UTF-8");
-		    for(String s : record){
-		    	writer.println(s);
-		    }
-		    writer.close();
+			File saveFile = new File("saved.txt");
+		    writer = new PrintWriter(saveFile);
+		    writer.println(data);
+		    writer.flush();
 		} catch (IOException e) {
-		   // do something
+		   e.printStackTrace();
 		}
 	}
 }
