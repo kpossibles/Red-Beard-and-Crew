@@ -14,13 +14,17 @@ public class IndividualTimed extends Event {
 		Run currentRun; 
 		String channelMode[];
 		Timer timer;
-		
-		public IndividualTimed(Timer _timer){
+		Printer print;
+
+		public IndividualTimed(Timer _timer, Printer _print){
 			racing = new LinkedList<Racer>();
 			channelMode = new String[8];
 			channelMode[0] = "START";
 			channelMode[1] = "FINISH";
+			for(int i=2;i<8;i++)
+				channelMode[i] = "";
 			timer = _timer;
+			print = _print;
 			currentRun = new Run(1);
 		}
 
@@ -36,10 +40,10 @@ public class IndividualTimed extends Event {
 				Racer racer = new Racer(r);
 				currentRun.add(racer);
 				racing.add(racer);
-				System.out.println(String.format("Racer %d added.", r));
+				print.print(String.format("Racer %d added.", r));
 			}
 			else {
-				System.out.println("Could not add racer.  Either the current run is not active, or there is currently no run. ");
+				print.print("Could not add racer.  Either the current run is not active, or there is currently no run. ");
 			}
 		}
 		
@@ -47,7 +51,7 @@ public class IndividualTimed extends Event {
 			if(currentRun.isActive()){
 				for(Racer r : racing){
 					if(r.getId() == index && racing.size()>0){
-						System.out.println(String.format("Racer %d removed.", r.getId()));
+						print.print(String.format("Racer %d removed.", r.getId()));
 						racing.remove(index); 
 						currentRun.remove(index);
 					}
@@ -74,26 +78,26 @@ public class IndividualTimed extends Event {
 				}
 			}
 			if (started != null)
-					System.out.println(String.format("Racer %d\t%s", started.getId(), timer.getTimeString()));
+					print.print(String.format("Racer %d started at %s", started.getId(), timer.getTimeString()));
 			else
-				System.out.println("No racer queued to start.");
+				print.print("No racer queued to start.");
 		}
 		
 		public void finish(){
 			Racer racer = racing.poll();
 			if (racer != null && racer.getStart() != 0){
 				racer.setFinish(timer.getTime());
-				System.out.println(String.format("Racer %d\t%s", racer.getId(), timer.getTimeString()));
-				System.out.println(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
+				print.print(String.format("Racer %d finished at %s", racer.getId(), timer.getTimeString()));
+				print.print(String.format("Racer %d's time was %s", racer.getId(), racer.getTime()));
 			}
 			else
-				System.out.println("No racer queued to finish.");
+				print.print("No racer queued to finish.");
 		}
 		
 		// for CANCEL
 		public void discard(){
 			racing.peek().reset();
-			System.out.println("Start was not valid. Racer will retry.");
+			print.print("Start was not valid. Racer will retry.");
 		}
 		
 		// for DNF
@@ -101,10 +105,10 @@ public class IndividualTimed extends Event {
 			Racer racer = racing.poll();
 			if (racer != null && racer.getStart() != 0){
 				racer.didNotFinish();;
-				System.out.println(String.format("Racer %d marked as Did Not Finish. ", racer.getId()));
+				print.print(String.format("Racer %d marked as Did Not Finish. ", racer.getId()));
 			}
 			else
-				System.out.println("No racer queued to finish.");
+				print.print("No racer queued to finish.");
 		}
 
 		public void trigger(int id) {
@@ -116,9 +120,9 @@ public class IndividualTimed extends Event {
 					finish();
 			}
 			else{
-				System.out.println(String.format("Sorry, Channel %d is not active", id));
+				print.print(String.format("Sorry, Channel %d is not active", id));
 				if(racing.size() == 0)
-					System.out.println("No racer queued to start.");
+					print.print("No racer queued to start.");
 			}
 		}
 }

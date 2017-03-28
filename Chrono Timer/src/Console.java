@@ -45,7 +45,7 @@ public class Console
 			if (chronotimer != null)
 				chronotimer = null;
 			else
-				chronotimer = new ChronoTimer();
+				chronotimer = new ChronoTimer(printer);
 		}
 		else if (chronotimer != null) {
 			chronotimer.setTime(timestamp);
@@ -241,8 +241,8 @@ public class Console
 					if(!simulator.input(nextLine)){
 						System.out.println("Sorry, cannot accept that command.");
 					}
-					else
-						simulator.addToRecord(nextLine);
+//					else
+//						simulator.addToRecord(nextLine);
 					printCommands("waiting for command");
 					nextLine = input.nextLine();
 				}

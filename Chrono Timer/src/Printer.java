@@ -22,7 +22,15 @@ public class Printer {
 	public void addToRecord(String str){
 		record.add(str);
 	}
-	
+
+	/**
+	 * Prints to the Console and to the
+	 */
+	public void print(String str) {
+		System.out.println(str);
+		addToRecord(str);
+	}
+
 	/**
 	 * Gets the record for printing.
 	 *

@@ -9,12 +9,14 @@ public class ChronoTimer {
 	private Event event;
 	private Channel[] channels;
 	private Timer timer;
+	private Printer print;
 	private LinkedList<Run> runs;
 	
 	/**
 	 * Instantiates a new ChronoTimer.
 	 */
-	public ChronoTimer(){
+	public ChronoTimer(Printer _print){
+		print = _print;
 		reset();
 	}
 
@@ -23,7 +25,7 @@ public class ChronoTimer {
 	 */
 	public void reset() {
 		timer = new Timer();
-		event = new IndividualTimed(timer);
+		event = new IndividualTimed(timer, print);
 		channels = new Channel[2];
 		for(int i = 0; i < 2; i++){
 			channels[i] = new Channel(this, i);
@@ -51,13 +53,13 @@ public class ChronoTimer {
 	public void setEvent(String type) {
 		//IND | PARIND | GRP | PARGRP
 		if(type.equals("IND"))
-			event = new IndividualTimed(timer);
+			event = new IndividualTimed(timer, print);
 		else if(type.equals("PARIND"))
-			event = new ParallelTimed(timer);
+			event = new ParallelTimed(timer, print);
 //		else if(type.equals("GRP"))
-//			event = new GroupTimed(timer);
+//			event = new GroupTimed(timer, print);
 //		else if(type.equals("PARGRP"))
-//			event = new ParallelGroupTimed(timer);
+//			event = new ParallelGroupTimed(timer, print);
 	}
 
 	/**
