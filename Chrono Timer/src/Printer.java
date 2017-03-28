@@ -37,16 +37,28 @@ public class Printer {
 		return ret;
 	}
 	
-	public void saveData(){
+	public void saveData(int runNum){
 		// TODO: Might have to add timestamp?
 		String data = getRecord();
 		try{
-			File saveFile = new File("saved.txt");
+			File saveFile = new File(filename(runNum));
 		    writer = new PrintWriter(saveFile);
 		    writer.println(data);
 		    writer.flush();
 		} catch (IOException e) {
 		   e.printStackTrace();
+		}
+	}
+	
+	private String filename(int runNum){
+		if(runNum<10) {
+			return "Run00"+runNum+".txt";
+		}
+		else if(runNum>=10 && runNum<100) {
+			return "Run0"+runNum+".txt";
+		}
+		else {
+			return "Run"+runNum+".txt";
 		}
 	}
 }

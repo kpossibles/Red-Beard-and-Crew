@@ -80,8 +80,8 @@ public class Console
 			} 
 			// ENDRUN Done with a Run
 			else if (command.equalsIgnoreCase("ENDRUN")){
-				chronotimer.endRun();
-				printer.saveData();
+				int runNum = chronotimer.endRun();
+				printer.saveData(runNum);
 			}
 			// PRINT <RUN> Print the run on stdout
 			else if (command.equalsIgnoreCase("PRINT")){

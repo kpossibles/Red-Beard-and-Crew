@@ -28,9 +28,11 @@ public class Run {
 	 
 	/**
 	 * Ends the run.
+	 * @return 
 	 */
-	public void end(){
+	public int end(){
 		active = false;
+		return number;
 	}
 
 	/**

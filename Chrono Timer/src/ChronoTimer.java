@@ -117,8 +117,8 @@ public class ChronoTimer {
 	/**
 	 * End run.
 	 */
-	public void endRun() {
-		runs.getLast().end();
+	public int endRun() {
+		return runs.getLast().end();
 	}
 	
 	/**
