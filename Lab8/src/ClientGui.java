@@ -1,12 +1,18 @@
-	import javax.swing.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+
+import javax.swing.*;
+
+import com.google.gson.Gson;
 	
-public class ClientGui extends JFrame {
+public class ClientGui extends JFrame{
 	private static final long serialVersionUID = 1L;
 	JLabel firstNameLabel, lastNameLabel, departmentLabel, phoneLabel, genderLabel;
 	JTextArea firstNameText, lastNameText, departmentText, phoneText;
 	JRadioButton maleRadio, femaleRadio, otherRadio;
 	JList<String> titleList;
-	JButton submitButton, clrButton, printButton;
+	JButton submitButton, exitButton, printButton;
 	ButtonGroup radiobuttons = new ButtonGroup();
 	  
 	public ClientGui() {
@@ -102,24 +108,91 @@ public class ClientGui extends JFrame {
 		submitButton.setLocation(20,200);
 		submitButton.setSize(100,50);
 		submitButton.setText("SUBMIT");
+		submitButton.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	Gson g = new Gson();
+		        Employee emp = new Employee(firstNameText.getText(), lastNameText.getText(), 
+		        		departmentText.getText(), phoneText.getText(), ((JButton) radiobuttons.getSelection()).getText(), 
+		        		titleList.getSelectedValue());
+		        submit(g.toJson(emp));
+		        clearGUI();
+		      }
+		    });
 		getContentPane().add(submitButton);
 		
-		clrButton = new JButton();
-		clrButton.setLocation(140,200);
-		clrButton.setSize(100,50);
-		clrButton.setText("CLR");
-		getContentPane().add(clrButton);
-		
-		printButton = new JButton();
-		printButton.setText("PRINT");
-		printButton.setLocation(260,200);
-		printButton.setSize(100,50);
-		getContentPane().add(printButton);
+		exitButton = new JButton();
+		exitButton.setLocation(140,200);
+		exitButton.setSize(100,50);
+		exitButton.setText("EXIT");
+		exitButton.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	clear();
+		    	clearGUI();
+		    }
+		});
+		getContentPane().add(exitButton);
 		
 		setTitle("Lab 8");
 		setSize(500,350);
 		setVisible(true);
 		setResizable(true);			
+	}
+	
+	public void clearGUI(){
+		firstNameText.setText("");
+    	lastNameText.setText("");
+    	departmentText.setText("");
+    	phoneText.setText("");
+    	radiobuttons.clearSelection();
+    	titleList.clearSelection();
+	}
+	
+	private void submit(String emp){
+		try {
+			System.out.println("in the client");
+
+			// Client will connect to this location
+			URL site = new URL("http://localhost:8000/sendresults");
+			HttpURLConnection conn = (HttpURLConnection) site.openConnection();
+
+			// now create a POST request
+			conn.setRequestMethod("POST");
+			conn.setDoOutput(true);
+			conn.setDoInput(true);
+			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+
+			// build a string that contains JSON from console
+			String content = emp;
+
+			// write out string to output buffer for message
+			out.writeBytes(content);
+			out.flush();
+			out.close();
+
+			System.out.println("Done sent to server");
+
+			InputStreamReader inputStr = new InputStreamReader(conn.getInputStream());
+
+			// string to hold the result of reading in the response
+			StringBuilder sb = new StringBuilder();
+
+			// read the characters from the request byte by byte and build up
+			// the Response
+			int nextChar;
+			while ((nextChar = inputStr.read()) > -1) {
+				sb = sb.append((char) nextChar);
+			}
+			System.out.println("Return String: " + sb);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private void clear(){
+		
+	}
+	private void print(){
+		
 	}
 	
 	public static void main( String args[] ) {
