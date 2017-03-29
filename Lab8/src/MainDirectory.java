@@ -15,7 +15,6 @@ import com.sun.net.httpserver.HttpServer;
 public class MainDirectory {
 	private ArrayList<Employee> employees;
 	private Gson g;
-	static String sharedResponse = "";
 
 	public MainDirectory(){
 		employees = new ArrayList<>();
@@ -28,15 +27,12 @@ public class MainDirectory {
 		for(Employee e: list){
 			//Insert in place to maintain sort
 			for (int i = 0; i < employees.size(); i++)
-			{
 				if (e.lname.compareTo(employees.get(i).lname) < 0){
 					employees.add(i, e);
 					break;
 				}
-			}
-			if (!employees.contains(e)){
+			if (!employees.contains(e))
 				employees.add(e);
-			}
 		}
 	}
 	
@@ -45,42 +41,36 @@ public class MainDirectory {
 	}
 	
 	public String print(){
-		if(employees.size() == 0) {
+		if(employees.size() == 0)
 			return "<empty directory>";
-		}
 		else {
 			String res = "";
-			for(Employee e : employees){
+			for(Employee e : employees)
 				res += e.toString() + '\n';
-			}
 			return res;
 		}
 	}
 
 	public String toString(){
-		if(employees.size() == 0) {
+		if(employees.size() == 0)
 			return "<empty directory>";
-		}
 		else {
 			String res = "";
-			for(Employee e : employees){
+			for(Employee e : employees)
 				res += e.toString() + '\n';
-			}
 			return res;
 		}
 	}
 
 	private void parseText(String s){
-		if(s.length() > 3 && s.substring(0,3).equalsIgnoreCase("Add")){
+		if(s.length() > 3 && s.substring(0,3).equalsIgnoreCase("Add"))
 			this.add(s.substring(4));
-		}
 		if(s.equalsIgnoreCase("CLR")){
 			this.clear();
 			System.out.println("Database Cleared");
 		}
-		if(s.equalsIgnoreCase("PRINT")){
+		if(s.equalsIgnoreCase("PRINT"))
 			this.print();
-		}
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -117,37 +107,19 @@ public class MainDirectory {
 
 	class PostHandler implements HttpHandler {
 		public void handle(HttpExchange transmission) throws IOException {
-			//  shared data that is used with other handlers
-			sharedResponse = "";
-
-			// set up a stream to read the body of the request
 			InputStream inputStr = transmission.getRequestBody();
-
-			// set up a stream to write out the body of the response
 			OutputStream outputStream = transmission.getResponseBody();
 
-			// string to hold the result of reading in the request
 			StringBuilder sb = new StringBuilder();
-
-			// read the characters from the request byte by byte and build up the sharedResponse
 			int nextChar = inputStr.read();
 			while (nextChar > -1) {
 				sb=sb.append((char)nextChar);
 				nextChar=inputStr.read();
 			}
-
-			// create our response String to use in other handler
 			parseText(sb.toString());
 
-			// respond to the POST with ROGER
 			String postResponse = "ROGER COMMAND RECEIVED";
-
-			System.out.println("response: " + sharedResponse);
-
-			// assume that stuff works all the time
 			transmission.sendResponseHeaders(300, postResponse.length());
-
-			// write it and return it
 			outputStream.write(postResponse.getBytes());
 			outputStream.close();
 		}
