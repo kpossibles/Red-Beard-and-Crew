@@ -16,8 +16,7 @@ public class MainDirectory {
 	private ArrayList<Employee> employees;
 	private Gson g;
 	static String sharedResponse = "";
-	static boolean gotMessageFlag = false;
-	
+
 	public MainDirectory(){
 		employees = new ArrayList<>();
 		g = new Gson();
@@ -45,14 +44,29 @@ public class MainDirectory {
 		employees = new ArrayList<>();
 	}
 	
-	public void print(){
+	public String print(){
 		if(employees.size() == 0) {
-			System.out.println("<empty directory>");
+			return "<empty directory>";
 		}
 		else {
+			String res = "";
 			for(Employee e : employees){
-				System.out.println(e.toString());
+				res += e.toString() + '\n';
 			}
+			return res;
+		}
+	}
+
+	public String toString(){
+		if(employees.size() == 0) {
+			return "<empty directory>";
+		}
+		else {
+			String res = "";
+			for(Employee e : employees){
+				res += e.toString() + '\n';
+			}
+			return res;
 		}
 	}
 
@@ -90,22 +104,7 @@ public class MainDirectory {
 		public void handle(HttpExchange t) throws IOException {
 
 			String response = "Begin of response\n";
-			Gson g = new Gson();
-			// set up the header
-			System.out.println(response);
-			try {
-				if (!sharedResponse.isEmpty()) {
-					System.out.println(response);
-					ArrayList<Employee> fromJson = g.fromJson(sharedResponse,
-							new TypeToken<Collection<Employee>>() {
-							}.getType());
-
-					System.out.println(response);
-					response += "Before sort\n";
-				}
-			} catch (JsonSyntaxException e) {
-				e.printStackTrace();
-			}
+			response += print() + '\n';
 			response += "End of response\n";
 			System.out.println(response);
 			// write out the response
@@ -118,7 +117,6 @@ public class MainDirectory {
 
 	class PostHandler implements HttpHandler {
 		public void handle(HttpExchange transmission) throws IOException {
-
 			//  shared data that is used with other handlers
 			sharedResponse = "";
 
