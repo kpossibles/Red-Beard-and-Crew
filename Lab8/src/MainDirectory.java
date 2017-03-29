@@ -75,10 +75,10 @@ public class MainDirectory {
 		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
 		// create a context to get the request to display the results
-		server.createContext("/displayresults", new DisplayHandler());
+		server.createContext("/displayresults", directory.new DisplayHandler());
 
 		// create a context to get the request for the POST
-		server.createContext("/sendresults", new PostHandler());
+		server.createContext("/sendresults", directory.new PostHandler());
 		server.setExecutor(null); // creates a default executor
 
 		// get it going
@@ -86,7 +86,7 @@ public class MainDirectory {
 		server.start();
 	}
 
-	static class DisplayHandler implements HttpHandler {
+	class DisplayHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
 
 			String response = "Begin of response\n";
@@ -116,7 +116,7 @@ public class MainDirectory {
 		}
 	}
 
-	static class PostHandler implements HttpHandler {
+	class PostHandler implements HttpHandler {
 		public void handle(HttpExchange transmission) throws IOException {
 
 			//  shared data that is used with other handlers
@@ -151,7 +151,6 @@ public class MainDirectory {
 
 			// write it and return it
 			outputStream.write(postResponse.getBytes());
-
 			outputStream.close();
 		}
 	}
