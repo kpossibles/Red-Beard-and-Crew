@@ -42,7 +42,7 @@ public class ParallelTimed extends Event {
 	}
 
 	private void start(int lane){
-		if (currentRun.isActive()) {
+		if (currentRun != null && currentRun.isActive()) {
 			Racer started = null;
 			for (Racer r : racing) {
 				if (r.getStart() == 0) {
@@ -84,9 +84,9 @@ public class ParallelTimed extends Event {
 		// Figures out what the channel type is, and then does the relevant function.
 		if(id<=channelMode.length){
 			if (channelMode[id-1].startsWith("START"))
-				start(Integer.getInteger(channelMode[id-1].substring(6)));
+				start(Integer.parseInt(channelMode[id-1].substring(5,6)));
 			else if (channelMode[id-1].startsWith("FINISH"))
-				finish(Integer.getInteger(channelMode[id-1].substring(7)));
+				finish(Integer.parseInt(channelMode[id-1].substring(6,7)));
 		}
 		else{
 			System.out.println(String.format("Sorry, Channel %d is not active", id));
