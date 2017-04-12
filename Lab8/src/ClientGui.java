@@ -6,7 +6,7 @@ import javax.swing.*;
 
 import com.google.gson.Gson;
 	
-public class ClientGui extends JFrame{
+public class ClientGui extends JFrame implements ActionListener, WindowListener{
 	private static final long serialVersionUID = 1L;
 	JLabel firstNameLabel, lastNameLabel, departmentLabel, phoneLabel, genderLabel;
 	JTextArea firstNameText, lastNameText, departmentText, phoneText;
@@ -51,8 +51,6 @@ public class ClientGui extends JFrame{
 	 * @param column the column
 	 */
 		private void setJText(JTextArea textbox, int lx, int ly, int width, int height, int row, int col) {
-			textbox = new JTextArea();
-			textbox.setText("");
 			textbox.setLocation(lx,ly);
 			textbox.setSize(width, height);
 			textbox.setRows(row);
@@ -70,8 +68,7 @@ public class ClientGui extends JFrame{
 	 * @param height the height
 	 * @param name the name
 	 */
-	private void setJRadio(JRadioButton button, int lx, int ly, int width, int height, String name, boolean selected) {
-		button = new JRadioButton(name);
+	private void setJRadio(JRadioButton button, int lx, int ly, int width, int height, boolean selected) {
 		button.setLocation(lx,ly);
 		button.setSize(width, height);
 		button.setSelected(selected);
@@ -86,14 +83,21 @@ public class ClientGui extends JFrame{
 		setJLabel(phoneLabel, 20, 110, 100, 20, "Phone");
 		setJLabel(phoneLabel, 20, 140, 100, 20, "Gender");
 		
+		firstNameText = new JTextArea();
+		lastNameText = new JTextArea();
+		departmentText = new JTextArea();
+		phoneText = new JTextArea();
 		setJText(firstNameText, 110, 20, 150, 20, 1, 1);
 		setJText(lastNameText, 110, 50, 150, 20, 5, 5);
 		setJText(departmentText, 110, 80, 150, 20, 5, 5);
 		setJText(phoneText, 110, 110, 150, 20, 5, 5);
 		
-		setJRadio(maleRadio, 110, 140, 100, 20, "Male", true);
-		setJRadio(femaleRadio, 210, 140, 100, 20, "Female", false);
-		setJRadio(otherRadio, 310, 140, 100, 20, "Other", false);
+		maleRadio = new JRadioButton("Male");
+		femaleRadio = new JRadioButton("Female");
+		otherRadio =  new JRadioButton("Other");
+		setJRadio(maleRadio, 110, 140, 100, 20,true);
+		setJRadio(femaleRadio, 210, 140, 100, 20,false);
+		setJRadio(otherRadio, 310, 140, 100, 20, false);
 			
 		//TODO Review List Code
 			
@@ -110,13 +114,31 @@ public class ClientGui extends JFrame{
 		submitButton.setText("SUBMIT");
 		submitButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
+		    	Object src = e.getSource();
+//		    	System.out.println("making GSON");
 		    	Gson g = new Gson();
-		        Employee emp = new Employee(firstNameText.getText(), lastNameText.getText(), 
-		        		departmentText.getText(), phoneText.getText(), ((JButton) radiobuttons.getSelection()).getText(), 
+//		    	System.out.println("making Employee");
+//		    	System.out.println("FN is: "+firstNameText.getText());
+//		    	System.out.println("LN is: "+lastNameText.getText());
+//		    	System.out.println("Dept is: "+departmentText.getText());
+//		    	System.out.println("Phone is: "+phoneText.getText());
+		    	Employee emp = new Employee(firstNameText.getText(), lastNameText.getText(), 
+		        		departmentText.getText(), phoneText.getText(), getSelected(), 
 		        		titleList.getSelectedValue());
 		        submit(g.toJson(emp));
 		        clearGUI();
 		      }
+
+			private String getSelected() {
+				if(maleRadio.isSelected())
+					return maleRadio.getText();
+				else if (femaleRadio.isSelected())
+					return femaleRadio.getText();
+				else if (otherRadio.isSelected())
+					return otherRadio.getText();
+				else
+					return "not selected";
+			}
 		    });
 		getContentPane().add(submitButton);
 		
@@ -126,8 +148,7 @@ public class ClientGui extends JFrame{
 		exitButton.setText("EXIT");
 		exitButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	clear();
-		    	clearGUI();
+		    	System.exit(0);
 		    }
 		});
 		getContentPane().add(exitButton);
@@ -197,6 +218,54 @@ public class ClientGui extends JFrame{
 	
 	public static void main( String args[] ) {
 		new ClientGui();
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }  
 

@@ -1,0 +1,20 @@
+
+***CHRONOTIMER RECORD:
+Racer 1 added.
+Racer 2 added.
+Racer 1 started at 17:47:38.8
+Racer 2 started at 17:47:39.9
+Racer 1 finished at 17:47:41.5
+Racer 1's time was 00:00:02.7
+Racer 2 finished at 17:47:42.9
+Racer 2's time was 00:00:03.0
+Racer 3 added.
+Racer 4 added.
+Racer 3 started at 17:48:08.2
+Racer 4 started at 17:48:10.1
+Racer 3 finished at 17:48:11.4
+Racer 3's time was 00:00:03.2
+Racer 4 finished at 17:48:13.5
+Racer 4's time was 00:00:03.4
+***END RECORD
+
