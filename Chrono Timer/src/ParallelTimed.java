@@ -84,9 +84,9 @@ public class ParallelTimed extends Event {
 		// Figures out what the channel type is, and then does the relevant function.
 		if(id<=channelMode.length){
 			if (channelMode[id-1].startsWith("START"))
-				start(Integer.parseInt(channelMode[id-1].substring(5,6)));
+				start(Integer.parseInt(channelMode[id-1].substring(5,6))); // trig 3 => START2 start(2)
 			else if (channelMode[id-1].startsWith("FINISH"))
-				finish(Integer.parseInt(channelMode[id-1].substring(6,7)));
+				finish(Integer.parseInt(channelMode[id-1].substring(6,7))); // trig 4 => FINISH2 finish(2)
 		}
 		else{
 			System.out.println(String.format("Sorry, Channel %d is not active", id));
