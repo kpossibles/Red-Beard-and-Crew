@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.Collections;
+
 
 import com.google.gson.*;
 import com.google.gson.reflect.*;
@@ -15,6 +17,7 @@ import com.sun.net.httpserver.HttpServer;
 public class MainDirectory {
 	private ArrayList<Employee> employees;
 	private Gson g;
+	static String sharedResponse = "";
 
 	public MainDirectory(){
 		employees = new ArrayList<>();
@@ -74,15 +77,15 @@ public class MainDirectory {
 	}
 
 	public static void main(String[] args) throws Exception {
-		MainDirectory directory = new MainDirectory();
+		
 		// set up a simple HTTP server on our local host
 		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
 		// create a context to get the request to display the results
-		server.createContext("/displayresults", directory.new DisplayHandler());
+		server.createContext("/displayresults", new DisplayHandler());
 
 		// create a context to get the request for the POST
-		server.createContext("/sendresults", directory.new PostHandler());
+		server.createContext("/sendresults", new PostHandler());
 		server.setExecutor(null); // creates a default executor
 
 		// get it going
@@ -90,11 +93,36 @@ public class MainDirectory {
 		server.start();
 	}
 
-	class DisplayHandler implements HttpHandler {
+	static class DisplayHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
 
 			String response = "Begin of response\n";
-			response += print() + '\n';
+			Gson g = new Gson();
+			
+			//set up the header
+			System.out.println(response);
+			try {
+				if (!sharedResponse.isEmpty()) {
+					System.out.println(response);
+					ArrayList<Employee> fromJson = g.fromJson(sharedResponse,
+							new TypeToken<Collection<Employee>>() {
+							}.getType());
+
+					System.out.println(response);
+					response += "Before sort\n";
+					for (Employee e : fromJson) {
+						response += e + "\n";
+					}
+					Collections.sort(fromJson);
+					response += "\nAfter sort\n";
+					for (Employee e : fromJson) {
+						response += e + "\n";
+					}
+				}
+			} catch (JsonSyntaxException e) {
+				e.printStackTrace();
+			}
+			
 			response += "End of response\n";
 			System.out.println(response);
 			// write out the response
@@ -105,8 +133,12 @@ public class MainDirectory {
 		}
 	}
 
-	class PostHandler implements HttpHandler {
+	static class PostHandler implements HttpHandler {
 		public void handle(HttpExchange transmission) throws IOException {
+			//  shared data that is used with other handlers
+            sharedResponse = "";
+
+            // set up a stream to read the body of the request
 			InputStream inputStr = transmission.getRequestBody();
 			OutputStream outputStream = transmission.getResponseBody();
 			
@@ -116,11 +148,12 @@ public class MainDirectory {
 				sb=sb.append((char)nextChar);
 				nextChar=inputStr.read();
 			}
-			parseText(sb.toString());
-			System.out.print(sb.toString());
-			System.out.print(print());
+			// create our response String to use in other handler
+            sharedResponse = sharedResponse+sb.toString();
 			
 			String postResponse = "ROGER COMMAND RECEIVED";
+			System.out.println("response: " + sharedResponse);
+			
 			transmission.sendResponseHeaders(300, postResponse.length());
 			outputStream.write(postResponse.getBytes());
 			outputStream.close();

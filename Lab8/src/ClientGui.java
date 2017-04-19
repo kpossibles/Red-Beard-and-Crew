@@ -167,7 +167,7 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
     	titleList.clearSelection();
 	}
 	
-	private void submit(String emp){
+	public void submit(String emp){
 		try {
 			System.out.println("in the client");
 
@@ -183,6 +183,7 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 
 			// build a string that contains JSON from console
 			String content = "ADD " + emp;
+			System.out.println("SENDING: "+content);
 
 			// write out string to output buffer for message
 			out.writeBytes(content);
