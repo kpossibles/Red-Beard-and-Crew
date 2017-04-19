@@ -13,7 +13,7 @@ public class DirectoryProxy {
 		dir.clear();
 	}
 	
-	public void print(){
-		dir.print();
+	public String print(){
+		return dir.print();
 	}
 }

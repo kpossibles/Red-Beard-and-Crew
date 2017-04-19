@@ -36,14 +36,18 @@ public class MainDirectory {
 		employees = new ArrayList<>();
 	}
 	
-	public void print(){
+	public String print(){
+		String returnStr = "";
 		if(employees.size() == 0) {
 			System.out.println("<empty directory>");
+			returnStr += "<empty directory>";
 		}
 		else {
 			for(Employee e : employees){
 				System.out.println(e.toString());
+				returnStr += e.toString();
 			}
 		}
+		return returnStr;
 	}
 }
