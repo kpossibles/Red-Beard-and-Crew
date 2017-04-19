@@ -36,9 +36,10 @@ public class Directory {
 	
 	/**
 	 * Prints via proxy.
+	 * @return 
 	 */
-	public void print(){
-		proxy.print();
+	public String print(){
+		return proxy.print();
 	}
 	
 	/**

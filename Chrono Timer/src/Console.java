@@ -90,6 +90,7 @@ public class Console
 			// EXPORT <RUN> Export run in XML to file "RUN<RUN>"
 			else if (command.equalsIgnoreCase("EXPORT")){
 				// NOT IMPLEMENTED IN SPRINT 1
+				printer.saveData(runNum);
 			}
 			// NUM <number> Set <number> as the next competitor to start.
 			else if (command.equalsIgnoreCase("NUM")){
