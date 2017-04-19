@@ -123,8 +123,7 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 //		    	System.out.println("Dept is: "+departmentText.getText());
 //		    	System.out.println("Phone is: "+phoneText.getText());
 		    	Employee emp = new Employee(firstNameText.getText(), lastNameText.getText(), 
-		        		departmentText.getText(), phoneText.getText(), getSelected(), 
-		        		titleList.getSelectedValue());
+		        		departmentText.getText(), phoneText.getText(), titleList.getSelectedValue(),getSelected());
 		        submit(g.toJson(emp));
 		        clearGUI();
 		      }
@@ -183,7 +182,7 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
 
 			// build a string that contains JSON from console
-			String content = emp;
+			String content = "ADD " + emp;
 
 			// write out string to output buffer for message
 			out.writeBytes(content);

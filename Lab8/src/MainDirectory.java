@@ -109,7 +109,7 @@ public class MainDirectory {
 		public void handle(HttpExchange transmission) throws IOException {
 			InputStream inputStr = transmission.getRequestBody();
 			OutputStream outputStream = transmission.getResponseBody();
-
+			
 			StringBuilder sb = new StringBuilder();
 			int nextChar = inputStr.read();
 			while (nextChar > -1) {
@@ -117,7 +117,9 @@ public class MainDirectory {
 				nextChar=inputStr.read();
 			}
 			parseText(sb.toString());
-
+			System.out.print(sb.toString());
+			System.out.print(print());
+			
 			String postResponse = "ROGER COMMAND RECEIVED";
 			transmission.sendResponseHeaders(300, postResponse.length());
 			outputStream.write(postResponse.getBytes());
