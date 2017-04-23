@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 
 public class ChronoGui extends JFrame
@@ -49,6 +51,10 @@ public class ChronoGui extends JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    private void sendCommand(String command){
+        c.input(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+command);
+    }
+
     void setupGUI()
     {
         buttonPower = new JButton();
@@ -60,7 +66,7 @@ public class ChronoGui extends JFrame
         {
             public void actionPerformed(ActionEvent e)
             {
-                c.input("POWER");
+                sendCommand("POWER");
             }
         });
 
