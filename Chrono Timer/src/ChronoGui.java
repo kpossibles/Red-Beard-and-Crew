@@ -4,6 +4,7 @@ import javax.swing.*;
 
 public class ChronoGui extends JFrame
 {
+    Console c;
     JButton buttonPower;
     JButton buttonFunction;
     JButton buttonSwap;
@@ -42,6 +43,7 @@ public class ChronoGui extends JFrame
 
     public ChronoGui()
     {
+        c = new Console();
         getContentPane().setLayout(null);
         setupGUI();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,7 +60,7 @@ public class ChronoGui extends JFrame
         {
             public void actionPerformed(ActionEvent e)
             {
-                //Console.input("power");
+                c.input("POWER");
             }
         });
 
