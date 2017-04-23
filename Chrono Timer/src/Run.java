@@ -60,6 +60,15 @@ public class Run {
 		}
 		return false;
 	}
+	public void removeLast(){
+		if(active){
+			racers.remove(racers.size()-1);
+		}
+	}
+
+	public boolean isEmpty(){
+		return racers.size() == 0;
+	}
 	
 	public Racer getRacer(){
 		return racers.get(0);

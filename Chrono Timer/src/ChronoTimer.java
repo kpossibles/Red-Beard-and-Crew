@@ -26,9 +26,9 @@ public class ChronoTimer {
 	public void reset() {
 		timer = new Timer();
 		event = new IndividualTimed(timer, print);
-		channels = new Channel[2];
-		for(int i = 0; i < 2; i++){
-			channels[i] = new Channel(this, i);
+		channels = new Channel[8];
+		for(int i = 0; i < 8; i++){
+			channels[i] = new Channel(this, i+1);
 		}
 		runs = new LinkedList<Run>();
 		runs.add(new Run(1));
@@ -52,14 +52,20 @@ public class ChronoTimer {
 	 */
 	public void setEvent(String type) {
 		//IND | PARIND | GRP | PARGRP
-		if(type.equals("IND"))
+		if (type.equals("IND")) {
 			event = new IndividualTimed(timer, print);
-		else if(type.equals("PARIND"))
+			print.print("Event set to Individual");
+		} else if (type.equals("PARIND")) {
 			event = new ParallelTimed(timer, print);
-//		else if(type.equals("GRP"))
-//			event = new GroupTimed(timer, print);
-//		else if(type.equals("PARGRP"))
+			print.print("Event set to Parallel");
+		} else if (type.equals("GRP")) {
+			event = new GroupTimed(timer, print);
+			print.print("Event set to Group");
+		}
+//		else if(type.equals("PARGRP")){
 //			event = new ParallelGroupTimed(timer, print);
+//			print.print("Event Set to Parallel Group");
+//		}
 	}
 
 	/**
@@ -69,8 +75,10 @@ public class ChronoTimer {
 	 */
 	public void toggle(String number) {
 		int index = Integer.valueOf(number);
-		channels[index-1].toggle();
-		System.out.println(String.format("TOG %d\t\t%s", index, timer.getTimeString()));
+		if (index < channels.length)
+			channels[index-1].toggle();
+		else
+			print.print("Invalid port to toggle");
 	}
 
 	/**
@@ -97,7 +105,10 @@ public class ChronoTimer {
 	 */
 	public void trigger(String id){
 		int index = Integer.valueOf(id);
-		trigger(index);
+		if (index < channels.length)
+			channels[index-1].trigger();
+		else
+			print.print("Invalid port to trigger. ");
 	}
 
 	/**

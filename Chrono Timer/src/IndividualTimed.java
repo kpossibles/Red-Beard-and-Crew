@@ -28,13 +28,6 @@ public class IndividualTimed extends Event {
 			currentRun = new Run(1);
 		}
 
-		public void addRacer(){
-			if(currentRun.isActive()){
-				Racer racer = new Racer(0);
-				currentRun.add(racer);
-				racing.add(racer);
-			}
-		}
 		public void addRacer(int r){
 			if(currentRun!=null && currentRun.isActive()){
 				Racer racer = new Racer(r);

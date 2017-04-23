@@ -1,11 +1,7 @@
 //import java.util.*;
 
 public abstract class Event{
-	
-	/**
-	 * Adds the racer.
-	 */
-	abstract public void addRacer();
+
 	
 	/**
 	 * Adds the racer.

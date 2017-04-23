@@ -55,11 +55,16 @@ public class Racer {
 	public void setLane(int _lane) {
 		lane=_lane;
 	}
+
+	public void setId(int _id){
+		id = _id;
+	}
 	/**
 	 * Gets the time by converting millisecond time to HH:mm:ss.S format.
 	 *
 	 * @return the time
 	 */
+
 	public String getTime(){
 		if(didNotFinish)
 			return "-1";

@@ -20,15 +20,6 @@ public class ParallelTimed extends Event {
 	}
 
 	@Override
-	public void addRacer() {
-		if(currentRun.isActive()){
-			Racer racer = new Racer(0);
-			currentRun.add(racer);
-			racing.add(racer);
-		}
-	}
-
-	@Override
 	public void addRacer(int r) {
 		if(currentRun!=null && currentRun.isActive()){
 			Racer racer = new Racer(r);
