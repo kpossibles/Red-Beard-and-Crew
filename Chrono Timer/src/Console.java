@@ -42,10 +42,13 @@ public class Console
 		// POWER(if off) Create ChronoTimer, which should set to default state
 		// POWER(if on) Delete ChronoTimer
 		if (command.equalsIgnoreCase("POWER")){
-			if (chronotimer != null)
+			if (chronotimer != null){
 				chronotimer = null;
-			else
+				System.out.println("POWER OFF");
+			} else{
 				chronotimer = new ChronoTimer(printer);
+				System.out.println("POWER ON");
+			}
 		}
 		else if (chronotimer != null) {
 			chronotimer.setTime(timestamp);

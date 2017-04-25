@@ -59,7 +59,7 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 			getContentPane().add(textbox);
 	}
 	/**
-	 * Sets the JLabel.
+	 * Sets the JRadio.
 	 *
 	 * @param label the label
 	 * @param lx the location x

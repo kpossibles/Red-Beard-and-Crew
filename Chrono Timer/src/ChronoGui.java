@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
+import javax.swing.JComponent;
 
 public class ChronoGui extends JFrame
 {
@@ -16,10 +17,11 @@ public class ChronoGui extends JFrame
     typeSelect7, typeSelect2, typeSelect4, typeSelect6, typeSelect8;
     JButton buttonPower, buttonFunction, buttonSwap, printPower, 
     button1, button2, button3, button4, 
-    button5, button6, button7, button8, button9, button0, 
-    buttonStar, buttonPound, buttonTrigger1, 
+    button5, button6, button7, button8, button9, 
+    buttonStar, button0, buttonPound, buttonTrigger1, 
     buttonTrigger3, buttonTrigger5, buttonTrigger7, 
     buttonTrigger2, buttonTrigger6, buttonTrigger4, buttonTrigger8;
+    private String tempRacer="";
 
     public ChronoGui()
     {
@@ -32,6 +34,78 @@ public class ChronoGui extends JFrame
     private void sendCommand(String command){
         c.input(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+command);
     }
+    
+    /**
+	 * Sets the JLabel.
+	 *
+	 * @param label the label
+	 * @param lx the location x
+	 * @param ly the location y
+	 * @param width the width
+	 * @param height the height
+	 * @param name the name
+	 */
+	private void setJLabel(JLabel label, int lx, int ly, int width, int height, String name){
+		label = new JLabel();
+		label.setLocation(lx,ly);
+		label.setSize(width, height);
+		label.setText(name);
+		getContentPane().add(label);
+	}
+	
+	/**
+	 * Sets the JTextArea.
+	 *
+	 * @param textbox the textbox
+	 * @param lx the location x
+	 * @param ly the location y
+	 * @param sx the size x
+	 * @param sy the size y
+	 * @param row the row
+	 * @param column the column
+	 */
+	private void setJText(JTextArea textbox, int lx, int ly, int width, int height, int row, int col) {
+		textbox.setLocation(lx,ly);
+		textbox.setSize(width, height);
+		textbox.setRows(row);
+		textbox.setColumns(col);
+		
+		getContentPane().add(textbox);
+	}
+	
+	/**
+	 * Sets the JRadio.
+	 *
+	 * @param label the label
+	 * @param lx the location x
+	 * @param ly the location y
+	 * @param width the width
+	 * @param height the height
+	 * @param name the name
+	 */
+	private void setJRadio(JRadioButton button, int lx, int ly, int width, int height, String text, boolean selected) {
+		button.setLocation(lx,ly);
+		button.setSize(width, height);
+		button.setSelected(selected);
+		button.setText(text);
+		getContentPane().add(button);
+	}
+	
+	/**
+	 * Sets ActionListener for button
+	 * 
+	 * @param i
+	 * @param command
+	 */
+	private void setActionListener(AbstractButton i, String command){
+		i.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendCommand(command);
+            }
+        });
+	}
 
     void setupGUI()
     {
@@ -72,144 +146,73 @@ public class ChronoGui extends JFrame
             }
         });
         radioChannel1 = new JRadioButton();
-        radioChannel1.setLocation(160,30);
-        radioChannel1.setSize(40,40);
-        radioChannel1.setText("1");
-        radioChannel1.setSelected(false);
-        getContentPane().add(radioChannel1);
-        radioChannel1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("tog 1");
-            }
-        });
+        setJRadio(radioChannel1, 160, 30, 40, 40, "1", false);
+        setActionListener(radioChannel1, "tog 1");
+        
         radioChannel3 = new JRadioButton();
-        radioChannel3.setLocation(160,70);
-        radioChannel3.setSize(40,40);
-        radioChannel3.setText("3");
-        radioChannel3.setSelected(false);
-        getContentPane().add(radioChannel3);
-        radioChannel3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("tog 3");
-            }
-        });
+        setJRadio(radioChannel3, 160, 70, 40, 40, "3", false);
+        setActionListener(radioChannel3, "tog 3");
+        
         radioChannel5 = new JRadioButton();
-        radioChannel5.setLocation(160,110);
-        radioChannel5.setSize(40,40);
-        radioChannel5.setText("5");
-        radioChannel5.setSelected(false);
-        getContentPane().add(radioChannel5);
-        radioChannel5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("tog 5");
-            }
-        });
+        setJRadio(radioChannel5, 160, 110, 40, 40, "5", false);
+        setActionListener(radioChannel5, "tog 5");
+        
         radioChannel7 = new JRadioButton();
-        radioChannel7.setLocation(160,150);
-        radioChannel7.setSize(40,40);
-        radioChannel7.setText("7");
-        radioChannel7.setSelected(false);
-        getContentPane().add(radioChannel7);
-        radioChannel7.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("tog 7");
-            }
-        });
+        setJRadio(radioChannel7, 160, 150, 40, 40, "7", false);
+        setActionListener(radioChannel7, "tog 7");
+
         radioChannel2 = new JRadioButton();
-        radioChannel2.setLocation(350,30);
-        radioChannel2.setSize(40,40);
-        radioChannel2.setText("2");
-        radioChannel2.setSelected(false);
-        getContentPane().add(radioChannel2);
-        radioChannel2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("tog 2");
-            }
-        });
+        setJRadio(radioChannel2, 350, 30, 40, 40, "2", false);
+        setActionListener(radioChannel2, "tog 2");
+        
         radioChannel4 = new JRadioButton();
-        radioChannel4.setLocation(350,70);
-        radioChannel4.setSize(40,40);
-        radioChannel4.setText("4");
-        radioChannel4.setSelected(false);
-        getContentPane().add(radioChannel4);
-        radioChannel4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("tog 4");
-            }
-        });
+        setJRadio(radioChannel4, 350, 70, 40, 40, "4", false);
+        setActionListener(radioChannel4, "tog 4");
+        
         radioChannel6 = new JRadioButton();
-        radioChannel6.setLocation(350,110);
-        radioChannel6.setSize(40,40);
-        radioChannel6.setText("6");
-        radioChannel6.setSelected(false);
-        getContentPane().add(radioChannel6);
-        radioChannel6.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("tog 6");
-            }
-        });
+        setJRadio(radioChannel6, 350, 110, 40, 40, "6", false);
+        setActionListener(radioChannel6, "tog 6");
+        
         radioChannel8 = new JRadioButton();
-        radioChannel8.setLocation(350,150);
-        radioChannel8.setSize(40,40);
-        radioChannel8.setText("8");
-        radioChannel8.setSelected(false);
-        getContentPane().add(radioChannel8);
-        radioChannel8.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("tog 8");
-            }
-        });
+        setJRadio(radioChannel8, 350, 150, 40, 40, "1", false);
+        setActionListener(radioChannel8, "tog 8");
+        
         printDisplayTex = new JTextArea();
-        printDisplayTex.setLocation(136,257);
-        printDisplayTex.setSize(100,100);
-        printDisplayTex.setText("");
-        printDisplayTex.setRows(10);
-        printDisplayTex.setColumns(10);
-        getContentPane().add(printDisplayTex);
+        setJText(printDisplayTex, 136, 257, 100, 100, 10, 10);
+        
 
         //not printing
         //TODO
         
         
         labelLegend = new JLabel();
-        labelLegend.setLocation(135,360);
-        labelLegend.setSize(175,48);
-        labelLegend.setText("Queue/Running/Final");
-        getContentPane().add(labelLegend);
+        setJLabel(labelLegend, 135, 360, 175, 48, "Queue/Running/Final");
 
         String typeSelect1_tmp[]={"Sensor1","Sensor2"};
         typeSelect1 = new JComboBox<Object>(typeSelect1_tmp);
         typeSelect1.setLocation(200,30);
-        typeSelect1.setSize(80,40);
+        typeSelect1.setSize(100,40);
         typeSelect1.setEditable(false );
         getContentPane().add(typeSelect1);
 
         String typeSelect3_tmp[]={"Sensor1","Sensor2"};
         typeSelect3 = new JComboBox<Object>(typeSelect3_tmp);
         typeSelect3.setLocation(200,70);
-        typeSelect3.setSize(80,40);
+        typeSelect3.setSize(100,40);
         typeSelect3.setEditable(false );
         getContentPane().add(typeSelect3);
 
         String typeSelect5_tmp[]={"Sensor1","Sensor2"};
         typeSelect5 = new JComboBox<Object>(typeSelect5_tmp);
         typeSelect5.setLocation(200,110);
-        typeSelect5.setSize(80,40);
+        typeSelect5.setSize(100,40);
         typeSelect5.setEditable(false );
         getContentPane().add(typeSelect5);
 
         String typeSelect7_tmp[]={"Sensor1","Sensor2"};
         typeSelect7 = new JComboBox<Object>(typeSelect7_tmp);
         typeSelect7.setLocation(200,150);
-        typeSelect7.setSize(80,40);
+        typeSelect7.setSize(100,40);
         typeSelect7.setEditable(false );
         getContentPane().add(typeSelect7);
         
@@ -238,7 +241,7 @@ public class ChronoGui extends JFrame
         buttonTrigger5 = new JButton();
         buttonTrigger5.setLocation(300,110);
         buttonTrigger5.setSize(40,40);
-        buttonTrigger5.setText("1");
+        buttonTrigger5.setText("5");
         getContentPane().add(buttonTrigger5);
         buttonTrigger5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
@@ -249,7 +252,7 @@ public class ChronoGui extends JFrame
         buttonTrigger7 = new JButton();
         buttonTrigger7.setLocation(300,150);
         buttonTrigger7.setSize(40,40);
-        buttonTrigger7.setText("1");
+        buttonTrigger7.setText("7");
         getContentPane().add(buttonTrigger7);
         buttonTrigger7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
@@ -289,7 +292,7 @@ public class ChronoGui extends JFrame
         buttonTrigger2 = new JButton();
         buttonTrigger2.setLocation(490,30);
         buttonTrigger2.setSize(40,40);
-        buttonTrigger2.setText("1");
+        buttonTrigger2.setText("2");
         getContentPane().add(buttonTrigger2);
         buttonTrigger2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
@@ -300,7 +303,7 @@ public class ChronoGui extends JFrame
         buttonTrigger4 = new JButton();
         buttonTrigger4.setLocation(490,70);
         buttonTrigger4.setSize(40,40);
-        buttonTrigger4.setText("1");
+        buttonTrigger4.setText("4");
         getContentPane().add(buttonTrigger4);
         buttonTrigger4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
@@ -311,7 +314,7 @@ public class ChronoGui extends JFrame
         buttonTrigger6 = new JButton();
         buttonTrigger6.setLocation(490,110);
         buttonTrigger6.setSize(40,40);
-        buttonTrigger6.setText("1");
+        buttonTrigger6.setText("6");
         getContentPane().add(buttonTrigger6);
         buttonTrigger6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
@@ -322,7 +325,7 @@ public class ChronoGui extends JFrame
         buttonTrigger8 = new JButton();
         buttonTrigger8.setLocation(490,150);
         buttonTrigger8.setSize(40,40);
-        buttonTrigger8.setText("1");
+        buttonTrigger8.setText("8");
         getContentPane().add(buttonTrigger8);
         buttonTrigger8.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
@@ -332,10 +335,7 @@ public class ChronoGui extends JFrame
         });
 
         labelheader = new JLabel();
-        labelheader.setLocation(250,0);
-        labelheader.setSize(150,25);
-        labelheader.setText("Enable/disable sensor");
-        getContentPane().add(labelheader);
+        setJLabel(labelheader, 250, 0, 150, 25, "Enable/disable sensor");
 
         printPower = new JButton();
         printPower.setLocation(135,418);
@@ -358,7 +358,7 @@ public class ChronoGui extends JFrame
         button1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
-                sendCommand("num 1");
+            	tempRacer+=1;
             }
         });
         button2 = new JButton();
@@ -368,7 +368,7 @@ public class ChronoGui extends JFrame
         getContentPane().add(button2);
         button2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num 2");
+            	tempRacer+=2;
             }});
         button3 = new JButton();
         button3.setLocation(478,273);
@@ -377,7 +377,7 @@ public class ChronoGui extends JFrame
         getContentPane().add(button3);
         button3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num 3");
+            	tempRacer+=3;
             }});
         button4 = new JButton();
         button4.setLocation(376,325);
@@ -386,7 +386,7 @@ public class ChronoGui extends JFrame
         getContentPane().add(button4);
         button4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num 4");
+            	tempRacer+=4;
             }});
         button7 = new JButton();
         button7.setLocation(376,377);
@@ -395,7 +395,7 @@ public class ChronoGui extends JFrame
         getContentPane().add(button7);
         button7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num 7");
+            	tempRacer+=7;
             }});
         buttonStar = new JButton();
         buttonStar.setLocation(376,429);
@@ -413,7 +413,7 @@ public class ChronoGui extends JFrame
         getContentPane().add(button5);
         button5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num 5");
+            	tempRacer+=5;
             }});
         button6 = new JButton();
         button6.setLocation(478,325);
@@ -422,7 +422,7 @@ public class ChronoGui extends JFrame
         getContentPane().add(button6);
         button6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num 6");
+            	tempRacer+=6;
             }});
         button8 = new JButton();
         button8.setLocation(427,377);
@@ -431,7 +431,7 @@ public class ChronoGui extends JFrame
         getContentPane().add(button8);
         button8.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num 8");
+            	tempRacer+=8;
             }});
         button9 = new JButton();
         button9.setLocation(478,377);
@@ -440,7 +440,7 @@ public class ChronoGui extends JFrame
         getContentPane().add(button9);
         button9.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num 9");
+            	tempRacer+=9;
             }});
         button0 = new JButton();
         button0.setLocation(427,429);
@@ -449,7 +449,7 @@ public class ChronoGui extends JFrame
         getContentPane().add(button0);
         button0.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num 0");
+            	tempRacer+=0;
             }});
         buttonPound = new JButton();
         buttonPound.setLocation(480,429);
@@ -458,10 +458,11 @@ public class ChronoGui extends JFrame
         getContentPane().add(buttonPound);
         buttonPound.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sendCommand("num #");
+            	sendCommand("num "+tempRacer);
+            	tempRacer="";
             }});
 
-        setTitle("ChronoTimer ( JFrame )");
+        setTitle("ChronoTimer");
         setSize(566,512);
         setVisible(true);
         setResizable(true);
