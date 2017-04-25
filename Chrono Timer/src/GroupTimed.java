@@ -18,6 +18,7 @@ public class GroupTimed extends Event {
 		channelMode[1] = "FINISH";
 	}
 
+	@Override
 	public void trigger(int id) {
 		// Figures out what the channel type is, and then does the relevant function.
 		if(id<=channelMode.length){
@@ -80,6 +81,7 @@ public class GroupTimed extends Event {
 		}
 	}
 
+	@Override
 	public void removeRacer(int index){
 		print.print("CLEAR is not a valid command for this type of race");
 	}

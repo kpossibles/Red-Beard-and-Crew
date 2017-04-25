@@ -3,472 +3,445 @@ import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
-import javax.swing.JComponent;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
 
+@SuppressWarnings("serial")
 public class ChronoGui extends JFrame
 {
-    Console c;
-    JRadioButton radioChannel1, radioChannel3, radioChannel5, 
+	JPanel rPanel3= new JPanel();
+	Console c;
+	JRadioButton radioChannel1, radioChannel3, radioChannel5, 
     radioChannel7, radioChannel2, radioChannel4, 
     radioChannel6, radioChannel8;
-    JTextArea printDisplayTex;
-    JLabel labelLegend, labelheader;
-    JComboBox<Object> typeSelect1, typeSelect3, typeSelect5, 
-    typeSelect7, typeSelect2, typeSelect4, typeSelect6, typeSelect8;
-    JButton buttonPower, buttonFunction, buttonSwap, printPower, 
+	JTextArea printDisplayTex;
+	JLabel labelLegend;
+	JButton buttonPower, buttonFunction, buttonSwap, printPower, 
     button1, button2, button3, button4, 
     button5, button6, button7, button8, button9, 
     buttonStar, button0, buttonPound, buttonTrigger1, 
     buttonTrigger3, buttonTrigger5, buttonTrigger7, 
     buttonTrigger2, buttonTrigger6, buttonTrigger4, buttonTrigger8;
-    private String tempRacer="";
+    JPanel mPanel1a, mPanel1d, panel_1, panel_2;
+    String tempRacer="";
 
     public ChronoGui()
     {
         c = new Console();
         getContentPane().setLayout(null);
+        setSize(560, 400);
+		setTitle("ChronoTimer");
         setupGUI();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void sendCommand(String command){
+    /**
+     * Sends command to Console
+     * 
+     * @param command
+     */
+    void sendCommand(String command){
         c.input(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+command);
     }
     
-    /**
-	 * Sets the JLabel.
-	 *
-	 * @param label the label
-	 * @param lx the location x
-	 * @param ly the location y
-	 * @param width the width
-	 * @param height the height
-	 * @param name the name
-	 */
-	private void setJLabel(JLabel label, int lx, int ly, int width, int height, String name){
-		label = new JLabel();
-		label.setLocation(lx,ly);
-		label.setSize(width, height);
-		label.setText(name);
-		getContentPane().add(label);
-	}
-	
-	/**
-	 * Sets the JTextArea.
-	 *
-	 * @param textbox the textbox
-	 * @param lx the location x
-	 * @param ly the location y
-	 * @param sx the size x
-	 * @param sy the size y
-	 * @param row the row
-	 * @param column the column
-	 */
-	private void setJText(JTextArea textbox, int lx, int ly, int width, int height, int row, int col) {
-		textbox.setLocation(lx,ly);
-		textbox.setSize(width, height);
-		textbox.setRows(row);
-		textbox.setColumns(col);
-		
-		getContentPane().add(textbox);
-	}
-	
-	/**
-	 * Sets the JRadio.
-	 *
-	 * @param label the label
-	 * @param lx the location x
-	 * @param ly the location y
-	 * @param width the width
-	 * @param height the height
-	 * @param name the name
-	 */
-	private void setJRadio(JRadioButton button, int lx, int ly, int width, int height, String text, boolean selected) {
-		button.setLocation(lx,ly);
-		button.setSize(width, height);
-		button.setSelected(selected);
-		button.setText(text);
-		getContentPane().add(button);
-	}
-	
 	/**
 	 * Sets ActionListener for button
 	 * 
 	 * @param i
 	 * @param command
 	 */
-	private void setActionListener(AbstractButton i, String command){
+	void setActionListener(AbstractButton i, String command){
 		i.addActionListener(new ActionListener()
         {
-            public void actionPerformed(ActionEvent e)
+            @Override
+			public void actionPerformed(ActionEvent e)
             {
                 sendCommand(command);
             }
         });
 	}
 
-    void setupGUI()
-    {
-        buttonPower = new JButton();
-        buttonPower.setLocation(14,24);
-        buttonPower.setSize(100,50);
-        buttonPower.setText("Power");
-        getContentPane().add(buttonPower);
-        buttonPower.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
+    /**
+     * Sets up the GUI
+     */
+    void setupGUI() {
+		getContentPane().setLayout(null);
+		// left
+		JPanel lPanel = new JPanel();
+		lPanel.setBounds(0, 0, 110, 377);
+		getContentPane().add(lPanel);
+			
+			buttonPower = new JButton("Power"); 	
+			buttonPower.setBounds(5, 6, 100, 40);
+			buttonPower.addActionListener(new ActionListener() {
+	            @Override
+				public void actionPerformed(ActionEvent e)
+	            {
+	                sendCommand("POWER");
+	            }
+	        });
+			lPanel.setLayout(null);
+			lPanel.add(buttonPower);
+			
+			buttonFunction = new JButton("Function");
+			buttonFunction.setBounds(5, 131, 100, 40);
+			lPanel.add(buttonFunction);
+			buttonFunction.addActionListener(new ActionListener() {
+	            @Override
+				public void actionPerformed(ActionEvent e)
+	            {
+	                // TODO
+	            }
+	        });
+			
+			// bottom left
+			JPanel lPanel3 = new JPanel();
+			lPanel3.setSize(lPanel.getWidth(), lPanel.getHeight()/3);
+			
+			buttonSwap = new JButton("SWAP"); 
+			buttonSwap.setLocation(5, 273);
+			buttonSwap.setSize(100, 40);
+			buttonSwap.addActionListener(new ActionListener() {
+	            @Override
+				public void actionPerformed(ActionEvent e)
+	            {
+	                // TODO
+	            }
+	        });
+			lPanel.add(buttonSwap);
+			JPanel lPanelNav = new JPanel();
+			lPanelNav.setBounds(5, 176, 100, 29);
+			lPanel.add(lPanelNav);
+			lPanelNav.setLayout(null);
+			
+			JButton left = new JButton("◄");
+			left.setBounds(4, 5, 20, 20);
+			lPanelNav.add(left);
+			left.setHorizontalAlignment(SwingConstants.CENTER);
+			JButton right = new JButton("►");
+			right.setBounds(28, 5, 20, 20);
+			lPanelNav.add(right);
+			right.setHorizontalAlignment(SwingConstants.CENTER);
+			JButton up = new JButton("▲");
+			up.setBounds(52, 5, 20, 20);
+			lPanelNav.add(up);
+			up.setHorizontalAlignment(SwingConstants.CENTER);
+			JButton down = new JButton("▼");
+			down.setBounds(76, 5, 20, 20);
+			lPanelNav.add(down);
+			down.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			
+			
+		
+		// middle
+		JPanel mPanel = new JPanel();
+		mPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		mPanel.setLocation(109, 0);
+		mPanel.setSize(250, 377);
+		getContentPane().add(mPanel);
+		mPanel.setLayout(new BoxLayout(mPanel, BoxLayout.Y_AXIS));
+			
+			// top middle
+			JPanel mPanel1 = new JPanel();
+			mPanel1.setLayout(null);
+			
+			panel_1 = new JPanel();
+			panel_1.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+			panel_1.setBounds(-39, 9, 290, 80);
+			mPanel1.add(panel_1);
+			panel_1.setLayout(new GridLayout(2, 2, 5, 0));
+			// split into 4 rows
+			JLabel label = new JLabel("Start");
+			label.setHorizontalAlignment(SwingConstants.RIGHT);
+			panel_1.add(label);
+			label.setFont(new Font("Lucida Grande", Font.BOLD, 21));
+			mPanel1a = new JPanel();
+			panel_1.add(mPanel1a);
+			mPanel1a.setLayout(null);
+			
+			buttonTrigger1 = new JButton();
+			buttonTrigger1.setBounds(-4, 5, 40, 30);
+			buttonTrigger1.setText("1");
+			mPanel1a.add(buttonTrigger1);
+			buttonTrigger1.addActionListener(new ActionListener() {
+			    @Override
+				public void actionPerformed(ActionEvent e)
+			    {
+			        sendCommand("trig 1");
+			    }
+			});
+			buttonTrigger3 = new JButton();
+			buttonTrigger3.setBounds(32, 5, 40, 30);
+			buttonTrigger3.setText("3");
+			mPanel1a.add(buttonTrigger3);
+			buttonTrigger3.addActionListener(new ActionListener() {
+			    @Override
+				public void actionPerformed(ActionEvent e)
+			    {
+			        sendCommand("trig 3");
+			    }
+			});
+			buttonTrigger5 = new JButton();
+			buttonTrigger5.setBounds(68, 5, 40, 30);
+			buttonTrigger5.setText("5");
+			mPanel1a.add(buttonTrigger5);
+			buttonTrigger5.addActionListener(new ActionListener() {
+			    @Override
+				public void actionPerformed(ActionEvent e)
+			    {
+			        sendCommand("trig 5");
+			    }
+			});
+			buttonTrigger7 = new JButton();
+			buttonTrigger7.setBounds(104, 5, 40, 30);
+			buttonTrigger7.setText("7");
+			mPanel1a.add(buttonTrigger7);
+			JLabel label_1 = new JLabel("Enable/Disable");
+			label_1.setHorizontalAlignment(SwingConstants.RIGHT);
+			panel_1.add(label_1);
+			JPanel mPanel1b = new JPanel();
+			panel_1.add(mPanel1b);
+			mPanel1b.setLayout(null);
+			
+			radioChannel1 = new JRadioButton();
+			radioChannel1.setBounds(5, 8, 28, 23);
+			radioChannel1.setSelected(false);
+			setActionListener(radioChannel1, "tog 1");
+			mPanel1b.add(radioChannel1);
+			
+			radioChannel3 = new JRadioButton();
+			radioChannel3.setBounds(38, 8, 28, 23);
+			radioChannel3.setSelected(false);
+			setActionListener(radioChannel3, "tog 3");
+			mPanel1b.add(radioChannel3);
+			
+			radioChannel5 = new JRadioButton();
+			radioChannel5.setBounds(71, 8, 28, 23);
+			radioChannel5.setSelected(false);
+			setActionListener(radioChannel5, "tog 5");
+			mPanel1b.add(radioChannel5);
+			
+			radioChannel7 = new JRadioButton();
+			radioChannel7.setBounds(104, 8, 28, 23);
+			radioChannel7.setSelected(false);
+			setActionListener(radioChannel7, "tog 7");
+			mPanel1b.add(radioChannel7);
+			buttonTrigger7.addActionListener(new ActionListener() {
+			    @Override
+				public void actionPerformed(ActionEvent e)
+			    {
+			        sendCommand("trig 7");
+			    }
+			});
+			
+			panel_2 = new JPanel();
+			panel_2.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+			panel_2.setBounds(-39, 98, 290, 80);
+			mPanel1.add(panel_2);
+			panel_2.setLayout(new GridLayout(0, 2, 5, 0));
+			JLabel lblFinish = new JLabel("Finish");
+			lblFinish.setHorizontalAlignment(SwingConstants.RIGHT);
+			lblFinish.setFont(new Font("Lucida Grande", Font.BOLD, 21));
+			panel_2.add(lblFinish);
+			JPanel mPanel1c = new JPanel();
+			panel_2.add(mPanel1c);
+			mPanel1c.setLayout(null);
+			
+			buttonTrigger2 = new JButton();
+			buttonTrigger2.setBounds(-4, 5, 40, 30);
+			buttonTrigger2.setText("2");
+			mPanel1c.add(buttonTrigger2);
+			buttonTrigger2.addActionListener(new ActionListener() {
+			    @Override
+				public void actionPerformed(ActionEvent e)
+			    {
+			        sendCommand("trig 2");
+			    }
+			});
+			buttonTrigger4 = new JButton();
+			buttonTrigger4.setBounds(32, 5, 40, 30);
+			buttonTrigger4.setText("4");
+			mPanel1c.add(buttonTrigger4);
+			buttonTrigger4.addActionListener(new ActionListener() {
+			    @Override
+				public void actionPerformed(ActionEvent e)
+			    {
+			        sendCommand("trig 4");
+			    }
+			});
+			buttonTrigger6 = new JButton();
+			buttonTrigger6.setBounds(68, 5, 40, 30);
+			buttonTrigger6.setText("6");
+			mPanel1c.add(buttonTrigger6);
+			buttonTrigger6.addActionListener(new ActionListener() {
+			    @Override
+				public void actionPerformed(ActionEvent e)
+			    {
+			        sendCommand("trig 6");
+			    }
+			});
+			buttonTrigger8 = new JButton();
+			buttonTrigger8.setBounds(104, 5, 40, 29);
+			buttonTrigger8.setText("8");
+			mPanel1c.add(buttonTrigger8);
+			JLabel label_3 = new JLabel("Enable/Disable");
+			label_3.setHorizontalAlignment(SwingConstants.RIGHT);
+			panel_2.add(label_3);
+			
+			mPanel1d = new JPanel();
+			panel_2.add(mPanel1d);
+			mPanel1d.setLayout(null);
+			
+			radioChannel2 = new JRadioButton();
+			radioChannel2.setBounds(4, 8, 28, 23);
+			mPanel1d.add(radioChannel2);
+			radioChannel2.setSelected(false);
+			setActionListener(radioChannel2, "tog 2");
+			
+			radioChannel4 = new JRadioButton();
+			radioChannel4.setBounds(37, 8, 28, 23);
+			mPanel1d.add(radioChannel4);
+			radioChannel4.setSelected(false);
+			setActionListener(radioChannel4, "tog 4");
+			
+			radioChannel6 = new JRadioButton();
+			radioChannel6.setBounds(70, 8, 28, 23);
+			mPanel1d.add(radioChannel6);
+			radioChannel6.setSelected(false);
+			setActionListener(radioChannel6, "tog 6");
+			
+			radioChannel8 = new JRadioButton();
+			radioChannel8.setBounds(103, 8, 28, 23);
+			mPanel1d.add(radioChannel8);
+			radioChannel8.setSelected(false);
+			setActionListener(radioChannel8, "tog 8");
+			buttonTrigger8.addActionListener(new ActionListener() {
+			    @Override
+				public void actionPerformed(ActionEvent e)
+			    {
+			        sendCommand("trig 8");
+			    }
+			});
+			
+			// mid middle
+			JPanel mPanel2 = new JPanel();
+			mPanel2.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+			mPanel2.setSize(mPanel.getWidth(), mPanel.getHeight()/3);
+			mPanel2.setLayout(null);
+			
+			printDisplayTex = new JTextArea();
+			printDisplayTex.setBounds(35, 15, 180, 125);
+			printDisplayTex.setRows(10);
+			printDisplayTex.setColumns(15);
+			mPanel2.add(printDisplayTex);
+			
+			mPanel.add(mPanel1);
+			mPanel.add(mPanel2);
+		
+		// right
+		JPanel rPanel = new JPanel();
+		rPanel.setLocation(360, 0);
+		rPanel.setSize(200, 377);
+		getContentPane().add(rPanel);
+			// top right
+			JPanel rPanel1 = new JPanel();
+			rPanel1.setLocation(0, 0);
+			rPanel1.setSize(200, 190);
+			
+			// mid right
+			JPanel rPanel2 = new JPanel();
+			rPanel2.setLocation(0, 188);
+			rPanel2.setSize(200, 190);
+			
+			JTextArea printArea = new JTextArea();
+			printArea.setBounds(-14, 58, 0, 16);
+			printDisplayTex.setRows(10);
+			printDisplayTex.setColumns(15);
+			labelLegend = new JLabel("Queue/Running/Final");
+			labelLegend.setBounds(57, 155, 136, 16);
+			mPanel2.add(labelLegend);
+			rPanel2.setLayout(null);
+			rPanel2.add(printArea);
+			rPanel.setLayout(null);
+			
+			
+			rPanel.add(rPanel1);
+			
+			printPower = new JButton("Printer Pwr");
+			rPanel1.add(printPower);
+			rPanel.add(rPanel2);
+			rPanel3.setBounds(10, 15, 180, 123);
+			rPanel2.add(rPanel3);
+			rPanel3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+			rPanel3.setLayout(new GridLayout(4,3,0,1));
+			
+			button1 = new JButton("1");
+			button2 = new JButton("2");
+			button3 = new JButton("3");
+			button4 = new JButton("4");
+			button5 = new JButton("5");
+			button6 = new JButton("6");
+			button7 = new JButton("7");
+			button8 = new JButton("8");
+			button9 = new JButton("9");
+			buttonStar = new JButton("*");
+			
+	        buttonStar.addActionListener(new ActionListener() {
+	            @Override
+				public void actionPerformed(ActionEvent e) {
+	                sendCommand("num *");
+	            }});
+	        button0 = new JButton("0");
+	        buttonPound = new JButton("#");
+	        buttonPound.addActionListener(new ActionListener() {
+	            @Override
+				public void actionPerformed(ActionEvent e) {
+	            	sendCommand("num "+tempRacer);
+	            	tempRacer="";
+	            }});
+	        
+	        buttonAction(button1, 1);
+	        buttonAction(button2, 2);
+	        buttonAction(button3, 3);
+	        buttonAction(button4, 4);
+	        buttonAction(button5, 5);
+	        buttonAction(button6, 6);
+	        buttonAction(button7, 7);
+	        buttonAction(button8, 8);
+	        buttonAction(button9, 9);
+	        buttonAction(button0, 0);
+	        rPanel3.add(button1);
+	        rPanel3.add(button2);
+	        rPanel3.add(button3);
+	        rPanel3.add(button4);
+	        rPanel3.add(button5);
+	        rPanel3.add(button6);
+	        rPanel3.add(button7);
+	        rPanel3.add(button8);
+	        rPanel3.add(button9);
+	        rPanel3.add(buttonStar);
+	        rPanel3.add(button0);
+	        rPanel3.add(buttonPound);
+		
+		
+		
+	}
+	
+    /**
+	 * Sets up actionPerformed for Runner button
+	 * @param b
+	 * @param i
+	 */
+	private void buttonAction(JButton b, int i){
+		b.addActionListener(new ActionListener() {
+            @Override
+			public void actionPerformed(ActionEvent e)
             {
-                sendCommand("POWER");
+            	tempRacer+=i;
             }
         });
-
-        buttonFunction = new JButton();
-        buttonFunction.setLocation(18,179);
-        buttonFunction.setSize(100,50);
-        buttonFunction.setText("Function");
-        getContentPane().add(buttonFunction);
-        buttonFunction.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                //not documented in project
-                //TODO
-            }
-        });
-        buttonSwap = new JButton();
-        buttonSwap.setLocation(23,362);
-        buttonSwap.setSize(100,50);
-        buttonSwap.setText("Swap");
-        getContentPane().add(buttonSwap);
-        buttonSwap.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("swap");
-            }
-        });
-        radioChannel1 = new JRadioButton();
-        setJRadio(radioChannel1, 160, 30, 40, 40, "1", false);
-        setActionListener(radioChannel1, "tog 1");
-        
-        radioChannel3 = new JRadioButton();
-        setJRadio(radioChannel3, 160, 70, 40, 40, "3", false);
-        setActionListener(radioChannel3, "tog 3");
-        
-        radioChannel5 = new JRadioButton();
-        setJRadio(radioChannel5, 160, 110, 40, 40, "5", false);
-        setActionListener(radioChannel5, "tog 5");
-        
-        radioChannel7 = new JRadioButton();
-        setJRadio(radioChannel7, 160, 150, 40, 40, "7", false);
-        setActionListener(radioChannel7, "tog 7");
-
-        radioChannel2 = new JRadioButton();
-        setJRadio(radioChannel2, 350, 30, 40, 40, "2", false);
-        setActionListener(radioChannel2, "tog 2");
-        
-        radioChannel4 = new JRadioButton();
-        setJRadio(radioChannel4, 350, 70, 40, 40, "4", false);
-        setActionListener(radioChannel4, "tog 4");
-        
-        radioChannel6 = new JRadioButton();
-        setJRadio(radioChannel6, 350, 110, 40, 40, "6", false);
-        setActionListener(radioChannel6, "tog 6");
-        
-        radioChannel8 = new JRadioButton();
-        setJRadio(radioChannel8, 350, 150, 40, 40, "1", false);
-        setActionListener(radioChannel8, "tog 8");
-        
-        printDisplayTex = new JTextArea();
-        setJText(printDisplayTex, 136, 257, 100, 100, 10, 10);
-        
-
-        //not printing
-        //TODO
-        
-        
-        labelLegend = new JLabel();
-        setJLabel(labelLegend, 135, 360, 175, 48, "Queue/Running/Final");
-
-        String typeSelect1_tmp[]={"Sensor1","Sensor2"};
-        typeSelect1 = new JComboBox<Object>(typeSelect1_tmp);
-        typeSelect1.setLocation(200,30);
-        typeSelect1.setSize(100,40);
-        typeSelect1.setEditable(false );
-        getContentPane().add(typeSelect1);
-
-        String typeSelect3_tmp[]={"Sensor1","Sensor2"};
-        typeSelect3 = new JComboBox<Object>(typeSelect3_tmp);
-        typeSelect3.setLocation(200,70);
-        typeSelect3.setSize(100,40);
-        typeSelect3.setEditable(false );
-        getContentPane().add(typeSelect3);
-
-        String typeSelect5_tmp[]={"Sensor1","Sensor2"};
-        typeSelect5 = new JComboBox<Object>(typeSelect5_tmp);
-        typeSelect5.setLocation(200,110);
-        typeSelect5.setSize(100,40);
-        typeSelect5.setEditable(false );
-        getContentPane().add(typeSelect5);
-
-        String typeSelect7_tmp[]={"Sensor1","Sensor2"};
-        typeSelect7 = new JComboBox<Object>(typeSelect7_tmp);
-        typeSelect7.setLocation(200,150);
-        typeSelect7.setSize(100,40);
-        typeSelect7.setEditable(false );
-        getContentPane().add(typeSelect7);
-        
-        buttonTrigger1 = new JButton();
-        buttonTrigger1.setLocation(300,30);
-        buttonTrigger1.setSize(40,40);
-        buttonTrigger1.setText("1");
-        getContentPane().add(buttonTrigger1);
-        buttonTrigger1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("trig 1");
-            }
-        });
-        buttonTrigger3 = new JButton();
-        buttonTrigger3.setLocation(300,70);
-        buttonTrigger3.setSize(40,40);
-        buttonTrigger3.setText("3");
-        getContentPane().add(buttonTrigger3);
-        buttonTrigger3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("trig 3");
-            }
-        });
-        buttonTrigger5 = new JButton();
-        buttonTrigger5.setLocation(300,110);
-        buttonTrigger5.setSize(40,40);
-        buttonTrigger5.setText("5");
-        getContentPane().add(buttonTrigger5);
-        buttonTrigger5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("trig 5");
-            }
-        });
-        buttonTrigger7 = new JButton();
-        buttonTrigger7.setLocation(300,150);
-        buttonTrigger7.setSize(40,40);
-        buttonTrigger7.setText("7");
-        getContentPane().add(buttonTrigger7);
-        buttonTrigger7.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("trig 7");
-            }
-        });
-
-        String typeSelect2_tmp[]={"Sensor1","Sensor2"};
-        typeSelect2 = new JComboBox<Object>(typeSelect2_tmp);
-        typeSelect2.setLocation(390,30);
-        typeSelect2.setSize(80,40);
-        typeSelect2.setEditable(false );
-        getContentPane().add(typeSelect2);
-
-        String typeSelect4_tmp[]={"Sensor1","Sensor2"};
-        typeSelect4 = new JComboBox<Object>(typeSelect4_tmp);
-        typeSelect4.setLocation(390,70);
-        typeSelect4.setSize(80,40);
-        typeSelect4.setEditable(false );
-        getContentPane().add(typeSelect4);
-
-        String typeSelect6_tmp[]={"Sensor1","Sensor2"};
-        typeSelect6 = new JComboBox<Object>(typeSelect6_tmp);
-        typeSelect6.setLocation(390,110);
-        typeSelect6.setSize(80,40);
-        typeSelect6.setEditable(false );
-        getContentPane().add(typeSelect6);
-
-        String typeSelect8_tmp[]={"Sensor1","Sensor2"};
-        typeSelect8 = new JComboBox<Object>(typeSelect8_tmp);
-        typeSelect8.setLocation(390,150);
-        typeSelect8.setSize(80,40);
-        typeSelect8.setEditable(false );
-        getContentPane().add(typeSelect8);
-        
-        buttonTrigger2 = new JButton();
-        buttonTrigger2.setLocation(490,30);
-        buttonTrigger2.setSize(40,40);
-        buttonTrigger2.setText("2");
-        getContentPane().add(buttonTrigger2);
-        buttonTrigger2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("trig 2");
-            }
-        });
-        buttonTrigger4 = new JButton();
-        buttonTrigger4.setLocation(490,70);
-        buttonTrigger4.setSize(40,40);
-        buttonTrigger4.setText("4");
-        getContentPane().add(buttonTrigger4);
-        buttonTrigger4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("trig 4");
-            }
-        });
-        buttonTrigger6 = new JButton();
-        buttonTrigger6.setLocation(490,110);
-        buttonTrigger6.setSize(40,40);
-        buttonTrigger6.setText("6");
-        getContentPane().add(buttonTrigger6);
-        buttonTrigger6.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("trig 6");
-            }
-        });
-        buttonTrigger8 = new JButton();
-        buttonTrigger8.setLocation(490,150);
-        buttonTrigger8.setSize(40,40);
-        buttonTrigger8.setText("8");
-        getContentPane().add(buttonTrigger8);
-        buttonTrigger8.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                sendCommand("trig 8");
-            }
-        });
-
-        labelheader = new JLabel();
-        setJLabel(labelheader, 250, 0, 150, 25, "Enable/disable sensor");
-
-        printPower = new JButton();
-        printPower.setLocation(135,418);
-        printPower.setSize(100,50);
-        printPower.setText("Print Power");
-        printPower.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-                //TODO
-                
-            }
-        });
-        getContentPane().add(printPower);
-
-        button1 = new JButton();
-        button1.setLocation(376,273);
-        button1.setSize(50,50);
-        button1.setText("1");
-        getContentPane().add(button1);
-        button1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e)
-            {
-            	tempRacer+=1;
-            }
-        });
-        button2 = new JButton();
-        button2.setLocation(427,273);
-        button2.setSize(50,50);
-        button2.setText("2");
-        getContentPane().add(button2);
-        button2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	tempRacer+=2;
-            }});
-        button3 = new JButton();
-        button3.setLocation(478,273);
-        button3.setSize(50,50);
-        button3.setText("3");
-        getContentPane().add(button3);
-        button3.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	tempRacer+=3;
-            }});
-        button4 = new JButton();
-        button4.setLocation(376,325);
-        button4.setSize(50,50);
-        button4.setText("4");
-        getContentPane().add(button4);
-        button4.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	tempRacer+=4;
-            }});
-        button7 = new JButton();
-        button7.setLocation(376,377);
-        button7.setSize(50,50);
-        button7.setText("7");
-        getContentPane().add(button7);
-        button7.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	tempRacer+=7;
-            }});
-        buttonStar = new JButton();
-        buttonStar.setLocation(376,429);
-        buttonStar.setSize(50,50);
-        buttonStar.setText("*");
-        getContentPane().add(buttonStar);
-        buttonStar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sendCommand("num *");
-            }});
-        button5 = new JButton();
-        button5.setLocation(427,325);
-        button5.setSize(50,50);
-        button5.setText("5");
-        getContentPane().add(button5);
-        button5.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	tempRacer+=5;
-            }});
-        button6 = new JButton();
-        button6.setLocation(478,325);
-        button6.setSize(50,50);
-        button6.setText("6");
-        getContentPane().add(button6);
-        button6.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	tempRacer+=6;
-            }});
-        button8 = new JButton();
-        button8.setLocation(427,377);
-        button8.setSize(50,50);
-        button8.setText("8");
-        getContentPane().add(button8);
-        button8.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	tempRacer+=8;
-            }});
-        button9 = new JButton();
-        button9.setLocation(478,377);
-        button9.setSize(50,50);
-        button9.setText("9");
-        getContentPane().add(button9);
-        button9.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	tempRacer+=9;
-            }});
-        button0 = new JButton();
-        button0.setLocation(427,429);
-        button0.setSize(50,50);
-        button0.setText("0");
-        getContentPane().add(button0);
-        button0.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	tempRacer+=0;
-            }});
-        buttonPound = new JButton();
-        buttonPound.setLocation(480,429);
-        buttonPound.setSize(50,50);
-        buttonPound.setText("#");
-        getContentPane().add(buttonPound);
-        buttonPound.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	sendCommand("num "+tempRacer);
-            	tempRacer="";
-            }});
-
-        setTitle("ChronoTimer");
-        setSize(566,512);
-        setVisible(true);
-        setResizable(true);
-
-
-    }
+	}
     public static void main( String args[] )
     {
         new ChronoGui();
