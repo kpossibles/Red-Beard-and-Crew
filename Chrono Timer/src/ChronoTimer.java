@@ -34,6 +34,10 @@ public class ChronoTimer {
 		runs.add(new Run(1));
 		event.setRun(runs.getFirst());
 	}
+	
+	public String getEvent(){
+		return event.getClass().getName();
+	}
 
 	/**
 	 * Sets the time.

@@ -20,6 +20,9 @@ public class Console
 		System.out.println("***DEBUG: "+str);
 	}
 	
+	public String getRaceType(){
+		return chronotimer.getEvent();
+	}
 	/**
 	 * Parses the input and converts the lines into commands for Chronotimer to execute.
 	 *
