@@ -7,41 +7,19 @@ import javax.swing.*;
 public class ChronoGui extends JFrame
 {
     Console c;
-    JButton buttonPower;
-    JButton buttonFunction;
-    JButton buttonSwap;
-    JRadioButton radioChannel1;
-    JRadioButton radioChannel3;
-    JRadioButton radioChannel5;
-    JRadioButton radioChannel7;
-    JRadioButton radioChannel2;
-    JRadioButton radioChannel4;
-    JRadioButton radioChannel6;
-    JRadioButton radioChannel8;
+    JRadioButton radioChannel1, radioChannel3, radioChannel5, 
+    radioChannel7, radioChannel2, radioChannel4, 
+    radioChannel6, radioChannel8;
     JTextArea printDisplayTex;
-    JLabel labelLegend;
-    JComboBox typeSelect1;
-    JComboBox typeSelect3;
-    JComboBox typeSelect5;
-    JComboBox typeSelect7;
-    JComboBox typeSelect2;
-    JComboBox typeSelect4;
-    JComboBox typeSelect6;
-    JComboBox typeSelect8;
-    JLabel labelheader;
-    JButton printPower;
-    JButton button1;
-    JButton button2;
-    JButton button3;
-    JButton button4;
-    JButton button5;
-    JButton button6;
-    JButton button7;
-    JButton button8;
-    JButton button9;
-    JButton button0;
-    JButton buttonStar;
-    JButton buttonPound;
+    JLabel labelLegend, labelheader;
+    JComboBox<Object> typeSelect1, typeSelect3, typeSelect5, 
+    typeSelect7, typeSelect2, typeSelect4, typeSelect6, typeSelect8;
+    JButton buttonPower, buttonFunction, buttonSwap, printPower, 
+    button1, button2, button3, button4, 
+    button5, button6, button7, button8, button9, button0, 
+    buttonStar, buttonPound, buttonTrigger1, 
+    buttonTrigger3, buttonTrigger5, buttonTrigger7, 
+    buttonTrigger2, buttonTrigger6, buttonTrigger4, buttonTrigger8;
 
     public ChronoGui()
     {
@@ -94,8 +72,8 @@ public class ChronoGui extends JFrame
             }
         });
         radioChannel1 = new JRadioButton();
-        radioChannel1.setLocation(161,24);
-        radioChannel1.setSize(41,49);
+        radioChannel1.setLocation(160,30);
+        radioChannel1.setSize(40,40);
         radioChannel1.setText("1");
         radioChannel1.setSelected(false);
         getContentPane().add(radioChannel1);
@@ -106,8 +84,8 @@ public class ChronoGui extends JFrame
             }
         });
         radioChannel3 = new JRadioButton();
-        radioChannel3.setLocation(160,77);
-        radioChannel3.setSize(44,48);
+        radioChannel3.setLocation(160,70);
+        radioChannel3.setSize(40,40);
         radioChannel3.setText("3");
         radioChannel3.setSelected(false);
         getContentPane().add(radioChannel3);
@@ -118,8 +96,8 @@ public class ChronoGui extends JFrame
             }
         });
         radioChannel5 = new JRadioButton();
-        radioChannel5.setLocation(160,131);
-        radioChannel5.setSize(44,44);
+        radioChannel5.setLocation(160,110);
+        radioChannel5.setSize(40,40);
         radioChannel5.setText("5");
         radioChannel5.setSelected(false);
         getContentPane().add(radioChannel5);
@@ -130,8 +108,8 @@ public class ChronoGui extends JFrame
             }
         });
         radioChannel7 = new JRadioButton();
-        radioChannel7.setLocation(160,183);
-        radioChannel7.setSize(45,44);
+        radioChannel7.setLocation(160,150);
+        radioChannel7.setSize(40,40);
         radioChannel7.setText("7");
         radioChannel7.setSelected(false);
         getContentPane().add(radioChannel7);
@@ -142,8 +120,8 @@ public class ChronoGui extends JFrame
             }
         });
         radioChannel2 = new JRadioButton();
-        radioChannel2.setLocation(328,26);
-        radioChannel2.setSize(100,50);
+        radioChannel2.setLocation(350,30);
+        radioChannel2.setSize(40,40);
         radioChannel2.setText("2");
         radioChannel2.setSelected(false);
         getContentPane().add(radioChannel2);
@@ -154,8 +132,8 @@ public class ChronoGui extends JFrame
             }
         });
         radioChannel4 = new JRadioButton();
-        radioChannel4.setLocation(327,78);
-        radioChannel4.setSize(100,50);
+        radioChannel4.setLocation(350,70);
+        radioChannel4.setSize(40,40);
         radioChannel4.setText("4");
         radioChannel4.setSelected(false);
         getContentPane().add(radioChannel4);
@@ -166,8 +144,8 @@ public class ChronoGui extends JFrame
             }
         });
         radioChannel6 = new JRadioButton();
-        radioChannel6.setLocation(326,132);
-        radioChannel6.setSize(100,50);
+        radioChannel6.setLocation(350,110);
+        radioChannel6.setSize(40,40);
         radioChannel6.setText("6");
         radioChannel6.setSelected(false);
         getContentPane().add(radioChannel6);
@@ -178,8 +156,8 @@ public class ChronoGui extends JFrame
             }
         });
         radioChannel8 = new JRadioButton();
-        radioChannel8.setLocation(324,184);
-        radioChannel8.setSize(100,50);
+        radioChannel8.setLocation(350,150);
+        radioChannel8.setSize(40,40);
         radioChannel8.setText("8");
         radioChannel8.setSelected(false);
         getContentPane().add(radioChannel8);
@@ -191,7 +169,7 @@ public class ChronoGui extends JFrame
         });
         printDisplayTex = new JTextArea();
         printDisplayTex.setLocation(136,257);
-        printDisplayTex.setSize(200,100);
+        printDisplayTex.setSize(100,100);
         printDisplayTex.setText("");
         printDisplayTex.setRows(10);
         printDisplayTex.setColumns(10);
@@ -199,8 +177,8 @@ public class ChronoGui extends JFrame
 
         //not printing
         //TODO
-
-
+        
+        
         labelLegend = new JLabel();
         labelLegend.setLocation(135,360);
         labelLegend.setSize(175,48);
@@ -208,60 +186,150 @@ public class ChronoGui extends JFrame
         getContentPane().add(labelLegend);
 
         String typeSelect1_tmp[]={"Sensor1","Sensor2"};
-        typeSelect1 = new JComboBox(typeSelect1_tmp);
-        typeSelect1.setLocation(217,25);
-        typeSelect1.setSize(100,50);
+        typeSelect1 = new JComboBox<Object>(typeSelect1_tmp);
+        typeSelect1.setLocation(200,30);
+        typeSelect1.setSize(80,40);
         typeSelect1.setEditable(false );
         getContentPane().add(typeSelect1);
 
         String typeSelect3_tmp[]={"Sensor1","Sensor2"};
-        typeSelect3 = new JComboBox(typeSelect3_tmp);
-        typeSelect3.setLocation(216,78);
-        typeSelect3.setSize(100,50);
+        typeSelect3 = new JComboBox<Object>(typeSelect3_tmp);
+        typeSelect3.setLocation(200,70);
+        typeSelect3.setSize(80,40);
         typeSelect3.setEditable(false );
         getContentPane().add(typeSelect3);
 
         String typeSelect5_tmp[]={"Sensor1","Sensor2"};
-        typeSelect5 = new JComboBox(typeSelect5_tmp);
-        typeSelect5.setLocation(215,131);
-        typeSelect5.setSize(100,50);
+        typeSelect5 = new JComboBox<Object>(typeSelect5_tmp);
+        typeSelect5.setLocation(200,110);
+        typeSelect5.setSize(80,40);
         typeSelect5.setEditable(false );
         getContentPane().add(typeSelect5);
 
         String typeSelect7_tmp[]={"Sensor1","Sensor2"};
-        typeSelect7 = new JComboBox(typeSelect7_tmp);
-        typeSelect7.setLocation(217,184);
-        typeSelect7.setSize(100,50);
+        typeSelect7 = new JComboBox<Object>(typeSelect7_tmp);
+        typeSelect7.setLocation(200,150);
+        typeSelect7.setSize(80,40);
         typeSelect7.setEditable(false );
         getContentPane().add(typeSelect7);
+        
+        buttonTrigger1 = new JButton();
+        buttonTrigger1.setLocation(300,30);
+        buttonTrigger1.setSize(40,40);
+        buttonTrigger1.setText("1");
+        getContentPane().add(buttonTrigger1);
+        buttonTrigger1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendCommand("trig 1");
+            }
+        });
+        buttonTrigger3 = new JButton();
+        buttonTrigger3.setLocation(300,70);
+        buttonTrigger3.setSize(40,40);
+        buttonTrigger3.setText("3");
+        getContentPane().add(buttonTrigger3);
+        buttonTrigger3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendCommand("trig 3");
+            }
+        });
+        buttonTrigger5 = new JButton();
+        buttonTrigger5.setLocation(300,110);
+        buttonTrigger5.setSize(40,40);
+        buttonTrigger5.setText("1");
+        getContentPane().add(buttonTrigger5);
+        buttonTrigger5.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendCommand("trig 5");
+            }
+        });
+        buttonTrigger7 = new JButton();
+        buttonTrigger7.setLocation(300,150);
+        buttonTrigger7.setSize(40,40);
+        buttonTrigger7.setText("1");
+        getContentPane().add(buttonTrigger7);
+        buttonTrigger7.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendCommand("trig 7");
+            }
+        });
 
         String typeSelect2_tmp[]={"Sensor1","Sensor2"};
-        typeSelect2 = new JComboBox(typeSelect2_tmp);
-        typeSelect2.setLocation(433,26);
-        typeSelect2.setSize(100,50);
+        typeSelect2 = new JComboBox<Object>(typeSelect2_tmp);
+        typeSelect2.setLocation(390,30);
+        typeSelect2.setSize(80,40);
         typeSelect2.setEditable(false );
         getContentPane().add(typeSelect2);
 
         String typeSelect4_tmp[]={"Sensor1","Sensor2"};
-        typeSelect4 = new JComboBox(typeSelect4_tmp);
-        typeSelect4.setLocation(433,78);
-        typeSelect4.setSize(100,50);
+        typeSelect4 = new JComboBox<Object>(typeSelect4_tmp);
+        typeSelect4.setLocation(390,70);
+        typeSelect4.setSize(80,40);
         typeSelect4.setEditable(false );
         getContentPane().add(typeSelect4);
 
         String typeSelect6_tmp[]={"Sensor1","Sensor2"};
-        typeSelect6 = new JComboBox(typeSelect6_tmp);
-        typeSelect6.setLocation(433,131);
-        typeSelect6.setSize(100,50);
+        typeSelect6 = new JComboBox<Object>(typeSelect6_tmp);
+        typeSelect6.setLocation(390,110);
+        typeSelect6.setSize(80,40);
         typeSelect6.setEditable(false );
         getContentPane().add(typeSelect6);
 
         String typeSelect8_tmp[]={"Sensor1","Sensor2"};
-        typeSelect8 = new JComboBox(typeSelect8_tmp);
-        typeSelect8.setLocation(434,185);
-        typeSelect8.setSize(100,50);
+        typeSelect8 = new JComboBox<Object>(typeSelect8_tmp);
+        typeSelect8.setLocation(390,150);
+        typeSelect8.setSize(80,40);
         typeSelect8.setEditable(false );
         getContentPane().add(typeSelect8);
+        
+        buttonTrigger2 = new JButton();
+        buttonTrigger2.setLocation(490,30);
+        buttonTrigger2.setSize(40,40);
+        buttonTrigger2.setText("1");
+        getContentPane().add(buttonTrigger2);
+        buttonTrigger2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendCommand("trig 2");
+            }
+        });
+        buttonTrigger4 = new JButton();
+        buttonTrigger4.setLocation(490,70);
+        buttonTrigger4.setSize(40,40);
+        buttonTrigger4.setText("1");
+        getContentPane().add(buttonTrigger4);
+        buttonTrigger4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendCommand("trig 4");
+            }
+        });
+        buttonTrigger6 = new JButton();
+        buttonTrigger6.setLocation(490,110);
+        buttonTrigger6.setSize(40,40);
+        buttonTrigger6.setText("1");
+        getContentPane().add(buttonTrigger6);
+        buttonTrigger6.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendCommand("trig 6");
+            }
+        });
+        buttonTrigger8 = new JButton();
+        buttonTrigger8.setLocation(490,150);
+        buttonTrigger8.setSize(40,40);
+        buttonTrigger8.setText("1");
+        getContentPane().add(buttonTrigger8);
+        buttonTrigger8.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+                sendCommand("trig 8");
+            }
+        });
 
         labelheader = new JLabel();
         labelheader.setLocation(250,0);
@@ -277,7 +345,7 @@ public class ChronoGui extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 //TODO
-
+                
             }
         });
         getContentPane().add(printPower);
@@ -393,7 +461,7 @@ public class ChronoGui extends JFrame
                 sendCommand("num #");
             }});
 
-        setTitle("untitled ( JFrame )");
+        setTitle("ChronoTimer ( JFrame )");
         setSize(566,512);
         setVisible(true);
         setResizable(true);
