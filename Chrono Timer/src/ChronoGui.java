@@ -10,28 +10,26 @@ import javax.swing.border.EtchedBorder;
 @SuppressWarnings("serial")
 public class ChronoGui extends JFrame
 {
-	Console c;
-	Printer p;
-	JRadioButton radioChannel1, radioChannel3, radioChannel5, 
+	private Console c;
+	private Printer p;
+	private JRadioButton radioChannel1, radioChannel3, radioChannel5, 
     radioChannel7, radioChannel2, radioChannel4, 
     radioChannel6, radioChannel8;
-	JTextArea displayText, printerText;
-	JLabel lblEventType, labelLegend, label_1, label_2, label_3, label_4, lblFinish;
-	JButton buttonPower, buttonDNF, buttonEndRun, buttonSwap, printPower, 
+	private JTextArea displayText, printerText;
+	private JLabel lblEventType, labelLegend, enable01, enable02, lblStart, lblFinish;
+	private JButton buttonPower, buttonDNF, buttonEndRun, buttonSwap, printPower, 
     button1, button2, button3, button4, 
     button5, button6, button7, button8, button9, 
     buttonStar, button0, buttonPound, buttonTrigger1, 
     buttonTrigger3, buttonTrigger5, buttonTrigger7,
-//    left, right, up, down, 
     buttonTrigger2, buttonTrigger6, buttonTrigger4, buttonTrigger8;
-    JPanel lPanel, mPanel, mPanel1, mPanel1a, mPanel1b, mPanel1c, mPanel1d, mPanel2, panel_1, panel_2, panel_3,
+    private JPanel lPanel, mPanel, mPanel1, mPanel1a, mPanel1b, mPanel1c, mPanel1d, mPanel2, panel_1, panel_2,
     rPanel, rPanel1, rPanel2, keypad;
-    String tempRacer="";
-    JScrollPane scroll, scroll2;
-    JComboBox<String> eventType;
+    private String tempRacer="";
+    private JScrollPane scroll, scroll2;
+    private JComboBox<String> eventType;
 
-    public ChronoGui()
-    {
+    public ChronoGui(){
         c = new Console();
         p = new Printer();
         getContentPane().setLayout(null);
@@ -42,10 +40,12 @@ public class ChronoGui extends JFrame
         setVisible(true);
         resizeGUI();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        
+        pack();       
     }
 
+    /**
+     * Making the GUI respond dynamically to JFrame size
+     */
     private void resizeGUI() {
 		// TODO Auto-generated method stub
     	//Left Panel
@@ -59,10 +59,22 @@ public class ChronoGui extends JFrame
     	buttonEndRun.setBounds(20, buttonEndRun.getLocation().y, lpanelwidth, 60);
     	
     	// Mid Panel
+    	
     	mPanel.setBounds(getContentPane().getWidth()/4, 0, 5*getContentPane().getWidth()/12, getContentPane().getHeight());
     	mPanel1.setBounds(0, 0, mPanel.getWidth(), mPanel.getHeight()/2);
     	panel_1.setBounds(0, 0, mPanel.getWidth(), mPanel1.getHeight()/2-20);
-    	panel_2.setBounds(0, panel_1.getHeight()+20, mPanel.getWidth(), mPanel1.getHeight()/2-20);
+    	int splitwidth= mPanel.getWidth()/2-10;
+    	int splitheight= panel_1.getHeight()/2-10;
+    	lblStart.setBounds(0, 10, splitwidth, splitheight);
+    	enable01.setBounds(0, panel_1.getHeight()/2, splitwidth, splitheight);
+    	mPanel1a.setBounds(mPanel.getWidth()/2, 10, splitwidth, splitheight);
+    	mPanel1b.setBounds(mPanel.getWidth()/2, panel_1.getHeight()/2, splitwidth, splitheight);
+    	
+    	panel_2.setBounds(0, panel_1.getHeight()+20, mPanel.getWidth(), mPanel.getHeight()/2-20);
+    	lblFinish.setBounds(0, 10, splitwidth, splitheight);
+    	enable02.setBounds(0, panel_1.getHeight()/2, splitwidth, splitheight);
+    	mPanel1c.setBounds(mPanel.getWidth()/2, 10, splitwidth, splitheight);
+    	mPanel1d.setBounds(mPanel.getWidth()/2, panel_1.getHeight()/2, splitwidth, splitheight);
     	scroll.setBounds(20,20, mPanel.getWidth()-40, 2*(mPanel2.getHeight()/3));
     	labelLegend.setBounds((mPanel.getWidth()/2)-70, scroll.getHeight()+50, 150, 16);
 		
@@ -84,7 +96,8 @@ public class ChronoGui extends JFrame
     void sendCommand(String command){
     	String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+command;
         c.input(formatted);
-        c.display(displayText);
+        if(c.checkChronotimer())
+        	c.display(displayText);
         if(p.active)
         	p.printGUI(formatted, printerText);
         if(!c.checkChronotimer()){
@@ -157,8 +170,7 @@ public class ChronoGui extends JFrame
 	            @Override
 				public void actionPerformed(ActionEvent e)
 	            {
-	            	// TODO - implement swap in chronotimer
-	                sendCommand("EVENT "+eventType.getSelectedItem().toString());
+	            	sendCommand("EVENT "+eventType.getSelectedItem().toString());
 	                sendCommand("NEWRUN");
 	            }
 	        });
@@ -166,6 +178,7 @@ public class ChronoGui extends JFrame
 			buttonEndRun = new JButton("End Run");
 			buttonEndRun.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					 sendCommand("ENDRUN");
 				}
 			});
 			
@@ -187,14 +200,12 @@ public class ChronoGui extends JFrame
 	            @Override
 				public void actionPerformed(ActionEvent e)
 	            {
-	            	// TODO - implement swap in chronotimer
-	               sendCommand("SWAP");
+	            	sendCommand("SWAP");
 	            }
 	        });
 			lPanel.add(buttonSwap);
 			buttonEndRun.setBounds(53, 400, 100, 40);
-			lPanel.add(buttonEndRun);
-			
+			lPanel.add(buttonEndRun);			
 		
 		// middle
 		mPanel = new JPanel();
@@ -213,19 +224,20 @@ public class ChronoGui extends JFrame
 			panel_1.setBounds(8, 9, 240, 80);
 			mPanel1.add(panel_1);
 			panel_1.setLayout(null);
+			
 			// split into 4 rows
-			JLabel label = new JLabel("Start");
-			label.setBounds(2, 2, 96, 38);
-			label.setHorizontalAlignment(SwingConstants.RIGHT);
-			panel_1.add(label);
-			label.setFont(new Font("Lucida Grande", Font.BOLD, 21));
+			lblStart = new JLabel("Start");
+			lblStart.setBounds(2, 2, 96, 38);
+			lblStart.setHorizontalAlignment(SwingConstants.RIGHT);
+			panel_1.add(lblStart);
+			lblStart.setFont(new Font("Lucida Grande", Font.BOLD, 24));
 			mPanel1a = new JPanel();
+			mPanel1a.setLayout(new GridLayout(1,4,0,0));
 			mPanel1a.setBounds(100, 2, 140, 38);
 			panel_1.add(mPanel1a);
-			mPanel1a.setLayout(null);
 			
 			buttonTrigger1 = new JButton();
-			buttonTrigger1.setBounds(-4, 5, 40, 30);
+			buttonTrigger1.setBounds(0, 5, 40, 30);
 			buttonTrigger1.setText("1");
 			mPanel1a.add(buttonTrigger1);
 			setActionListener(buttonTrigger1, "trig 1");
@@ -249,14 +261,14 @@ public class ChronoGui extends JFrame
 			buttonTrigger7.setBounds(104, 5, 40, 30);
 			buttonTrigger7.setText("7");
 			mPanel1a.add(buttonTrigger7);
-			label_1 = new JLabel("Enable/Disable");
-			label_1.setBounds(3, 40, 96, 38);
-			label_1.setHorizontalAlignment(SwingConstants.RIGHT);
-			panel_1.add(label_1);
+			enable01 = new JLabel("Enable/Disable");
+			enable01.setBounds(3, 40, 96, 38);
+			enable01.setHorizontalAlignment(SwingConstants.RIGHT);
+			panel_1.add(enable01);
 			mPanel1b = new JPanel();
+			mPanel1b.setLayout(new GridLayout(1,4,0,0));
 			mPanel1b.setBounds(100, 40, 140, 38);
 			panel_1.add(mPanel1b);
-			mPanel1b.setLayout(null);
 			
 			radioChannel1 = new JRadioButton();
 			radioChannel1.setBounds(5, 8, 28, 23);
@@ -297,12 +309,12 @@ public class ChronoGui extends JFrame
 			lblFinish = new JLabel("Finish");
 			lblFinish.setBounds(2, 2, 96, 38);
 			lblFinish.setHorizontalAlignment(SwingConstants.RIGHT);
-			lblFinish.setFont(new Font("Lucida Grande", Font.BOLD, 21));
+			lblFinish.setFont(new Font("Lucida Grande", Font.BOLD, 24));
 			panel_2.add(lblFinish);
 			mPanel1c = new JPanel();
+			mPanel1c.setLayout(new GridLayout(1,4,0,0));
 			mPanel1c.setBounds(100, 2, 140, 38);
 			panel_2.add(mPanel1c);
-			mPanel1c.setLayout(null);
 			
 			buttonTrigger2 = new JButton();
 			buttonTrigger2.setBounds(-4, 5, 40, 30);
@@ -341,15 +353,15 @@ public class ChronoGui extends JFrame
 			buttonTrigger8.setBounds(104, 5, 40, 29);
 			buttonTrigger8.setText("8");
 			mPanel1c.add(buttonTrigger8);
-			label_3 = new JLabel("Enable/Disable");
-			label_3.setBounds(3, 40, 96, 38);
-			label_3.setHorizontalAlignment(SwingConstants.RIGHT);
-			panel_2.add(label_3);
+			enable02 = new JLabel("Enable/Disable");
+			enable02.setBounds(3, 40, 96, 38);
+			enable02.setHorizontalAlignment(SwingConstants.RIGHT);
+			panel_2.add(enable02);
 			
 			mPanel1d = new JPanel();
+			mPanel1d.setLayout(new GridLayout(1,4,0,0));
 			mPanel1d.setBounds(100, 40, 140, 38);
 			panel_2.add(mPanel1d);
-			mPanel1d.setLayout(null);
 			
 			radioChannel2 = new JRadioButton();
 			radioChannel2.setBounds(4, 8, 28, 23);
@@ -384,7 +396,7 @@ public class ChronoGui extends JFrame
 			
 			
 			
-			// mid middle
+			// bottom middle panel
 			mPanel2 = new JPanel();
 			mPanel2.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 			mPanel2.setSize(mPanel.getWidth(), mPanel.getHeight()/3);
@@ -462,7 +474,7 @@ public class ChronoGui extends JFrame
 			button9 = new JButton("9");
 			buttonStar = new JButton("*");
 			
-//			setActionListener(buttonStar, "");
+			//setActionListener(buttonStar, "");
 	        button0 = new JButton("0");
 	        buttonPound = new JButton("#");
 	        
@@ -516,8 +528,7 @@ public class ChronoGui extends JFrame
             }
         });
 	}
-    public static void main( String args[] )
-    {
+    public static void main( String args[] ){
         ChronoGui frame = new ChronoGui();
         frame.addComponentListener(new ComponentListener() {
             public void componentResized(ComponentEvent e) {
@@ -526,17 +537,14 @@ public class ChronoGui extends JFrame
 
 			@Override
 			public void componentMoved(ComponentEvent e) {
-				
 			}
 
 			@Override
 			public void componentShown(ComponentEvent e) {
-				
 			}
 
 			@Override
 			public void componentHidden(ComponentEvent e) {
-				
 			}
         });
     }
