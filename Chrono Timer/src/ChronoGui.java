@@ -28,6 +28,7 @@ public class ChronoGui extends JFrame
     rPanel, rPanel1, rPanel2, keypad;
     String tempRacer="";
     JScrollPane scroll, scroll2;
+    JComboBox<String> eventType;
 
     public ChronoGui()
     {
@@ -62,6 +63,7 @@ public class ChronoGui extends JFrame
         	radioChannel7.setSelected(false);
         	radioChannel8.setSelected(false);
         	displayText.setText("");
+        	eventType.setSelectedIndex(0);
         }
     }
     
@@ -104,14 +106,14 @@ public class ChronoGui extends JFrame
 			lPanel.setLayout(null);
 			lPanel.add(buttonPower);
 			
-			buttonFunction = new JButton("Function");
+			buttonFunction = new JButton("DNF");
 			buttonFunction.setBounds(25, 131, 100, 40);
 			lPanel.add(buttonFunction);
 			buttonFunction.addActionListener(new ActionListener() {
 	            @Override
 				public void actionPerformed(ActionEvent e)
 	            {
-	                // TODO
+	            	sendCommand("DNF");
 	            }
 	        });
 			
@@ -123,9 +125,7 @@ public class ChronoGui extends JFrame
 				public void actionPerformed(ActionEvent e)
 	            {
 	            	// TODO - implement swap in chronotimer
-	                if(true){
-	                	sendCommand("SWAP");
-	                }
+	               sendCommand("SWAP");
 	            }
 	        });
 			lPanel.add(buttonSwap);
@@ -150,6 +150,26 @@ public class ChronoGui extends JFrame
 			down.setBounds(76, 5, 20, 20);
 			lPanelNav.add(down);
 			down.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			eventType = new JComboBox<>();
+			eventType.setBounds(25, 92, 100, 30);
+			lPanel.add(eventType);
+			eventType.addItem("IND");
+			eventType.addItem("PARIND");
+			eventType.addItem("GRP");
+			eventType.addItem("PARGRP");
+			eventType.addActionListener(new ActionListener() {
+	            @Override
+				public void actionPerformed(ActionEvent e)
+	            {
+	            	// TODO - implement swap in chronotimer
+	                sendCommand("EVENT "+eventType.getSelectedItem().toString());
+	            }
+	        });
+			
+			JLabel lblEventType = new JLabel("Event Type");
+			lblEventType.setBounds(38, 74, 73, 16);
+			lPanel.add(lblEventType);
 			
 		
 		// middle
