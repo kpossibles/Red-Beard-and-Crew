@@ -172,7 +172,7 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 			System.out.println("in the client");
 
 			// Client will connect to this location
-			URL site = new URL("http://localhost:8000/sendresults");
+			URL site = new URL("http://129.89.143.92/sendresults");
 			HttpURLConnection conn = (HttpURLConnection) site.openConnection();
 
 			// now create a POST request

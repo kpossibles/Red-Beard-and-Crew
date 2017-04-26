@@ -1,16 +1,16 @@
 
 public class Employee implements Comparable<Employee>{
 	String title;
-	String fname;
-	String lname;
+	String firstname;
+	String lastname;
 	String gender;
-	String dept;
+	String department;
 	String phone;
 	
 	public Employee(String _fname, String _lname, String _dept, String _phone, String _title, String _gender){
-		fname = toTitleCase(_fname);
-		lname =toTitleCase(_lname);
-		dept = _dept.toUpperCase();
+		firstname = toTitleCase(_fname);
+		lastname =toTitleCase(_lname);
+		department = _dept.toUpperCase();
 		phone = _phone;
 		title = _title;
 		gender = _gender;
@@ -23,13 +23,13 @@ public class Employee implements Comparable<Employee>{
 	}
 	
 	public String toString(){
-		return title + " " + fname + " " + lname + " " + dept + " " + phone;
+		return title + " " + firstname + " " + lastname + " " + department + " " + phone;
 	}
 
 	@Override
 	public int compareTo(Employee o) {
-		int last = this.lname.compareTo(o.lname);
-		return last == 0 ? this.fname.compareTo(o.fname) : last;
+		int last = this.lastname.compareTo(o.lastname);
+		return last == 0 ? this.firstname.compareTo(o.firstname) : last;
 	}
 
 }

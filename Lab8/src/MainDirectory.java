@@ -30,7 +30,7 @@ public class MainDirectory {
 		for(Employee e: list){
 			//Insert in place to maintain sort
 			for (int i = 0; i < employees.size(); i++)
-				if (e.lname.compareTo(employees.get(i).lname) < 0){
+				if (e.lastname.compareTo(employees.get(i).lastname) < 0){
 					employees.add(i, e);
 					break;
 				}
