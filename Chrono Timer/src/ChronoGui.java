@@ -10,10 +10,11 @@ import javax.swing.border.EtchedBorder;
 public class ChronoGui extends JFrame
 {// TODO
 	Console c;
+	Printer p;
 	JRadioButton radioChannel1, radioChannel3, radioChannel5, 
     radioChannel7, radioChannel2, radioChannel4, 
     radioChannel6, radioChannel8;
-	JTextArea printDisplayTex;
+	JTextArea displayText, printerText;
 	JLabel labelLegend, label_1, label_2, label_3, label_4, lblFinish;
 	JButton buttonPower, buttonFunction, buttonSwap, printPower, 
     button1, button2, button3, button4, 
@@ -22,18 +23,19 @@ public class ChronoGui extends JFrame
     buttonTrigger3, buttonTrigger5, buttonTrigger7, 
     buttonTrigger2, buttonTrigger6, buttonTrigger4, buttonTrigger8,
     left, right, up, down;
-    JPanel lPanel, lPanelNav, mPanel1, mPanel1a, mPanel1b, mPanel1c, mPanel1d, mPanel2, panel_1, panel_2, panel_3,
-    rPanel, rPanel1, rPanel2, rPanel3;
+    JPanel lPanel, lPanelNav, mPanel, mPanel1, mPanel1a, mPanel1b, mPanel1c, mPanel1d, mPanel2, panel_1, panel_2, panel_3,
+    rPanel, rPanel1, rPanel2, keypad;
     String tempRacer="";
+    JScrollPane scroll, scroll2;
 
     public ChronoGui()
     {
         c = new Console();
         getContentPane().setLayout(null);
-        setSize(600, 400);
-        setVisible(true);
 		setTitle("ChronoTimer");
         setupGUI();
+        setSize(600, 400);
+        setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
@@ -43,7 +45,10 @@ public class ChronoGui extends JFrame
      * @param command
      */
     void sendCommand(String command){
-        c.input(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+command);
+    	String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+command;
+        c.input(formatted);
+        if(p!=null)
+        	p.printGUI(formatted, printerText);
     }
     
 	/**
@@ -103,7 +108,10 @@ public class ChronoGui extends JFrame
 	            @Override
 				public void actionPerformed(ActionEvent e)
 	            {
-	                // TODO
+	            	// TODO - implement swap in chronotimer
+	                if(true){
+	                	sendCommand("SWAP");
+	                }
 	            }
 	        });
 			lPanel.add(buttonSwap);
@@ -133,7 +141,7 @@ public class ChronoGui extends JFrame
 			
 		
 		// middle
-		JPanel mPanel = new JPanel();
+		mPanel = new JPanel();
 		mPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		mPanel.setLocation(150, 0);
 		mPanel.setSize(260, 377);
@@ -164,24 +172,12 @@ public class ChronoGui extends JFrame
 			buttonTrigger1.setBounds(-4, 5, 40, 30);
 			buttonTrigger1.setText("1");
 			mPanel1a.add(buttonTrigger1);
-			buttonTrigger1.addActionListener(new ActionListener() {
-			    @Override
-				public void actionPerformed(ActionEvent e)
-			    {
-			        sendCommand("trig 1");
-			    }
-			});
+			setActionListener(buttonTrigger1, "trig 1");
 			buttonTrigger3 = new JButton();
 			buttonTrigger3.setBounds(32, 5, 40, 30);
 			buttonTrigger3.setText("3");
 			mPanel1a.add(buttonTrigger3);
-			buttonTrigger3.addActionListener(new ActionListener() {
-			    @Override
-				public void actionPerformed(ActionEvent e)
-			    {
-			        sendCommand("trig 3");
-			    }
-			});
+			setActionListener(buttonTrigger3, "trig 3");
 			buttonTrigger5 = new JButton();
 			buttonTrigger5.setBounds(68, 5, 40, 30);
 			buttonTrigger5.setText("5");
@@ -336,12 +332,16 @@ public class ChronoGui extends JFrame
 			mPanel2.setSize(mPanel.getWidth(), mPanel.getHeight()/3);
 			mPanel2.setLayout(null);
 			
-			printDisplayTex = new JTextArea();
-			printDisplayTex.setBounds(38, 15, 180, 125);
-			printDisplayTex.setRows(10);
-			printDisplayTex.setColumns(15);
-			mPanel2.add(printDisplayTex);
-			
+			displayText = new JTextArea();
+			displayText.setEditable(false);
+			scroll = new JScrollPane(displayText);
+		    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		    scroll.setBounds(38, 15, 180, 125);
+			mPanel2.add(scroll);
+			labelLegend = new JLabel("Queue/Running/Final");
+			labelLegend.setBounds(60, 155, 136, 16);
+			mPanel2.add(labelLegend);
 			mPanel.add(mPanel1);
 			mPanel.add(mPanel2);
 		
@@ -359,11 +359,8 @@ public class ChronoGui extends JFrame
 			rPanel2 = new JPanel();
 			rPanel2.setLocation(0, 188);
 			rPanel2.setSize(190, 190);
-			printDisplayTex.setRows(10);
-			printDisplayTex.setColumns(15);
-			labelLegend = new JLabel("Queue/Running/Final");
-			labelLegend.setBounds(60, 155, 136, 16);
-			mPanel2.add(labelLegend);
+			displayText.setRows(10);
+			displayText.setColumns(15);
 			rPanel2.setLayout(null);
 			rPanel.setLayout(null);
 			
@@ -371,17 +368,29 @@ public class ChronoGui extends JFrame
 			rPanel.add(rPanel1);
 			
 			printPower = new JButton("Printer Pwr");
+			printPower.setBounds(39, 12, 111, 29);
 			printPower.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					p = new Printer();
 				}
 			});
+			rPanel1.setLayout(null);
 			rPanel1.add(printPower);
-			rPanel.add(rPanel2);
-			rPanel3 = new JPanel();
-			rPanel3.setBounds(10, 15, 170, 123);
-			rPanel2.add(rPanel3);
-			rPanel3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-			rPanel3.setLayout(new GridLayout(4,3,0,1));
+			
+			printerText = new JTextArea();
+			printerText.setEditable(false);
+			scroll2 = new JScrollPane(printerText);
+			scroll2.setBounds(24, 53, 141, 125);
+			rPanel1.add(scroll2);
+			scroll2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+			scroll2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			
+			rPanel.add(rPanel2);			
+			keypad = new JPanel();
+			keypad.setBounds(10, 15, 170, 123);
+			rPanel2.add(keypad);
+			keypad.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+			keypad.setLayout(new GridLayout(4,3,0,1));
 			
 			button1 = new JButton("1");
 			button2 = new JButton("2");
@@ -418,18 +427,18 @@ public class ChronoGui extends JFrame
 	        buttonAction(button8, 8);
 	        buttonAction(button9, 9);
 	        buttonAction(button0, 0);
-	        rPanel3.add(button1);
-	        rPanel3.add(button2);
-	        rPanel3.add(button3);
-	        rPanel3.add(button4);
-	        rPanel3.add(button5);
-	        rPanel3.add(button6);
-	        rPanel3.add(button7);
-	        rPanel3.add(button8);
-	        rPanel3.add(button9);
-	        rPanel3.add(buttonStar);
-	        rPanel3.add(button0);
-	        rPanel3.add(buttonPound);
+	        keypad.add(button1);
+	        keypad.add(button2);
+	        keypad.add(button3);
+	        keypad.add(button4);
+	        keypad.add(button5);
+	        keypad.add(button6);
+	        keypad.add(button7);
+	        keypad.add(button8);
+	        keypad.add(button9);
+	        keypad.add(buttonStar);
+	        keypad.add(button0);
+	        keypad.add(buttonPound);
 		
 		
 		

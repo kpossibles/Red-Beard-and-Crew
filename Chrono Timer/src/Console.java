@@ -74,7 +74,7 @@ public class Console
 			}
 			// DISC <num> Disconnect a sensor from channel <num>
 			else if (command.equalsIgnoreCase("DISC")){
-				// NOT IMPLEMENTED IN SPRINT 1
+				chronotimer.toggle(argument);
 			} 
 			// EVENT <type> IND | PARIND | GRP | PARGRP
 			else if (command.equalsIgnoreCase("EVENT")){
@@ -108,7 +108,8 @@ public class Console
 			}
 			// SWAP exchange next two competitors to finish in IND
 			else if (command.equalsIgnoreCase("SWAP")){
-				// NOT IMPLEMENTED IN SPRINT 1
+				// TODO
+				chronotimer.swap();
 			}
 			// DNF The next competitor to finish will not finish
 			else if (command.equalsIgnoreCase("DNF")){
