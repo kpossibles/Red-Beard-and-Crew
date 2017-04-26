@@ -28,7 +28,6 @@ public class IndividualTimed extends Event {
 			currentRun = new Run(1);
 		}
 
-		@Override
 		public void addRacer(int r){
 			if(currentRun!=null && currentRun.isActive()){
 				Racer racer = new Racer(r);
@@ -41,7 +40,6 @@ public class IndividualTimed extends Event {
 			}
 		}
 		
-		@Override
 		public void removeRacer(int index){
 			if(currentRun.isActive()){
 				for(Racer r : racing){
@@ -54,12 +52,10 @@ public class IndividualTimed extends Event {
 			}
 		}
 		
-		@Override
 		public void setTimer(Timer timer){
 			timer = this.timer;
 		}
 		
-		@Override
 		public void setRun(Run _run){
 			currentRun = _run;
 			racing = new LinkedList<Racer>();
@@ -92,14 +88,12 @@ public class IndividualTimed extends Event {
 		}
 		
 		// for CANCEL
-		@Override
 		public void discard(){
 			racing.peek().reset();
 			print.print("Start was not valid. Racer will retry.");
 		}
 		
 		// for DNF
-		@Override
 		public void dnf(){
 			Racer racer = racing.poll();
 			if (racer != null && racer.getStart() != 0){
@@ -110,7 +104,6 @@ public class IndividualTimed extends Event {
 				print.print("No racer queued to finish.");
 		}
 
-		@Override
 		public void trigger(int id) {
 			// Figures out what the channel type is, and then does the relevant function. 
 			if(id<=channelMode.length){

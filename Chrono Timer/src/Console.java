@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 //import java.time.format.FormatStyle;
 import java.util.*;
+//test
 
 
 public class Console
@@ -20,9 +21,6 @@ public class Console
 		System.out.println("***DEBUG: "+str);
 	}
 	
-	public String getRaceType(){
-		return chronotimer.getEvent();
-	}
 	/**
 	 * Parses the input and converts the lines into commands for Chronotimer to execute.
 	 *
@@ -45,13 +43,10 @@ public class Console
 		// POWER(if off) Create ChronoTimer, which should set to default state
 		// POWER(if on) Delete ChronoTimer
 		if (command.equalsIgnoreCase("POWER")){
-			if (chronotimer != null){
+			if (chronotimer != null)
 				chronotimer = null;
-				System.out.println("POWER OFF");
-			} else{
+			else
 				chronotimer = new ChronoTimer(printer);
-				System.out.println("POWER ON");
-			}
 		}
 		else if (chronotimer != null) {
 			chronotimer.setTime(timestamp);

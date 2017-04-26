@@ -2,7 +2,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
-
+import java.awt.*;
+import java.awt.event.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.swing.*;
+//test
 public class Printer {
 	private Queue<String> record;
 	private PrintWriter writer = null;
@@ -28,6 +33,12 @@ public class Printer {
 	 */
 	public void print(String str) {
 		System.out.println(str);
+		addToRecord(str);
+	}
+	
+	public void printGUI(String str,JTextArea text){
+		
+		text.setText(str);
 		addToRecord(str);
 	}
 
