@@ -1,6 +1,8 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
+import javax.swing.JTextArea;
+
 public class IndividualTimed extends Event {
 //racers queue for single runs of a race.  Each racer has a start event and end event.  Start is on one channel and end is on another channel.
 	
@@ -15,6 +17,7 @@ public class IndividualTimed extends Event {
 		String channelMode[];
 		Timer timer;
 		Printer print;
+		Racer started = null, racer;
 
 		public IndividualTimed(Timer _timer, Printer _print){
 			racing = new LinkedList<Racer>();
@@ -71,13 +74,19 @@ public class IndividualTimed extends Event {
 				}
 			}
 			if (started != null)
-					print.print(String.format("Racer %d started at %s", started.getId(), timer.getTimeString()));
+				print.print(String.format("Racer %d started at %s", started.getId(), timer.getTimeString()));
 			else
 				print.print("No racer queued to start.");
 		}
 		
+//		public void start(JTextArea text){
+//			start();
+//			if (started != null)
+//				print.printGUI(String.format("%d\t%s R", started.getId(), timer.getTimeString()), text);
+//		}
+		
 		public void finish(){
-			Racer racer = racing.poll();
+			racer = racing.poll();
 			if (racer != null && racer.getStart() != 0){
 				racer.setFinish(timer.getTime());
 				print.print(String.format("Racer %d finished at %s", racer.getId(), timer.getTimeString()));
@@ -86,6 +95,13 @@ public class IndividualTimed extends Event {
 			else
 				print.print("No racer queued to finish.");
 		}
+		
+//		public void finish(JTextArea text){
+//			finish();
+//			if (racer != null && racing.size()==0){
+//				print.printGUI(String.format("%d\t%s F", racer.getId(), timer.getTime()), text);
+//			}
+//		}
 		
 		// for CANCEL
 		public void discard(){

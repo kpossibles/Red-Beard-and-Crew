@@ -46,6 +46,14 @@ public class Channel {
 		return on;
 	}
 	
+	public void setOn(){
+		on=true;
+	}
+	
+	public void setOff(){
+		on=false;
+	}
+	
 	/**
 	 * Triggers the ChronoTimer.
 	 */

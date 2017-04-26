@@ -31,6 +31,7 @@ public class ChronoGui extends JFrame
     public ChronoGui()
     {
         c = new Console();
+        p = new Printer();
         getContentPane().setLayout(null);
 		setTitle("ChronoTimer");
         setupGUI();
@@ -47,7 +48,8 @@ public class ChronoGui extends JFrame
     void sendCommand(String command){
     	String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+command;
         c.input(formatted);
-        if(p!=null)
+        c.display(displayText);
+        if(p.active)
         	p.printGUI(formatted, printerText);
     }
     
@@ -371,7 +373,10 @@ public class ChronoGui extends JFrame
 			printPower.setBounds(39, 12, 111, 29);
 			printPower.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					p = new Printer();
+					if(p.active)
+						p.active = false;
+					else
+						p.active = true;
 				}
 			});
 			rPanel1.setLayout(null);
@@ -380,7 +385,7 @@ public class ChronoGui extends JFrame
 			printerText = new JTextArea();
 			printerText.setEditable(false);
 			scroll2 = new JScrollPane(printerText);
-			scroll2.setBounds(24, 53, 141, 125);
+			scroll2.setBounds(5, 53, 180, 125);
 			rPanel1.add(scroll2);
 			scroll2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -410,8 +415,13 @@ public class ChronoGui extends JFrame
 	        buttonPound.addActionListener(new ActionListener() {
 	            @Override
 				public void actionPerformed(ActionEvent e) {
-	            	sendCommand("num "+tempRacer);
-	            	tempRacer="";
+	            	if(tempRacer.length()>0){
+		            	sendCommand("num "+tempRacer);
+		            	tempRacer="";
+	            	}
+	            	else {
+	            		System.out.println("Enter a number, then press #.");
+	            	}
 	            }});
 	        
 	        buttonAction(button1, 1);

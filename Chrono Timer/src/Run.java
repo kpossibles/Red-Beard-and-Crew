@@ -73,4 +73,21 @@ public class Run {
 	public Racer getRacer(){
 		return racers.get(0);
 	}
+	
+	public Racer getLast(){
+		Racer best=new Racer();
+		for(Racer r: racers){
+			if(r.getFinish()>0 && r.getTime().compareTo(best.getTime())>0)
+				best=r;
+		}
+		return best.getFinish()>0 ? best : null;
+	}
+	
+	public ArrayList<Racer> getRacers(){
+		return racers;
+	}
+	
+	public int size(){
+		return racers.size();
+	}
 }

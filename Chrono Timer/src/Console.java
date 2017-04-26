@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 //import java.time.format.FormatStyle;
 import java.util.*;
+
+import javax.swing.JTextArea;
+
 //test
 
 
@@ -43,10 +46,13 @@ public class Console
 		// POWER(if off) Create ChronoTimer, which should set to default state
 		// POWER(if on) Delete ChronoTimer
 		if (command.equalsIgnoreCase("POWER")){
-			if (chronotimer != null)
+			if (chronotimer != null){
 				chronotimer = null;
-			else
+				System.out.println("POWER OFF");
+			} else {
 				chronotimer = new ChronoTimer(printer);
+				System.out.println("POWER ON");
+			}
 		}
 		else if (chronotimer != null) {
 			chronotimer.setTime(timestamp);
@@ -65,11 +71,11 @@ public class Console
 			// CONN <sensor><num> Connect a type of sensor to channel <num>
 			// <sensor> = {EYE, GATE, PAD}
 			else if (command.equalsIgnoreCase("CONN")){
-				// NOT IMPLEMENTED IN SPRINT 1
+				chronotimer.connect(argument, true);
 			}
 			// DISC <num> Disconnect a sensor from channel <num>
 			else if (command.equalsIgnoreCase("DISC")){
-				chronotimer.toggle(argument);
+				chronotimer.connect(argument, false);
 			} 
 			// EVENT <type> IND | PARIND | GRP | PARGRP
 			else if (command.equalsIgnoreCase("EVENT")){
@@ -136,6 +142,8 @@ public class Console
 		return true;
 	}
 	
+	
+	
 	/**
 	 * Reads from text file.
 	 *
@@ -179,15 +187,15 @@ public class Console
 //					+ "RESET\n - Resets the system to the initial state\n"
 					+ "TIME <hour>:<min>:<sec>\n - Sets the current time\n"
 					+ "TOG <channel>\n - Toggle the state of the channel <CHANNEL>\n"
-//					+ "CONN <sensor> <NUM>\n - Connect a type of sensor to channel <NUM>, <sensor> = {EYE, GATE, PAD}\n"
-//					+ "DISC <NUM> EVENT <TYPE>\n - Disconnect a sensor from channel <NUM>\n"
+					+ "CONN <sensor> <NUM>\n - Connect a type of sensor to channel <NUM>, <sensor> = {EYE, GATE, PAD}\n"
+					+ "DISC <NUM> EVENT <TYPE>\n - Disconnect a sensor from channel <NUM>\n"
 					+ "EVENT <TYPE>\n - <TYPE> = {IND, PARIND, GRP, PARGRP}\n"
 					+ "NEWRUN\n - Create a new Run (but must end a run first)\n"
 					+ "ENDRUN\n - End a Run\n"
 					+ "PRINT <RUN>\n - Print the run on stdout\n"
 //					+ "EXPORT <RUN>\n - Export run in XML to file “RUN<RUN>\n"
 					+ "NUM <NUMBER>\n - Set <NUMBER> as the next competitor to start.\n"
-//					+ "CLR <NUMBER>\n - Clear <NUMBER> the competitor from queue\n"
+					+ "CLR <NUMBER>\n - Clear <NUMBER> the competitor from queue\n"
 					+ "SWAP\n - Exchange next two competitors to finish in IND\n"
 					+ "DNF\n - The next competitor to finish will not finish\n"
 					+ "TRIG <NUM>\n - Triggers channel <NUM>\n"
@@ -216,6 +224,10 @@ public class Console
 	 */
 	public String getRecord(){
 		return printer.getRecord();
+	}
+	
+	public void display(JTextArea textbox){
+		chronotimer.display(textbox);
 	}
 	
 	/**

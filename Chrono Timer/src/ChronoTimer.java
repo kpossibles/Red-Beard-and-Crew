@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.swing.JTextArea;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ChronoTimer.
@@ -163,11 +165,53 @@ public class ChronoTimer {
 	}
 
 	public void swap() {
-		// TODO check if working correctly
 		if(event.getType()=="IND"){
 			event.swap();
 		}
 		
+	}
+
+	/**
+	 * Connect or disconnect a sensor
+	 * 
+	 * @param i
+	 * @param on
+	 */
+	public void connect(String i, boolean on) {
+		int id = Integer.valueOf(i);
+		if (id < channels.length){
+			if(on)
+				channels[id-1].setOn();
+			else
+				channels[id-1].setOff();
+		}
+	}
+
+	public void display(JTextArea textbox) {
+		// TODO double check to see if display is working correctly
+		String q = "", r="", f="";
+		Run run = runs.peek();
+		if(!run.isEmpty()){
+			for(int i=0; i<3; i++){
+				if(i>run.size()-1)
+					break;
+				Racer racer = run.getRacers().get(i);
+				
+				if(racer.getStart()==0)
+					q+=(racer.getId()+" Q\n");
+				if(racer.getStart()>0){
+					if(racer.DNF())
+						f+=(racer.getId()+"\t"+" DNF\n");
+					else
+						r+=(racer.getId()+"\t"+racer.getStartTime()+" R\n");
+				}
+			}
+			if(run.getLast()!=null)
+				f+=(run.getLast().getId()+"\t"+run.getLast().getTime()+" F\n");
+			
+			// update display textbox with queue, racing, and finish
+			textbox.setText(q+"\n"+r+"\n"+f);
+		}
 	}
 
 }

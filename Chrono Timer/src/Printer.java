@@ -7,12 +7,14 @@ import javax.swing.*;
 public class Printer {
 	private Queue<String> record;
 	private PrintWriter writer = null;
+	boolean active;
 	
 	/**
 	 * Instantiates a new printer.
 	 */
 	public Printer(){
 		record = new LinkedList<String>();
+		active = false;
 	}
 	
 	public Printer(JTextArea d){
@@ -64,18 +66,10 @@ public class Printer {
 	}
 	
 	private String filename(int runNum){
-		if(runNum<10) {
-			return "Run00"+runNum+".txt";
-		}
-		else if(runNum>=10 && runNum<100) {
-			return "Run0"+runNum+".txt";
-		}
-		else {
-			return "Run"+runNum+".txt";
-		}
+		return String.format("Run%03d.txt", runNum);
 	}
 	
-	public void printGUI(String str,JTextArea text){		
+	public void printGUI(String str,JTextArea text){
 		text.setText(text.getText()+'\n'+str);
 		addToRecord(str);
 	}

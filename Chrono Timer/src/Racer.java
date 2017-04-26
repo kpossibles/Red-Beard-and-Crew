@@ -68,7 +68,11 @@ public class Racer {
 	public String getTime(){
 		if(didNotFinish)
 			return "-1";
-		long sec = TimeUnit.MILLISECONDS.toSeconds(finish - start);
+		return convertToTime(finish-start);
+	}
+	
+	private String convertToTime(long time){
+		long sec = TimeUnit.MILLISECONDS.toSeconds(time);
 		long min = TimeUnit.SECONDS.toMinutes(sec);
 		long hours = TimeUnit.MINUTES.toHours(min);
 		long remainMinute = min - TimeUnit.HOURS.toMinutes(min);
@@ -76,7 +80,6 @@ public class Racer {
 		long remainMilli = (finish - start) - TimeUnit.SECONDS.toMillis(remainSec);
 		
 		String result = String.format("%02d:%02d:%02d.%d", hours,remainMinute, remainSec, remainMilli/100);
-		
 		return result;
 	}
 
@@ -87,6 +90,14 @@ public class Racer {
 	 */
 	public long getStart() {
 		return start;
+	}
+	
+	public String getStartTime(){
+		return convertToTime(start);
+	}
+	
+	public String getFinishTime(){
+		return didNotFinish ? "DNF" : convertToTime(finish);
 	}
 	
 	/**
@@ -120,6 +131,10 @@ public class Racer {
 	public void didNotFinish() {
 		didNotFinish = true;
 		finish = 0;
+	}
+	
+	public boolean DNF() {
+		return didNotFinish;
 	}
 	
 	/**
