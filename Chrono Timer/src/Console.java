@@ -137,7 +137,7 @@ public class Console
 				return false;
 		}
 			else {
-				System.out.println("The Chronotimer is currently off.  Try 'POWER' to turn it on. ");
+				System.out.println("The Chronotimer is currently off.  Try 'POWER' to turn it on.");
 			}
 		
 		return true;

@@ -54,17 +54,17 @@ public class ChronoTimer {
 	 */
 	public void setEvent(String type) {
 		//IND | PARIND | GRP | PARGRP
-		if (type.equals("IND")) {
+		if (type.equalsIgnoreCase("IND")) {
 			event = new IndividualTimed(timer, print);
 			print.print("Event set to Individual");
-		} else if (type.equals("PARIND")) {
+		} else if (type.equalsIgnoreCase("PARIND")) {
 			event = new ParallelTimed(timer, print);
 			print.print("Event set to Parallel");
-		} else if (type.equals("GRP")) {
+		} else if (type.equalsIgnoreCase("GRP")) {
 			event = new GroupTimed(timer, print);
 			print.print("Event set to Group");
 		}
-//		else if(type.equals("PARGRP")){
+//		else if(type.equalsIgnoreCase("PARGRP")){
 //			event = new ParallelGroupTimed(timer, print);
 //			print.print("Event Set to Parallel Group");
 //		}
@@ -167,8 +167,11 @@ public class ChronoTimer {
 	public void swap() {
 		if(event.getType()=="IND"){
 			event.swap();
-		}
-		
+		}		
+	}
+	
+	public String getType() {
+		return event.getType();
 	}
 
 	/**
