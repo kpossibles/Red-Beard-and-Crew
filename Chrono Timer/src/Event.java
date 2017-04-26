@@ -11,6 +11,11 @@ public abstract class Event{
 	abstract public void addRacer(int r);
 	
 	/**
+	 * @return String type of event
+	 */
+	abstract public String getType();
+	
+	/**
 	 * Triggers a channel.
 	 *
 	 * @param id channel ID
@@ -47,4 +52,6 @@ public abstract class Event{
 	 * @param timer the new timer
 	 */
 	abstract public void setTimer(Timer timer);
+
+	abstract public void swap();
 }

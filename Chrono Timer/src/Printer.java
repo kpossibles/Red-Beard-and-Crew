@@ -2,12 +2,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+<<<<<<< HEAD
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.swing.*;
 //test
+=======
+import javax.swing.*;
+
+>>>>>>> temp
 public class Printer {
 	private Queue<String> record;
 	private PrintWriter writer = null;
@@ -16,6 +21,10 @@ public class Printer {
 	 * Instantiates a new printer.
 	 */
 	public Printer(){
+		record = new LinkedList<String>();
+	}
+	
+	public Printer(JTextArea d){
 		record = new LinkedList<String>();
 	}
 	
@@ -29,7 +38,7 @@ public class Printer {
 	}
 
 	/**
-	 * Prints to the Console and to the
+	 * Prints to the Console and adds to record
 	 */
 	public void print(String str) {
 		System.out.println(str);
@@ -80,4 +89,10 @@ public class Printer {
 			return "Run"+runNum+".txt";
 		}
 	}
+	
+	public void printGUI(String str,JTextArea text){		
+		text.setText(text.getText()+'\n'+str);
+		addToRecord(str);
+	}
+
 }

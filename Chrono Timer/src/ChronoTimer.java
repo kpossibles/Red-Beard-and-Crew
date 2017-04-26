@@ -162,4 +162,12 @@ public class ChronoTimer {
 		event.addRacer(num);
 	}
 
+	public void swap() {
+		// TODO Auto-generated method stub
+		if(event.getType()=="IND"){
+			event.swap();
+		}
+		
+	}
+
 }

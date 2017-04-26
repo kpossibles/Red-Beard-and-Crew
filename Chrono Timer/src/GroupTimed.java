@@ -125,4 +125,9 @@ public class GroupTimed extends Event {
 	public void setTimer(Timer _timer) {
 		timer = _timer;
 	}
+
+	@Override
+	public String getType() {
+		return "GRP";
+	}
 }

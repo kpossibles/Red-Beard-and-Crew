@@ -118,4 +118,25 @@ public class IndividualTimed extends Event {
 					print.print("No racer queued to start.");
 			}
 		}
+
+		@Override
+		public String getType() {
+			return "IND";
+		}
+		
+		@Override
+		public void swap(){
+			if(racing.size()>=2){
+				Object[] temp = racing.toArray();
+				Racer racer1 = (Racer) temp[1];
+				temp[1] = temp[0];
+				temp[0] = racer1;
+				racing = new LinkedList<Racer>();
+				for(Object r: temp){
+					racing.add((Racer)r);
+				}
+				System.out.println("Swapped 2 racers at front of queue.");
+				
+			}
+		}
 }
