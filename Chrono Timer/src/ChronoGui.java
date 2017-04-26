@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
@@ -51,6 +52,17 @@ public class ChronoGui extends JFrame
         c.display(displayText);
         if(p.active)
         	p.printGUI(formatted, printerText);
+        if(!c.checkChronotimer()){
+        	radioChannel1.setSelected(false);
+        	radioChannel2.setSelected(false);
+        	radioChannel3.setSelected(false);
+        	radioChannel4.setSelected(false);
+        	radioChannel5.setSelected(false);
+        	radioChannel6.setSelected(false);
+        	radioChannel7.setSelected(false);
+        	radioChannel8.setSelected(false);
+        	displayText.setText("");
+        }
     }
     
 	/**
@@ -138,8 +150,6 @@ public class ChronoGui extends JFrame
 			down.setBounds(76, 5, 20, 20);
 			lPanelNav.add(down);
 			down.setHorizontalAlignment(SwingConstants.CENTER);
-			
-			
 			
 		
 		// middle
@@ -327,6 +337,8 @@ public class ChronoGui extends JFrame
 			        sendCommand("trig 8");
 			    }
 			});
+			
+			
 			
 			// mid middle
 			mPanel2 = new JPanel();

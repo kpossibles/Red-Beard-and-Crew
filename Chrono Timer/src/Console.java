@@ -47,6 +47,7 @@ public class Console
 		// POWER(if on) Delete ChronoTimer
 		if (command.equalsIgnoreCase("POWER")){
 			if (chronotimer != null){
+				chronotimer.reset();
 				chronotimer = null;
 				System.out.println("POWER OFF");
 			} else {
@@ -227,7 +228,12 @@ public class Console
 	}
 	
 	public void display(JTextArea textbox){
-		chronotimer.display(textbox);
+		if(chronotimer!=null)
+			chronotimer.display(textbox);
+	}
+	
+	public boolean checkChronotimer(){
+		return chronotimer!=null;
 	}
 	
 	/**

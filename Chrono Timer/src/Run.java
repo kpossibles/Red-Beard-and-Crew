@@ -77,7 +77,7 @@ public class Run {
 	public Racer getLast(){
 		Racer best=new Racer();
 		for(Racer r: racers){
-			if(r.getFinish()>0 && r.getTime().compareTo(best.getTime())>0)
+			if(r.getFinish()>0 && r.getFinish()>best.getFinish())
 				best=r;
 		}
 		return best.getFinish()>0 ? best : null;

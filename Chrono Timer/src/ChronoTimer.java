@@ -192,25 +192,35 @@ public class ChronoTimer {
 		String q = "", r="", f="";
 		Run run = runs.peek();
 		if(!run.isEmpty()){
-			for(int i=0; i<3; i++){
+			int j=0;
+			for(int i=0; i<run.size(); i++){
 				if(i>run.size()-1)
 					break;
 				Racer racer = run.getRacers().get(i);
 				
-				if(racer.getStart()==0)
+				if(racer.getStart()==0 && j<3){
 					q+=(racer.getId()+" Q\n");
-				if(racer.getStart()>0){
+					j++;
+				}
+				if(racer.getStart()>0 && racer.getFinish()==0){
 					if(racer.DNF())
-						f+=(racer.getId()+"\t"+" DNF\n");
+						f+=(racer.getId()+"  "+" DNF\n");
 					else
-						r+=(racer.getId()+"\t"+racer.getStartTime()+" R\n");
+						r+=(racer.getId()+"  "+racer.getStartTime()+" R\n");
 				}
 			}
 			if(run.getLast()!=null)
-				f+=(run.getLast().getId()+"\t"+run.getLast().getTime()+" F\n");
+				f+=(run.getLast().getId()+"  "+run.getLast().getTime()+" F\n");
 			
 			// update display textbox with queue, racing, and finish
-			textbox.setText(q+"\n"+r+"\n"+f);
+			if(q==""){
+				if(r=="")
+					textbox.setText(f);
+				else
+					textbox.setText(r+"\n"+f);
+			}
+			else
+				textbox.setText(q+"\n"+r+"\n"+f);
 		}
 	}
 
