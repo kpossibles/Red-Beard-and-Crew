@@ -130,4 +130,10 @@ public class ParallelTimed extends Event {
 	public String getType() {
 		return "PARIND";
 	}
+
+	@Override
+	public void swap() {
+		// TODO Auto-generated method stub
+		
+	}
 }

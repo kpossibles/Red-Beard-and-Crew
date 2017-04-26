@@ -103,7 +103,7 @@ public class Console
 			}
 			// SWAP exchange next two competitors to finish in IND
 			else if (command.equalsIgnoreCase("SWAP")){
-				// TODO
+				// TODO - double check if working correctly
 				chronotimer.swap();
 			}
 			// DNF The next competitor to finish will not finish

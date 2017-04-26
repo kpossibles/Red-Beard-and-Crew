@@ -130,4 +130,8 @@ public class GroupTimed extends Event {
 	public String getType() {
 		return "GRP";
 	}
+
+	@Override
+	public void swap() {
+	}
 }

@@ -8,7 +8,7 @@ import javax.swing.border.EtchedBorder;
 
 @SuppressWarnings("serial")
 public class ChronoGui extends JFrame
-{// TODO
+{
 	Console c;
 	Printer p;
 	JRadioButton radioChannel1, radioChannel3, radioChannel5, 
@@ -403,13 +403,10 @@ public class ChronoGui extends JFrame
 			button9 = new JButton("9");
 			buttonStar = new JButton("*");
 			
-	        buttonStar.addActionListener(new ActionListener() {
-	            @Override
-				public void actionPerformed(ActionEvent e) {
-	                // TODO
-	            }});
+//			setActionListener(buttonStar, "");
 	        button0 = new JButton("0");
 	        buttonPound = new JButton("#");
+	        
 	        buttonPound.addActionListener(new ActionListener() {
 	            @Override
 				public void actionPerformed(ActionEvent e) {
@@ -439,9 +436,6 @@ public class ChronoGui extends JFrame
 	        keypad.add(buttonStar);
 	        keypad.add(button0);
 	        keypad.add(buttonPound);
-		
-		
-		
 	}
 	
     /**

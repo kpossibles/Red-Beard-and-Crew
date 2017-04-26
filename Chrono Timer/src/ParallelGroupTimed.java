@@ -47,4 +47,10 @@ public class ParallelGroupTimed extends Event {
 	public String getType() {
 		return "PARGRP";
 	}
+
+	@Override
+	public void swap() {
+		// TODO Auto-generated method stub
+		
+	}
 }

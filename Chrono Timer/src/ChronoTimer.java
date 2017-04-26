@@ -163,7 +163,7 @@ public class ChronoTimer {
 	}
 
 	public void swap() {
-		// TODO Auto-generated method stub
+		// TODO check if working correctly
 		if(event.getType()=="IND"){
 			event.swap();
 		}
