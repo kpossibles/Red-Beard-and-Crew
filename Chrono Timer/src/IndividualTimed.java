@@ -1,15 +1,13 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-import javax.swing.JTextArea;
-
 public class IndividualTimed extends Event {
-//racers queue for single runs of a race.  Each racer has a start event and end event.  Start is on one channel and end is on another channel.
-	
-	//a start event is associated with next racer in queue.
-	
+	//racers queue for single runs of a race.  Each racer has a start event and end event.  
+	//Start is on one channel and end is on another channel.
+	//a start event is associated with next racer in queue.	
 	//end event is fifo for racers association.  
-	// for each event handle the response in the Chronotimer.  Should be able to detect a start, a finish (with times) and calculate the total time for a race, DNF is possible.
+	//for each event handle the response in the Chronotimer.  
+	//Should be able to detect a start, a finish (with times) and calculate the total time for a race, DNF is possible.
 		/** This is a list of the racers who are actively racing. */
 		Queue<Racer> racing;
 		/** The run stores all racers who have ever raced and who are planned to race. */

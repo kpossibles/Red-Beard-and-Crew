@@ -15,6 +15,7 @@ public class Console
 {
 	private ChronoTimer chronotimer;
 	private Printer printer;
+	boolean on;
 	
 	public Console(){
 		printer = new Printer();
@@ -49,13 +50,15 @@ public class Console
 			if (chronotimer != null){
 				chronotimer.reset();
 				chronotimer = null;
+				on = false;
 				System.out.println("POWER OFF");
 			} else {
 				chronotimer = new ChronoTimer(printer);
+				on = true;
 				System.out.println("POWER ON");
 			}
 		}
-		else if (chronotimer != null) {
+		else if (on) {
 			chronotimer.setTime(timestamp);
 			// RESET Resets the System to initial state
 			if (command.equalsIgnoreCase("RESET")){

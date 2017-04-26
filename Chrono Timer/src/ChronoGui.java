@@ -47,12 +47,11 @@ public class ChronoGui extends JFrame
      * Making the GUI respond dynamically to JFrame size
      */
     private void resizeGUI() {
-		// TODO Auto-generated method stub
-    	//Left Panel
+		//Left Panel
     	int lpanelwidth = lPanel.getWidth()-40;
     	lPanel.setBounds(0, 0, getWidth()/4, getHeight());
     	buttonPower.setBounds(20, buttonPower.getLocation().y, lpanelwidth, 60);
-    	lblEventType.setLocation(lpanelwidth/2, lblEventType.getLocation().y);
+    	lblEventType.setLocation(30, lblEventType.getLocation().y);
     	eventType.setBounds(20, eventType.getLocation().y, lpanelwidth, 60);
     	buttonDNF.setBounds(20, buttonDNF.getLocation().y, lpanelwidth, 60);
     	buttonSwap.setBounds(20, buttonSwap.getLocation().y, lpanelwidth, 60);
@@ -96,11 +95,11 @@ public class ChronoGui extends JFrame
     void sendCommand(String command){
     	String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+command;
         c.input(formatted);
-        if(c.checkChronotimer())
+        if(c.on)
         	c.display(displayText);
         if(p.active)
         	p.printGUI(formatted, printerText);
-        if(!c.checkChronotimer()){
+        if(!c.on){
         	radioChannel1.setSelected(false);
         	radioChannel2.setSelected(false);
         	radioChannel3.setSelected(false);
@@ -148,15 +147,17 @@ public class ChronoGui extends JFrame
 				public void actionPerformed(ActionEvent e)
 	            {
 	                sendCommand("POWER");
-	                if(c.checkChronotimer())
+	                if(c.on){
 	                	sendCommand("NEWRUN");
+	                	debug("newrun");
+	                }
 	            }
 	        });
 			lPanel.setLayout(null);
 			lPanel.add(buttonPower);
 			
 			lblEventType = new JLabel("Event Type");
-			lblEventType.setBounds(0, 120, 73, 16);
+			lblEventType.setBounds(0, 135, 73, 16);
 			lPanel.add(lblEventType);
 			
 			eventType = new JComboBox<>();
@@ -514,7 +515,11 @@ public class ChronoGui extends JFrame
 	        keypad.add(buttonPound);
 	}
 	
-    /**
+    void debug(String str) {
+		System.out.println("DEBUG: "+str);
+	}
+
+	/**
 	 * Sets up actionPerformed for Runner button
 	 * @param b
 	 * @param i
