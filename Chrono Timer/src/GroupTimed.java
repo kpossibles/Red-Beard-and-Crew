@@ -1,6 +1,11 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * The Class GroupTimed.
+ *
+ * @author Red Beard & Crew
+ */
 public class GroupTimed extends Event {
 	private Queue<Racer> unnamed;
 	private Run currentRun;
@@ -10,6 +15,12 @@ public class GroupTimed extends Event {
 	private long startTime;
 	private int raceCount;
 
+	/**
+	 * Instantiates a new group timed.
+	 *
+	 * @param _timer the timer
+	 * @param _print the printer
+	 */
 	public GroupTimed(Timer _timer, Printer _print){
 		timer = _timer;
 		print = _print;
@@ -34,6 +45,9 @@ public class GroupTimed extends Event {
 		}
 	}
 
+	/**
+	 * Starts the event
+	 */
 	public void start(){
 		if (currentRun != null && currentRun.isActive()) {
 			if (startTime == 0) {
@@ -47,6 +61,9 @@ public class GroupTimed extends Event {
 			print.print("The current run is already complete or no run has been started. ");
 	}
 
+	/**
+	 * Finishes the event.
+	 */
 	private void finish() {
 		if (currentRun != null && currentRun.isActive()) {
 			if (startTime != 0) {

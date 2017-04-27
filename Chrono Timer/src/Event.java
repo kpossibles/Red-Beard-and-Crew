@@ -1,5 +1,10 @@
 //import java.util.*;
 
+/**
+ * The Class Event.
+ *
+ * @author Red Beard & Crew
+ */
 public abstract class Event{
 
 	
@@ -11,6 +16,8 @@ public abstract class Event{
 	abstract public void addRacer(int r);
 	
 	/**
+	 * Gets the type.
+	 *
 	 * @return String type of event
 	 */
 	abstract public String getType();
@@ -53,5 +60,8 @@ public abstract class Event{
 	 */
 	abstract public void setTimer(Timer timer);
 
+	/**
+	 * Swap.
+	 */
 	abstract public void swap();
 }

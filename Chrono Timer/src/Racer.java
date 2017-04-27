@@ -1,7 +1,10 @@
 import java.util.concurrent.TimeUnit;
 
-//import java.time.LocalTime;
-
+/**
+ * The Class Racer.
+ *
+ * @author Red Beard & Crew
+ */
 public class Racer {
 	private long start, finish;
 	private int id; 
@@ -56,6 +59,11 @@ public class Racer {
 		lane=_lane;
 	}
 
+	/**
+	 * Sets the id.
+	 *
+	 * @param _id the new id
+	 */
 	public void setId(int _id){
 		id = _id;
 	}
@@ -94,6 +102,11 @@ public class Racer {
 		return start;
 	}
 	
+	/**
+	 * Gets the start time.
+	 *
+	 * @return the start time
+	 */
 	public String getStartTime(){
 		long second = (start / 1000) % 60;
 		long minute = (start / (1000 * 60)) % 60;
@@ -104,6 +117,11 @@ public class Racer {
 		return time;
 	}
 	
+	/**
+	 * Gets the finish time.
+	 *
+	 * @return the finish time
+	 */
 	public String getFinishTime(){
 		return didNotFinish ? "DNF" : convertToTime(finish-start);
 	}
@@ -141,6 +159,11 @@ public class Racer {
 		finish = 0;
 	}
 	
+	/**
+	 * Checks if racer did not finish.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean DNF() {
 		return didNotFinish;
 	}

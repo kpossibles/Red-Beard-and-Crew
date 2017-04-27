@@ -1,26 +1,33 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
-//import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-//import java.time.format.FormatStyle;
 import java.util.*;
-
 import javax.swing.JTextArea;
 
-//test
-
-
+/**
+ * The Class Console.
+ *
+ * @author Red Beard & Crew
+ */
 public class Console
 {
 	private ChronoTimer chronotimer;
 	private Printer printer;
 	boolean on;
 	
+	/**
+	 * Instantiates a new console.
+	 */
 	public Console(){
 		printer = new Printer();
 	}
 	
+	/**
+	 * Debug.
+	 *
+	 * @param str the str
+	 */
 	public void debug(String str){
 		System.out.println("***DEBUG: "+str);
 	}
@@ -237,11 +244,21 @@ public class Console
 		return printer.getRecord();
 	}
 	
+	/**
+	 * Display.
+	 *
+	 * @param textbox the display
+	 */
 	public void display(JTextArea textbox){
 		if(chronotimer!=null)
 			chronotimer.display(textbox);
 	}
 	
+	/**
+	 * Check chronotimer.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean checkChronotimer(){
 		return chronotimer!=null;
 	}

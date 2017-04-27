@@ -1,6 +1,11 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * The Class IndividualTimed.
+ *
+ * @author Red Beard & Crew
+ */
 public class IndividualTimed extends Event {
 	//racers queue for single runs of a race.  Each racer has a start event and end event.  
 	//Start is on one channel and end is on another channel.
@@ -17,6 +22,12 @@ public class IndividualTimed extends Event {
 		Printer print;
 		Racer started = null, racer;
 
+		/**
+		 * Instantiates a new individual timed.
+		 *
+		 * @param _timer the timer
+		 * @param _print the printer
+		 */
 		public IndividualTimed(Timer _timer, Printer _print){
 			racing = new LinkedList<Racer>();
 			channelMode = new String[8];
@@ -62,6 +73,9 @@ public class IndividualTimed extends Event {
 			racing = new LinkedList<Racer>();
 		}
 		
+		/**
+		 * Start.
+		 */
 		public void start(){
 			Racer started = null;
 			for (Racer r: racing){
@@ -83,6 +97,9 @@ public class IndividualTimed extends Event {
 //				print.printGUI(String.format("%d\t%s R", started.getId(), timer.getTimeString()), text);
 //		}
 		
+		/**
+		 * Finish.
+		 */
 		public void finish(){
 			racer = racing.poll();
 			if (racer != null && racer.getStart() != 0){

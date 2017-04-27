@@ -1,5 +1,10 @@
 import java.util.ArrayList;
 
+/**
+ * The Class Run.
+ *
+ * @author Red Beard & Crew
+ */
 public class Run {
 	int number;
 	ArrayList<Racer> racers;
@@ -28,7 +33,8 @@ public class Run {
 	 
 	/**
 	 * Ends the run.
-	 * @return 
+	 *
+	 * @return the int
 	 */
 	public int end(){
 		active = false;
@@ -60,20 +66,39 @@ public class Run {
 		}
 		return false;
 	}
+	
+	/**
+	 * Removes the last racer in queue.
+	 */
 	public void removeLast(){
 		if(active){
 			racers.remove(racers.size()-1);
 		}
 	}
 
+	/**
+	 * Checks if is empty.
+	 *
+	 * @return true, if is empty
+	 */
 	public boolean isEmpty(){
 		return racers.size() == 0;
 	}
 	
+	/**
+	 * Gets the racer.
+	 *
+	 * @return the racer
+	 */
 	public Racer getRacer(){
 		return racers.get(0);
 	}
 	
+	/**
+	 * Gets the last racer.
+	 *
+	 * @return the last
+	 */
 	public Racer getLast(){
 		Racer best=new Racer();
 		for(Racer r: racers){
@@ -83,10 +108,20 @@ public class Run {
 		return best.getFinish()>0 ? best : null;
 	}
 	
+	/**
+	 * Gets a copy of the racer queue.
+	 *
+	 * @return the racers
+	 */
 	public ArrayList<Racer> getRacers(){
 		return racers;
 	}
 	
+	/**
+	 * Size of the racers queue.
+	 *
+	 * @return the int
+	 */
 	public int size(){
 		return racers.size();
 	}

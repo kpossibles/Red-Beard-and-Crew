@@ -7,6 +7,11 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
+/**
+ * The Class ChronoGui.
+ *
+ * @author Red Beard & Crew
+ */
 @SuppressWarnings("serial")
 public class ChronoGui extends JFrame
 {
@@ -29,6 +34,9 @@ public class ChronoGui extends JFrame
     private JScrollPane scroll, scroll2;
     private JComboBox<String> eventType;
 
+    /**
+     * Instantiates a new Chronotimer GUI.
+     */
     public ChronoGui(){
         c = new Console();
         p = new Printer();
@@ -533,6 +541,12 @@ public class ChronoGui extends JFrame
             }
         });
 	}
+    
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main( String args[] ){
         ChronoGui frame = new ChronoGui();
         frame.addComponentListener(new ComponentListener() {

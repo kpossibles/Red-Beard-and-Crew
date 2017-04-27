@@ -4,6 +4,11 @@ import java.io.PrintWriter;
 import java.util.*;
 import javax.swing.*;
 
+/**
+ * The Class Printer.
+ *
+ * @author Red Beard & Crew
+ */
 public class Printer {
 	private Queue<String> record;
 	private PrintWriter writer = null;
@@ -17,6 +22,11 @@ public class Printer {
 		active = false;
 	}
 	
+	/**
+	 * Instantiates a new printer.
+	 *
+	 * @param d the d
+	 */
 	public Printer(JTextArea d){
 		record = new LinkedList<String>();
 	}
@@ -31,7 +41,9 @@ public class Printer {
 	}
 
 	/**
-	 * Prints to the Console and adds to record
+	 * Prints to the Console and adds to record.
+	 *
+	 * @param str the str
 	 */
 	public void print(String str) {
 		System.out.println(str);
@@ -52,6 +64,11 @@ public class Printer {
 		return ret;
 	}
 	
+	/**
+	 * Save data.
+	 *
+	 * @param runNum the run number
+	 */
 	public void saveData(int runNum){
 		// TODO: Might have to add timestamp?
 		String data = getRecord();
@@ -69,6 +86,12 @@ public class Printer {
 		return String.format("Run%03d.txt", runNum);
 	}
 	
+	/**
+	 * Prints to the GUI.
+	 *
+	 * @param str the str
+	 * @param text the text
+	 */
 	public void printGUI(String str,JTextArea text){
 		text.setText(text.getText()+'\n'+str);
 		addToRecord(str);

@@ -1,4 +1,9 @@
 
+/**
+ * The Class Sensor.
+ *
+ * @author Red Beard & Crew
+ */
 public class Sensor {
 	String type;
 	Channel channel;
@@ -22,6 +27,10 @@ public class Sensor {
 	public void setType(String type){
 		this.type = type;
 	}
+	
+	/**
+	 * Trigger.
+	 */
 	public void trigger(){
 		channel.trigger();
 	}

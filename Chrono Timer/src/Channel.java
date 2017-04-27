@@ -1,7 +1,12 @@
-//import java.util.*;
-
+/**
+ * The Class Channel.
+ *
+ * @author Red Beard & Crew
+ */
 public class Channel {
 	private ChronoTimer chronotimer;
+	
+	/** The id. */
 	public int id;
 	private boolean on;
 	
@@ -46,10 +51,16 @@ public class Channel {
 		return on;
 	}
 	
+	/**
+	 * Sets channel on.
+	 */
 	public void setOn(){
 		on=true;
 	}
 	
+	/**
+	 * Sets channel off.
+	 */
 	public void setOff(){
 		on=false;
 	}

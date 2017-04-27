@@ -1,4 +1,8 @@
-
+/**
+ * The Class ParallelGroupTimed.
+ *
+ * @author Red Beard & Crew
+ */
 public class ParallelGroupTimed extends Event {
 
 	@Override

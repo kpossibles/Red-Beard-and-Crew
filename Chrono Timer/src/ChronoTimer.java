@@ -16,6 +16,8 @@ public class ChronoTimer {
 	
 	/**
 	 * Instantiates a new ChronoTimer.
+	 *
+	 * @param _print the print
 	 */
 	public ChronoTimer(Printer _print){
 		print = _print;
@@ -131,6 +133,8 @@ public class ChronoTimer {
 	
 	/**
 	 * End run.
+	 *
+	 * @return the int
 	 */
 	public int endRun() {
 		return runs.getLast().end();
@@ -164,21 +168,29 @@ public class ChronoTimer {
 		event.addRacer(num);
 	}
 
+	/**
+	 * Swap 1st and 2nd runner on individual event.
+	 */
 	public void swap() {
 		if(event.getType()=="IND"){
 			event.swap();
 		}		
 	}
 	
+	/**
+	 * Gets the type.
+	 *
+	 * @return the type
+	 */
 	public String getType() {
 		return event.getType();
 	}
 
 	/**
-	 * Connect or disconnect a sensor
-	 * 
-	 * @param i
-	 * @param on
+	 * Connect or disconnect a sensor.
+	 *
+	 * @param i the i
+	 * @param on the on
 	 */
 	public void connect(String i, boolean on) {
 		int id = Integer.valueOf(i);
@@ -190,6 +202,11 @@ public class ChronoTimer {
 		}
 	}
 
+	/**
+	 * Display.
+	 *
+	 * @param textbox the display
+	 */
 	public void display(JTextArea textbox) {
 		// TODO double check to see if display is working correctly
 		String q = "", r="", f="";

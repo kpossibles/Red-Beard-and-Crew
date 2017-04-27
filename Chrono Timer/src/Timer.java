@@ -4,6 +4,11 @@ import java.time.Instant; // EB - Solution for epoch (linux) time in millis
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * The Class Timer.
+ *
+ * @author Red Beard & Crew
+ */
 public class Timer {
 	//private Date timer;
 	//private SimpleDateFormat sdf = new SimpleDateFormat("sssss.SS");

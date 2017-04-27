@@ -1,6 +1,11 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * The Class ParallelTimed.
+ *
+ * @author Red Beard & Crew
+ */
 public class ParallelTimed extends Event {
 	private Queue<Racer> racing;
 	private Run currentRun;
@@ -8,6 +13,12 @@ public class ParallelTimed extends Event {
 	private Timer timer;
 	private Printer print;
 
+	/**
+	 * Instantiates a new parallel timed.
+	 *
+	 * @param _timer the timer
+	 * @param _print the print
+	 */
 	public ParallelTimed(Timer _timer, Printer _print){
 		racing = new LinkedList<>();
 		timer = _timer;
