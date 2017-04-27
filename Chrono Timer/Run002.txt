@@ -1,20 +1,30 @@
 
 ***CHRONOTIMER RECORD:
 12:01:04.0	POWER
-12:00:00.0	TIME 12:01:30.0
+12:01:05.0	TIME 12:01:30.0
 Event set to Group
 12:02:00.0	EVENT GRP
 Run 01 started. 
 12:02:01.0	NEWRUN
-12:02:04.0	START
-12:02:50.0	TRIG 1
+12:02:30.0	TOG 1
+12:02:40.0	TOG 2
+Current run started at 12:02:50.0. 
+12:02:50.0	START
+Racer 00001 has finished at 12:02:52.0.
+Racer 00001's time was 00:00:02.0. 
 12:02:52.0	TRIG 2
-No racer has finished that is unnamed.
+Racer 00001 was renamed to 00234.
 12:03:35.0	NUM 234
+Racer 00002 has finished at 12:03:55.0.
+Racer 00002's time was 00:01:05.6. 
 12:03:55.0	TRIG 2
-No racer has finished that is unnamed.
+Racer 00002 was renamed to 00999.
 13:04:30.0	NUM 999
+Racer 00003 has finished at 13:05:00.0.
+Racer 00003's time was 01:02:36.1. 
 13:05:00.0	FINISH
+Racer 00004 has finished at 13:05:02.0.
+Racer 00004's time was 01:02:36.1. 
 13:05:02.0	TRIG 2
 ***END RECORD
 

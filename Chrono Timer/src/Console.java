@@ -71,6 +71,7 @@ public class Console
 			// TOG <channel> Toggle the state of the channel <channel>
 			else if (command.equalsIgnoreCase("TOG")){
 				chronotimer.toggle(argument);
+//				System.out.println("Toggled "+argument);
 			}
 			// CONN <sensor><num> Connect a type of sensor to channel <num>
 			// <sensor> = {EYE, GATE, PAD}
@@ -88,11 +89,13 @@ public class Console
 			// NEWRUN Create a new Run (must end a run first)
 			else if (command.equalsIgnoreCase("NEWRUN")){
 				chronotimer.createRun();
+//				System.out.println("New run created.");
 			} 
 			// ENDRUN Done with a Run
 			else if (command.equalsIgnoreCase("ENDRUN")){
 				int runNum = chronotimer.endRun();
 				printer.saveData(runNum);
+//				System.out.println("Run ended.");
 			}
 			// PRINT <RUN> Print the run on stdout
 			else if (command.equalsIgnoreCase("PRINT")){
@@ -106,6 +109,7 @@ public class Console
 			// NUM <number> Set <number> as the next competitor to start.
 			else if (command.equalsIgnoreCase("NUM")){
 				chronotimer.addToQueue(Integer.valueOf(argument));
+//				System.out.println("Adding "+argument);
 			}
 			// CLR <number> Clear <number> the competitor from queue
 			else if (command.equalsIgnoreCase("CLR")){
@@ -119,10 +123,12 @@ public class Console
 			// DNF The next competitor to finish will not finish
 			else if (command.equalsIgnoreCase("DNF")){
 				chronotimer.didNotFinish();
+//				System.out.println("Did not finish.");
 			}
 			// CANCEL Start isn't valid, competitor still in queue to start
 			else if (command.equalsIgnoreCase("CANCEL")){
 				chronotimer.discard();
+				System.out.println("Cancelled start.");
 			}
 			// TRIG <num> Trigger channel <num>
 			else if (command.equalsIgnoreCase("TRIG")){
@@ -135,6 +141,7 @@ public class Console
 			// FINISH Finish trigger channel 2 (shorthand for trig 2)
 			else if (command.equalsIgnoreCase("FINISH")){
 				input(timestamp+"\tTRIG 2");
+//				System.out.println("Finish!");
 			} 
 			else
 				return false;
