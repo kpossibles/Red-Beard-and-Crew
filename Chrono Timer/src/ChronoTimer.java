@@ -121,7 +121,15 @@ public class ChronoTimer {
 	 * @param id the id
 	 */
 	public void trigger(int id) {
-		event.trigger(id);
+		// 4/30/17: added a check if channel activated -KP
+		if(channels[id-1].isOn())
+			event.trigger(id);
+		else{ // TODO check if PARGRP check implemented correctly -KP
+			print.print(String.format("Channel %d is not active.", id));
+			// for PARGRP, marks runner in queue as DNF since channel isn't active
+			if(event.getType()=="PARGRP")
+				event.dnf();
+		}
 	}
 	
 	/**

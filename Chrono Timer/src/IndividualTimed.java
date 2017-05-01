@@ -86,16 +86,10 @@ public class IndividualTimed extends Event {
 				}
 			}
 			if (started != null)
-				print.print(String.format("Racer %d started at %s", started.getId(), timer.getTimeString()));
+				print.print(String.format("Racer %d started at %s", started.getId(), started.getStartTime()));
 			else
 				print.print("No racer queued to start.");
 		}
-		
-//		public void start(JTextArea text){
-//			start();
-//			if (started != null)
-//				print.printGUI(String.format("%d\t%s R", started.getId(), timer.getTimeString()), text);
-//		}
 		
 		/**
 		 * Finish.
@@ -110,13 +104,6 @@ public class IndividualTimed extends Event {
 			else
 				print.print("No racer queued to finish.");
 		}
-		
-//		public void finish(JTextArea text){
-//			finish();
-//			if (racer != null && racing.size()==0){
-//				print.printGUI(String.format("%d\t%s F", racer.getId(), timer.getTime()), text);
-//			}
-//		}
 		
 		// for CANCEL
 		public void discard(){
