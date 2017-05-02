@@ -1,7 +1,9 @@
+import java.io.IOException;
+
 public class DirectoryProxy {
 	private MainDirectory dir; 
 	
-	public DirectoryProxy(){
+	public DirectoryProxy() throws IOException{
 		dir = new MainDirectory();
 	}
 	

@@ -114,7 +114,6 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 		submitButton.setText("SUBMIT");
 		submitButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	Object src = e.getSource();
 //		    	System.out.println("making GSON");
 		    	Gson g = new Gson();
 //		    	System.out.println("making Employee");
@@ -172,7 +171,7 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 			System.out.println("in the client");
 
 			// Client will connect to this location
-			URL site = new URL("http://129.89.143.92/sendresults");
+			URL site = new URL("http://localhost:8000/sendresults");
 			HttpURLConnection conn = (HttpURLConnection) site.openConnection();
 
 			// now create a POST request
@@ -182,7 +181,7 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
 
 			// build a string that contains JSON from console
-			String content = "ADD " + emp;
+			String content = "["+emp+"]";
 			System.out.println("SENDING: "+content);
 
 			// write out string to output buffer for message

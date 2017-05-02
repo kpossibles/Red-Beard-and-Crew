@@ -19,9 +19,23 @@ public class MainDirectory {
 	private Gson g;
 	static String sharedResponse = "";
 
-	public MainDirectory(){
+	public MainDirectory() throws IOException{
 		employees = new ArrayList<>();
 		g = new Gson();
+		
+		// set up a simple HTTP server on our local host
+		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+
+		// create a context to get the request to display the results
+		server.createContext("/displayresults", new DisplayHandler());
+
+		// create a context to get the request for the POST
+		server.createContext("/sendresults", new PostHandler());
+		server.setExecutor(null); // creates a default executor
+
+		// get it going
+		System.out.println("Starting Server...");
+		server.start();
 	}
 	
 	public void add(String json){
@@ -65,6 +79,7 @@ public class MainDirectory {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void parseText(String s){
 		if(s.length() > 3 && s.substring(0,3).equalsIgnoreCase("Add"))
 			this.add(s.substring(4));
@@ -77,53 +92,28 @@ public class MainDirectory {
 	}
 
 	public static void main(String[] args) throws Exception {
-		
-		// set up a simple HTTP server on our local host
-		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-
-		// create a context to get the request to display the results
-		server.createContext("/displayresults", new DisplayHandler());
-
-		// create a context to get the request for the POST
-		server.createContext("/sendresults", new PostHandler());
-		server.setExecutor(null); // creates a default executor
-
-		// get it going
-		System.out.println("Starting Server...");
-		server.start();
+		new MainDirectory();
 	}
 
-	static class DisplayHandler implements HttpHandler {
+	public class DisplayHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
 
 			String response = "Begin of response\n";
-			Gson g = new Gson();
 			
 			//set up the header
-			System.out.println(response);
 			try {
 				if (!sharedResponse.isEmpty()) {
-					System.out.println(response);
-					ArrayList<Employee> fromJson = g.fromJson(sharedResponse,
-							new TypeToken<Collection<Employee>>() {
-							}.getType());
-
-					System.out.println(response);
 					response += "Before sort\n";
-					for (Employee e : fromJson) {
-						response += e + "\n";
-					}
-					Collections.sort(fromJson);
+					response += print();
+					Collections.sort(employees);
 					response += "\nAfter sort\n";
-					for (Employee e : fromJson) {
-						response += e + "\n";
-					}
+					response += print();
 				}
 			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
 			}
 			
-			response += "End of response\n";
+			response += "\nEnd of response\n";
 			System.out.println(response);
 			// write out the response
 			t.sendResponseHeaders(200, response.length());
@@ -133,7 +123,7 @@ public class MainDirectory {
 		}
 	}
 
-	static class PostHandler implements HttpHandler {
+	public class PostHandler implements HttpHandler {
 		public void handle(HttpExchange transmission) throws IOException {
 			//  shared data that is used with other handlers
             sharedResponse = "";
@@ -150,6 +140,11 @@ public class MainDirectory {
 			}
 			// create our response String to use in other handler
             sharedResponse = sharedResponse+sb.toString();
+            ArrayList<Employee> fromJson = g.fromJson(sharedResponse,
+					new TypeToken<Collection<Employee>>() {
+					}.getType());
+
+			employees.addAll(fromJson);
 			
 			String postResponse = "ROGER COMMAND RECEIVED";
 			System.out.println("response: " + sharedResponse);

@@ -23,7 +23,10 @@ public class Employee implements Comparable<Employee>{
 	}
 	
 	public String toString(){
-		return title + " " + firstname + " " + lastname + " " + department + " " + phone;
+		if(firstname.length()+lastname.length()>8)
+			return String.format("TITLE: %s\tNAME: %s %s\tDEPT: %s\tPHONE: %s", title, firstname, lastname, department, phone);
+		else
+			return String.format("TITLE: %s\tNAME: %s %s\t\tDEPT: %s\tPHONE: %s", title, firstname, lastname, department, phone);
 	}
 
 	@Override

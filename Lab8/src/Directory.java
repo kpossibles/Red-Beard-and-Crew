@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
@@ -12,8 +13,9 @@ public class Directory {
 	static boolean isC = false;
 	/**
 	 * Instantiates a new directory.
+	 * @throws IOException 
 	 */
-	public Directory(){
+	public Directory() throws IOException{
 		proxy = new DirectoryProxy();
 	}
 	
@@ -89,8 +91,9 @@ public class Directory {
 	 * The main method.
 	 *
 	 * @param args the arguments
+	 * @throws IOException 
 	 */
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 		// TODO
 		String nextline = "";
 		Directory dir = new Directory();
