@@ -139,7 +139,7 @@ public class MainDirectory {
 				nextChar=inputStr.read();
 			}
 			// create our response String to use in other handler
-            sharedResponse = sharedResponse+sb.toString();
+            sharedResponse = "["+sharedResponse+sb.toString()+"]";
             ArrayList<Employee> fromJson = g.fromJson(sharedResponse,
 					new TypeToken<Collection<Employee>>() {
 					}.getType());

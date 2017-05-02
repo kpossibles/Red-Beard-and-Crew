@@ -181,7 +181,7 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
 
 			// build a string that contains JSON from console
-			String content = "["+emp+"]";
+			String content = emp;
 			System.out.println("SENDING: "+content);
 
 			// write out string to output buffer for message
