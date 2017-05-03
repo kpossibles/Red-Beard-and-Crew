@@ -13,7 +13,7 @@ public class Employee implements Comparable<Employee>{
 		department = _dept.toUpperCase();
 		phone = _phone;
 		title = _title;
-		gender = _gender;
+		gender = _gender.substring(0,1);
 	}
 	
 	private String toTitleCase(String str){
