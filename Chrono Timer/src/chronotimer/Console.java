@@ -1,3 +1,4 @@
+package chronotimer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ public class Console
 {
 	private ChronoTimer chronotimer;
 	private Printer printer;
-	boolean on;
+	private boolean on;
 	
 	/**
 	 * Instantiates a new console.
@@ -57,15 +58,15 @@ public class Console
 			if (chronotimer != null){
 				chronotimer.reset();
 				chronotimer = null;
-				on = false;
+				setOn(false);
 				System.out.println("POWER OFF");
 			} else {
 				chronotimer = new ChronoTimer(printer);
-				on = true;
+				setOn(true);
 				System.out.println("POWER ON");
 			}
 		}
-		else if (on) {
+		else if (isOn()) {
 			chronotimer.setTime(timestamp);
 			// RESET Resets the System to initial state
 			if (command.equalsIgnoreCase("RESET")){
@@ -202,7 +203,7 @@ public class Console
 			commands+="\n*** List of all commands ***\n"
 					+ "POWER\n - Turns ChronoTimer on and off\n"
 					+ "EXIT\n - Exits ChronoTimer simulator\n"
-//					+ "RESET\n - Resets the system to the initial state\n"
+					+ "RESET\n - Resets the system to the initial state\n"
 					+ "TIME <hour>:<min>:<sec>\n - Sets the current time\n"
 					+ "TOG <channel>\n - Toggle the state of the channel <CHANNEL>\n"
 					+ "CONN <sensor> <NUM>\n - Connect a type of sensor to channel <NUM>, <sensor> = {EYE, GATE, PAD}\n"
@@ -211,7 +212,7 @@ public class Console
 					+ "NEWRUN\n - Create a new Run (but must end a run first)\n"
 					+ "ENDRUN\n - End a Run\n"
 					+ "PRINT <RUN>\n - Print the run on stdout\n"
-//					+ "EXPORT <RUN>\n - Export run in XML to file “RUN<RUN>\n"
+					+ "EXPORT <RUN>\n - Export run in XML to file “RUN<RUN>\n"
 					+ "NUM <NUMBER>\n - Set <NUMBER> as the next competitor to start.\n"
 					+ "CLR <NUMBER>\n - Clear <NUMBER> the competitor from queue\n"
 					+ "SWAP\n - Exchange next two competitors to finish in IND\n"
@@ -298,6 +299,24 @@ public class Console
 			input.close();
 			System.out.println("\nThank you for using ChronoTimer. GOODBYE");
 		}
+	}
+
+	/**
+	 * @return the on
+	 */
+	public boolean isOn() {
+		return on;
+	}
+
+	/**
+	 * @param on the on to set
+	 */
+	public void setOn(boolean on) {
+		this.on = on;
+	}
+
+	public void setSensor(String sensorType, int num) {
+		input(String.format("CONN %s %d", sensorType, num));		
 	}
 	
 	

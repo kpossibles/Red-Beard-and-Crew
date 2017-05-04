@@ -1,3 +1,4 @@
+package chronotimer;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -122,7 +123,7 @@ public class GroupTimed extends Event {
 		raceCount = 0;
 		unnamed = new LinkedList<>();
 		currentRun = _run;
-		print.print(String.format("Run %1$02d started. ", _run.number));
+		print.print(String.format("Run %1$02d started. ", _run.getNumber()));
 	}
 
 	@Override

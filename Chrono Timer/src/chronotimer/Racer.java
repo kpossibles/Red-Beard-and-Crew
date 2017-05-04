@@ -1,3 +1,4 @@
+package chronotimer;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -112,8 +113,8 @@ public class Racer {
 		long minute = (start / (1000 * 60)) % 60;
 		long hour = (start / (1000 * 60 * 60)) % 24;
 		long millis = (start - TimeUnit.SECONDS.toMillis(second));
-
-		String time = String.format("%02d:%02d:%02d.%d", hour, minute, second, millis/100);
+		millis = Integer.parseInt(Integer.toString((int) millis).substring(0, 1));
+		String time = String.format("%02d:%02d:%02d.%d", hour, minute, second, millis);
 		return time;
 	}
 	

@@ -1,3 +1,4 @@
+package chronotimer;
 
 /**
  * The Class Sensor.

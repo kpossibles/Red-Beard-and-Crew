@@ -1,3 +1,4 @@
+package chronotimer;
 import java.util.ArrayList;
 
 /**
@@ -6,7 +7,7 @@ import java.util.ArrayList;
  * @author Red Beard & Crew
  */
 public class Run {
-	int number;
+	private int number;
 	ArrayList<Racer> racers;
 	boolean active; //Whether a run has been ended
 	
@@ -16,7 +17,7 @@ public class Run {
 	 * @param _number the number
 	 */
 	public Run(int _number){
-		number = _number;
+		setNumber(_number);
 		racers = new ArrayList<Racer>();
 		active = true;
 	}
@@ -38,7 +39,7 @@ public class Run {
 	 */
 	public int end(){
 		active = false;
-		return number;
+		return getNumber();
 	}
 
 	/**
@@ -124,5 +125,19 @@ public class Run {
 	 */
 	public int size(){
 		return racers.size();
+	}
+
+	/**
+	 * @return the number
+	 */
+	public int getNumber() {
+		return number;
+	}
+
+	/**
+	 * @param number the number to set
+	 */
+	public void setNumber(int number) {
+		this.number = number;
 	}
 }

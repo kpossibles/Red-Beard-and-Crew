@@ -1,3 +1,4 @@
+package chronotimer;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,14 +13,14 @@ import javax.swing.*;
 public class Printer {
 	private Queue<String> record;
 	private PrintWriter writer = null;
-	boolean active;
+	private boolean active;
 	
 	/**
 	 * Instantiates a new printer.
 	 */
 	public Printer(){
 		record = new LinkedList<String>();
-		active = false;
+		setActive(false);
 	}
 	
 	/**
@@ -95,6 +96,20 @@ public class Printer {
 	public void printGUI(String str,JTextArea text){
 		text.setText(text.getText()+'\n'+str);
 		addToRecord(str);
+	}
+
+	/**
+	 * @return the active
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * @param active the active to set
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 }

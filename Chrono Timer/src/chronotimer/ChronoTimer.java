@@ -1,3 +1,4 @@
+package chronotimer;
 import java.util.*;
 
 import javax.swing.JTextArea;
@@ -201,12 +202,15 @@ public class ChronoTimer {
 	 * @param on the on
 	 */
 	public void connect(String i, boolean on) {
-		int id = Integer.valueOf(i);
+		String[] args = i.split(" ");
+		int id = Integer.valueOf(args[1]);
+		
 		if (id < channels.length){
-			if(on)
-				channels[id-1].setOn();
-			else
-				channels[id-1].setOff();
+			if(on){
+				channels[id-1].setOn(args[0]);
+			} else{
+				channels[id-1].setOff(args[0]);
+			}
 		}
 	}
 

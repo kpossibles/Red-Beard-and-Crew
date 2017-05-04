@@ -1,3 +1,4 @@
+package chronotimer;
 /**
  * The Class Channel.
  *
@@ -5,10 +6,9 @@
  */
 public class Channel {
 	private ChronoTimer chronotimer;
-	
-	/** The id. */
 	public int id;
 	private boolean on;
+	Sensor sensor=null;
 	
 	/**
 	 * Instantiates a new channel.
@@ -30,7 +30,7 @@ public class Channel {
 	 */
 	public boolean setSensor(String type){
 		if(type.equalsIgnoreCase("eye") || type.equalsIgnoreCase("gate") || type.equalsIgnoreCase("pad")){
-			new Sensor(this, type);
+			sensor = new Sensor(this, type);
 			return true;
 		} else return false;
 	}
@@ -53,16 +53,22 @@ public class Channel {
 	
 	/**
 	 * Sets channel on.
+	 *
+	 * @param type the sensor type
 	 */
-	public void setOn(){
+	public void setOn(String type){
 		on=true;
+		setSensor(type);
 	}
 	
 	/**
-	 * Sets channel off.
+	 * Sets the off.
+	 *
+	 * @param type the sensor type
 	 */
-	public void setOff(){
+	public void setOff(String type){
 		on=false;
+		setSensor(type);
 	}
 	
 	/**
