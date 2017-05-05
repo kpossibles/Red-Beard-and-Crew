@@ -16,7 +16,7 @@ import javax.swing.JTextArea;
  * The Class ChronoTimer.
  */
 public class ChronoTimer  {
-	
+	private Map<Integer, String> NumNameMap;
 	private Event event;
 	private Channel[] channels;
 	private Timer timer;
@@ -42,6 +42,17 @@ public class ChronoTimer  {
 		server.createContext("/style.css", new cssHandler());
 
 		server.start();
+
+		buildMap();
+	}
+
+	private void buildMap(){
+		NumNameMap = new HashMap<Integer, String>();
+
+		NumNameMap.put(100, "Evan");
+		NumNameMap.put(200, "Kim");
+		NumNameMap.put(300, "James");
+		NumNameMap.put(400, "Biscuit");
 
 	}
 
@@ -294,7 +305,7 @@ public class ChronoTimer  {
 			StringBuilder htmlStringBuilder=new StringBuilder();
 
 			//set up content
-			htmlStringBuilder.append("<html><head><title>Directory</title>");
+			htmlStringBuilder.append("<html><head><title>Race Results</title>");
 			htmlStringBuilder.append("<meta http-equiv=\"refresh\" content=\"1\">");
 			htmlStringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head>");
 			htmlStringBuilder.append("<body>");
@@ -353,15 +364,17 @@ public class ChronoTimer  {
 			// Finally, display the results
 			if(racers.size() > 0) {
 				String res = "";
+
 				for(int i=0;i<racers.size();i++){
+					Racer r= racers.get(i);
 					if(i%2==0)
 						res += "<tr class=\"light\">";
 					else
 						res += "<tr class=\"dark\">"; //Place, Number, Name, Time
 					res    += "<td>" + (i+1) + "</td>"
-							+ "<td>" + racers.get(i).getId() + "</td>"
-							+ "<td>" + "" + "</td>" //TODO: Implement Name!
-							+ "<td>" + (racers.get(i).getDNF()?"DNF":racers.get(i).getTime()=="-2"?"":racers.get(i).getTime()) + "</td>";
+							+ "<td>" + r.getId() + "</td>"
+							+ "<td>" + (NumNameMap.containsKey(r.getId())?NumNameMap.get(r.getId()):"") + "</td>" //TODO: Implement Name!
+							+ "<td>" + (r.getDNF()?"DNF":r.getTime()=="-2"?"":r.getTime()) + "</td>";
 					res += "</tr>";
 				}
 
