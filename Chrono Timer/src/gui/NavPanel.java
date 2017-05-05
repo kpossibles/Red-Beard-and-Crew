@@ -19,19 +19,19 @@ public class NavPanel extends JPanel{
 		setBackground(new Color(0,0,0,0));
 		setSize(175, 60);
 		
-		up = new JButton("▲");
+		up = new JButton("\u25B2");
 		up.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		add(up);
 		
-		down = new JButton("▼");
+		down = new JButton("\u25BC");
 		down.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		add(down);
 		
-		left = new JButton("◄");
+		left = new JButton("\u25C0");
 		left.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		add(left);
 		
-		right = new JButton("►");
+		right = new JButton("\u25BA");
 		right.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
 		add(right);
 	}

@@ -6,9 +6,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
 
 import chronotimer.Console;
 import chronotimer.Printer;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 /**
  * The Class ChronoGui.
@@ -28,177 +32,134 @@ public class ChronoGui extends JFrame {
 			buttonTrigger3, buttonTrigger5, buttonTrigger7, buttonTrigger2, buttonTrigger6, buttonTrigger4,
 			buttonTrigger8;
 	private JPanel lPanel, mPanel, mPanel1, mPanel1a, mPanel1b, mPanel1c, mPanel1d, mPanel2, panel_1, panel_2, rPanel,
-			rPanel1, rPanel2, keypad;
+			rPanel1, rPanel2, keypad, navPanel, powerStatus;
 	private String tempRacer = "";
 	private JScrollPane scroll, scroll2;
-	private JComboBox<String> eventType;
+//	private JComboBox<String> eventType;
 	private String offWarning = "The Chronotimer is currently off.\nTry 'POWER' to turn it on.";
 	private BackPanel backpanel;
-	private NavPanel navPanel;
+	private JButton up, down, left, right;
+	private boolean fcnBtnOn;
+	private int rowSelected=0;
 	private static final int WIN_HEIGHT = 650;
 
 	/**
 	 * Instantiates a new Chronotimer GUI.
 	 */
 	public ChronoGui() {
-		getContentPane().setBackground(new Color(100, 149, 237));
+		getContentPane().setBackground(new Color(51, 153, 204));
 		c = new Console();
 		p = new Printer();
 		setTitle("ChronoTimer");
 		setupGUI();
-		setMinimumSize(new Dimension(850, WIN_HEIGHT));
-		setSize(850, WIN_HEIGHT);
 		setVisible(true);
-		resizeGUI();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 	}
-
-	/**
-	 * Making the GUI respond dynamically to JFrame size
-	 */
-	private void resizeGUI() {
-		// Left Panel
-		int lpanelwidth = lPanel.getWidth() - 40;
-		lPanel.setBounds(0, 0, getWidth() / 4, WIN_HEIGHT - 200);
-		buttonPower.setBounds(20, buttonPower.getLocation().y, lpanelwidth, 60);
-		eventType.setBounds(20, eventType.getLocation().y, lpanelwidth, 60);
-		navPanel.setBounds(20, navPanel.getLocation().y, lpanelwidth, 60);
-		buttonFunction.setBounds(20, buttonFunction.getLocation().y, lpanelwidth, 60);
-		buttonSwap.setBounds(20, buttonSwap.getLocation().y, lpanelwidth, 60);
-		buttonEndRun.setBounds(20, buttonEndRun.getLocation().y, lpanelwidth, 60);
-
-		// Mid Panel
-
-		mPanel.setBounds(getContentPane().getWidth() / 4, 0, 5 * getContentPane().getWidth() / 12, WIN_HEIGHT - 200);
-		mPanel1.setBounds(0, 0, mPanel.getWidth(), mPanel.getHeight() / 2);
-		panel_1.setBounds(0, 0, mPanel.getWidth(), mPanel1.getHeight() / 2 - 20);
-		int splitwidth = mPanel.getWidth() / 2 - 10;
-		int splitheight = panel_1.getHeight() / 2 - 10;
-		lblStart.setBounds(0, 10, splitwidth, splitheight);
-		enable01.setBounds(0, panel_1.getHeight() / 2, splitwidth, splitheight);
-		mPanel1a.setBounds(mPanel.getWidth() / 2, 10, splitwidth, splitheight);
-		mPanel1b.setBounds(mPanel.getWidth() / 2, panel_1.getHeight() / 2, splitwidth, splitheight);
-
-		panel_2.setBounds(0, panel_1.getHeight() + 20, mPanel.getWidth(), mPanel.getHeight() / 2 - 20);
-		lblFinish.setBounds(0, 10, splitwidth, splitheight);
-		enable02.setBounds(0, panel_1.getHeight() / 2, splitwidth, splitheight);
-		mPanel1c.setBounds(mPanel.getWidth() / 2, 10, splitwidth, splitheight);
-		mPanel1d.setBounds(mPanel.getWidth() / 2, panel_1.getHeight() / 2, splitwidth, splitheight);
-		scroll.setBounds(20, 20, mPanel.getWidth() - 40, 2 * (mPanel2.getHeight() / 3));
-		labelLegend.setBounds((mPanel.getWidth() / 2) - 70, scroll.getHeight() + 50, 150, 16);
-
-		// Right Panel
-		rPanel.setBounds(getContentPane().getWidth() - getContentPane().getWidth() / 3, 0,
-				getContentPane().getWidth() / 3, WIN_HEIGHT - 200);
-		rPanel1.setBounds(0, 0, rPanel.getWidth(), rPanel.getHeight() / 2);
-		rPanel2.setBounds(0, rPanel.getHeight() / 2, rPanel.getWidth(), rPanel.getHeight() / 2);
-		printPower.setLocation((rPanel.getWidth() / 2) - 50, 10);
-		scroll2.setBounds(10, printPower.getHeight() + 20, rPanel.getWidth() - 20,
-				rPanel1.getHeight() - printPower.getHeight() - 20);
-		keypad.setBounds(10, 10, rPanel2.getWidth() - 20, rPanel2.getHeight() - 20);
-		revalidate();
-
-		// back panel
-		backpanel.setSize(getContentPane().getWidth(), backpanel.getHeight());
-	}
-
-	/**
-	 * Sends command to Console
-	 * 
-	 * @param command
-	 */
-	void sendCommand(String command) {
-		String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) + "\t" + command;
-		if (c.isOn() || command == "POWER") {
-			c.input(formatted);
-			c.display(displayText);
-			eventType.setSelectedIndex(0);
-		}
-		if (p.isActive())
-			p.printGUI(formatted, printerText);
-		if (!c.isOn()) {
-			offWarning();
-			radioChannel1.setSelected(false);
-			radioChannel2.setSelected(false);
-			radioChannel3.setSelected(false);
-			radioChannel4.setSelected(false);
-			radioChannel5.setSelected(false);
-			radioChannel6.setSelected(false);
-			radioChannel7.setSelected(false);
-			radioChannel8.setSelected(false);
-		}
-	}
-
-	/**
-	 * Sets ActionListener for button
-	 * 
-	 * @param i
-	 * @param command
-	 */
-	void setActionListener(AbstractButton i, String command) {
-		i.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendCommand(command);
-			}
-		});
-	}
 	
+	
+
 	/**
 	 * Sets the ActionListener for sensor.
 	 *
 	 * @param i the i
 	 * @param num the panel number
 	 */
-	public void setSensorListener(AbstractButton i, int num) {
-		i.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO - implement sensor type selection
-				Object[] options = { "EYE", "GATE", "PAD" };
-				ImageIcon icon = null;
-				String s = (String) JOptionPane.showInputDialog(null, "Select a sensor below.", "Sensor Selection",
-						JOptionPane.PLAIN_MESSAGE, icon, options, options[0]);
-
-				// If a string was returned, set a sensor.
-				if ((s != null) && (s.length() > 0)) {
-					backpanel.toggle(num);
-					c.setSensor(s, num);
-				}
-			}
-		});
-	}
+//	public void setSensorListener(JPanel i, int num) {
+//		i.addMouseListener(new MouseListener() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				// TODO - implement sensor type selection
+//				Object[] options = { "EYE", "GATE", "PAD" };
+//				ImageIcon icon = null;
+//				String s = (String) JOptionPane.showInputDialog(null, "Select a sensor below.", "Sensor Selection",
+//						JOptionPane.PLAIN_MESSAGE, icon, options, options[0]);
+//
+//				// If a string was returned, set a sensor.
+//				if ((s != null) && (s.length() > 0)) {
+//					backpanel.toggle(num);
+//					c.setSensor(s, num);
+//				}
+//			}
+//
+//			@Override
+//			public void mousePressed(MouseEvent e) {
+//			}
+//
+//			@Override
+//			public void mouseReleased(MouseEvent e) {
+//			}
+//
+//			@Override
+//			public void mouseEntered(MouseEvent e) {
+//			}
+//
+//			@Override
+//			public void mouseExited(MouseEvent e) {
+//			}
+//		});
+//	}
 
 	/**
 	 * Sets up the GUI
 	 */
 	void setupGUI() {
+		setMinimumSize(new Dimension(850, WIN_HEIGHT));
+		setSize(850, WIN_HEIGHT);
+		getContentPane().setLayout(null);
+		
 		// back panel
 		backpanel = new BackPanel();
-		backpanel.setLocation(0, 474);
+		backpanel.setBounds(0, 500, 850, 130);
 		getContentPane().add(backpanel);
-
-		getContentPane().setLayout(null);
+		
 		// left
-		lPanel = new JPanel();
-		lPanel.setBackground(new Color(100, 149, 237));
-		lPanel.setBounds(0, 0, 150, 377);
-		getContentPane().add(lPanel);
+		setupLPanel();
+		
+		// middle
+		setupMPanel();
 
-		buttonPower = new JButton("Power");
-		buttonPower.setBounds(52, 45, 100, 50);
-		buttonPower.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendCommand("POWER");
-				if (c.isOn()) {
-					sendCommand("NEWRUN");
-				}
-			}
-		});
+		// right
+		setupRPanel();
+	}
+
+	private void setupLPanel(){
+		lPanel = new JPanel();
+		lPanel.setBackground(new Color(51, 153, 204));
+		lPanel.setBounds(0, 0, 200, 500);
+		getContentPane().add(lPanel);
 		lPanel.setLayout(null);
-		lPanel.add(buttonPower);
+		
+		Power = new JPanel();
+		Power.setBackground(new Color(51, 153, 204));
+		Power.setBounds(10, 18, 180, 74);
+		lPanel.add(Power);
+		Power.setLayout(null);
+		
+				buttonPower = new JButton("Power");
+				buttonPower.setBounds(10, 12, 125, 50);
+				Power.add(buttonPower);
+				
+				powerStatus = new JPanel();
+				powerStatus.setBounds(145, 24, 25, 25);
+				Power.add(powerStatus);
+				powerStatus.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+				powerStatus.setBackground(Color.RED);
+				buttonPower.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						sendCommand("POWER");
+						if (c.isOn()) {
+							sendCommand("NEWRUN");
+							powerStatus.setBackground(Color.GREEN);
+						}
+						else{
+							powerStatus.setBackground(Color.RED);
+						}
+						displayText.setText("");
+						fcnBtnOn=false;
+					}
+				});
 
 		// eventType.addActionListener(new ActionListener() {
 		// @Override
@@ -221,23 +182,32 @@ public class ChronoGui extends JFrame {
 		});
 
 		buttonFunction = new JButton("Function");
-		buttonFunction.setBounds(20, 140, 100, 40);
+		buttonFunction.setBounds(12, 197, 175, 50);
 		lPanel.add(buttonFunction);
 		buttonFunction.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO - import fcn list to displayText
-				String fcnList = "> RESET\n" + "SET TIME\n" + "TOGGLE CHANNEL\n" + "CONNECT SENSOR\n"
-						+ "DISCONNECT SENSOR\n" + "SET EVENT\n" + "NEWRUN\n" + "ENDRUN\n" + "PRINT\n" + "EXPORT\n"
-						+ "ADD A RACER\n" + "CLEAR\n" + "SWAP\n" + "MARK AS DNF\n" + "TRIGGER A CHANNEL\n" + "START\n"
-						+ "FINISH";
-				displayText.setText(fcnList);
+				fcnBtnOn = !fcnBtnOn;
+				if(fcnBtnOn && c.isOn()){
+					String fcnList = "> RESET\n" + "SET TIME\n" + "TOGGLE CHANNEL\n" + "CONNECT SENSOR\n"
+							+ "DISCONNECT SENSOR\n" + "SET EVENT\n" + "NEWRUN\n" + "ENDRUN\n" + "PRINT\n" + "EXPORT\n"
+							+ "ADD A RACER\n" + "CLEAR\n" + "SWAP\n" + "MARK AS DNF\n" + "TRIGGER A CHANNEL\n" + "START\n"
+							+ "FINISH";
+					displayText.setText(fcnList);
+				}
+				else{
+					if(c.isOn())
+						displayText.setText("");
+					else
+						offWarning();
+				}
 			}
 		});
 
 		buttonSwap = new JButton("SWAP");
-		buttonSwap.setLocation(25, 273);
-		buttonSwap.setSize(100, 40);
+		buttonSwap.setLocation(12, 327);
+		buttonSwap.setSize(175, 50);
 		buttonSwap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -245,234 +215,227 @@ public class ChronoGui extends JFrame {
 			}
 		});
 
-		navPanel = new NavPanel();
+		setNavPanel();
 		lPanel.add(navPanel);
+//		navPanel.setActionListener(up, "up", displayText);
 		lPanel.add(buttonSwap);
-		buttonEndRun.setBounds(20, 360, 100, 40);
+		buttonEndRun.setBounds(12, 397, 175, 50);
 		lPanel.add(buttonEndRun);
 
-		// middle
+	}
+	
+	private void setupMPanel() {
 		mPanel = new JPanel();
-		mPanel.setBackground(new Color(100, 149, 237));
-		mPanel.setLocation(150, 0);
-		mPanel.setSize(260, 377);
+		mPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		mPanel.setBackground(new Color(51, 153, 204));
 		getContentPane().add(mPanel);
-		mPanel.setLayout(new BoxLayout(mPanel, BoxLayout.Y_AXIS));
-
+		mPanel.setBounds(200, 0, 400, 500);
+		
 		// top middle
 		mPanel1 = new JPanel();
-		mPanel1.setBackground(new Color(100, 149, 237));
+		mPanel1.setBackground(new Color(51, 153, 204));
+		mPanel1.setBounds(0, 0, 400, 170);
 		mPanel1.setLayout(null);
-
+	
 		panel_1 = new JPanel();
-		panel_1.setBackground(new Color(100, 149, 237));
-		panel_1.setBounds(8, 9, 240, 80);
+		panel_1.setBounds(0, 10, 400, 80);
+		panel_1.setBackground(new Color(51, 153, 204));
 		mPanel1.add(panel_1);
-		panel_1.setLayout(null);
-
-		// split into 4 rows
+		panel_1.setLayout(new GridLayout(0, 2, 0, 0));
+	
+		// m1: split into 4 panels
 		lblStart = new JLabel("Start");
-		lblStart.setBounds(2, 2, 96, 38);
 		lblStart.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel_1.add(lblStart);
 		lblStart.setFont(new Font("Lucida Grande", Font.BOLD, 24));
+		
 		mPanel1a = new JPanel();
-		mPanel1a.setBackground(new Color(100, 149, 237));
+		mPanel1a.setBackground(new Color(51, 153, 204));
 		mPanel1a.setLayout(new GridLayout(1, 4, 0, 0));
-		mPanel1a.setBounds(100, 2, 140, 38);
 		panel_1.add(mPanel1a);
-
-		buttonTrigger1 = new JButton();
-		buttonTrigger1.setBounds(0, 5, 40, 30);
-		buttonTrigger1.setText("1");
-		mPanel1a.add(buttonTrigger1);
-		setActionListener(buttonTrigger1, "trig 1");
-		buttonTrigger3 = new JButton();
-		buttonTrigger3.setBounds(32, 5, 40, 30);
-		buttonTrigger3.setText("3");
-		mPanel1a.add(buttonTrigger3);
-		setActionListener(buttonTrigger3, "trig 3");
-		buttonTrigger5 = new JButton();
-		buttonTrigger5.setBounds(68, 5, 40, 30);
-		buttonTrigger5.setText("5");
-		mPanel1a.add(buttonTrigger5);
-		setActionListener(buttonTrigger5, "trig 5");
-		buttonTrigger7 = new JButton();
-		buttonTrigger7.setBounds(104, 5, 40, 30);
-		buttonTrigger7.setText("7");
-		mPanel1a.add(buttonTrigger7);
-		setActionListener(buttonTrigger7, "trig 7");
+	
+			buttonTrigger1 = new JButton();
+			buttonTrigger1.setBounds(0, 5, 40, 30);
+			buttonTrigger1.setText("1");
+			mPanel1a.add(buttonTrigger1);
+			setActionListener(buttonTrigger1, "trig 1");
+			buttonTrigger3 = new JButton();
+			buttonTrigger3.setBounds(32, 5, 40, 30);
+			buttonTrigger3.setText("3");
+			mPanel1a.add(buttonTrigger3);
+			setActionListener(buttonTrigger3, "trig 3");
+			buttonTrigger5 = new JButton();
+			buttonTrigger5.setBounds(68, 5, 40, 30);
+			buttonTrigger5.setText("5");
+			mPanel1a.add(buttonTrigger5);
+			setActionListener(buttonTrigger5, "trig 5");
+			buttonTrigger7 = new JButton();
+			buttonTrigger7.setBounds(104, 5, 40, 30);
+			buttonTrigger7.setText("7");
+			mPanel1a.add(buttonTrigger7);
+			setActionListener(buttonTrigger7, "trig 7");
+		
 		enable01 = new JLabel("Enable/Disable");
-		enable01.setBounds(3, 40, 96, 38);
 		enable01.setHorizontalAlignment(SwingConstants.RIGHT);
-
+	
 		panel_1.add(enable01);
 		mPanel1b = new JPanel();
-		mPanel1b.setBackground(new Color(100, 149, 237));
+		mPanel1b.setBackground(new Color(51, 153, 204));
 		mPanel1b.setLayout(new GridLayout(1, 4, 0, 0));
-		mPanel1b.setBounds(100, 40, 140, 38);
 		panel_1.add(mPanel1b);
-
-		radioChannel1 = new JRadioButton();
-		radioChannel1.setBounds(5, 8, 28, 23);
-		radioChannel1.setSelected(false);
-		setActionListener(radioChannel1, "tog 1");
-		mPanel1b.add(radioChannel1);
-
-		radioChannel3 = new JRadioButton();
-		radioChannel3.setBounds(38, 8, 28, 23);
-		radioChannel3.setSelected(false);
-		setActionListener(radioChannel3, "tog 3");
-		mPanel1b.add(radioChannel3);
-
-		radioChannel5 = new JRadioButton();
-		radioChannel5.setBounds(71, 8, 28, 23);
-		radioChannel5.setSelected(false);
-		setActionListener(radioChannel5, "tog 5");
-		mPanel1b.add(radioChannel5);
-
-		radioChannel7 = new JRadioButton();
-		radioChannel7.setBounds(104, 8, 28, 23);
-		radioChannel7.setSelected(false);
-		setActionListener(radioChannel7, "tog 7");
-		mPanel1b.add(radioChannel7);
-
+	
+			radioChannel1 = new JRadioButton();
+			radioChannel1.setHorizontalAlignment(SwingConstants.CENTER);
+			radioChannel1.setBounds(5, 8, 28, 23);
+			radioChannel1.setSelected(false);
+			setActionListener(radioChannel1, "tog 1");
+			mPanel1b.add(radioChannel1);
+		
+			radioChannel3 = new JRadioButton();
+			radioChannel3.setHorizontalAlignment(SwingConstants.CENTER);
+			radioChannel3.setBounds(38, 8, 28, 23);
+			radioChannel3.setSelected(false);
+			setActionListener(radioChannel3, "tog 3");
+			mPanel1b.add(radioChannel3);
+		
+			radioChannel5 = new JRadioButton();
+			radioChannel5.setHorizontalAlignment(SwingConstants.CENTER);
+			radioChannel5.setBounds(71, 8, 28, 23);
+			radioChannel5.setSelected(false);
+			setActionListener(radioChannel5, "tog 5");
+			mPanel1b.add(radioChannel5);
+		
+			radioChannel7 = new JRadioButton();
+			radioChannel7.setHorizontalAlignment(SwingConstants.CENTER);
+			radioChannel7.setBounds(104, 8, 28, 23);
+			radioChannel7.setSelected(false);
+			setActionListener(radioChannel7, "tog 7");
+			mPanel1b.add(radioChannel7);
+		
+		// m2: split into 4 panels
 		panel_2 = new JPanel();
-		panel_2.setBackground(new Color(100, 149, 237));
-		panel_2.setBounds(8, 98, 240, 80);
+		panel_2.setBounds(0, 90, 400, 80);
+		panel_2.setBackground(new Color(51, 153, 204));
 		mPanel1.add(panel_2);
-		panel_2.setLayout(null);
+		panel_2.setLayout(new GridLayout(0, 2, 0, 0));
+		
 		lblFinish = new JLabel("Finish");
-		lblFinish.setBounds(2, 2, 96, 38);
 		lblFinish.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblFinish.setFont(new Font("Lucida Grande", Font.BOLD, 24));
 		panel_2.add(lblFinish);
+		
 		mPanel1c = new JPanel();
-		mPanel1c.setBackground(new Color(100, 149, 237));
+		mPanel1c.setBackground(new Color(51, 153, 204));
 		mPanel1c.setLayout(new GridLayout(1, 4, 0, 0));
-		mPanel1c.setBounds(100, 2, 140, 38);
 		panel_2.add(mPanel1c);
-
-		buttonTrigger2 = new JButton();
-		buttonTrigger2.setBounds(-4, 5, 40, 30);
-		buttonTrigger2.setText("2");
-		mPanel1c.add(buttonTrigger2);
-		buttonTrigger2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendCommand("trig 2");
-			}
-		});
-		buttonTrigger4 = new JButton();
-		buttonTrigger4.setBounds(32, 5, 40, 30);
-		buttonTrigger4.setText("4");
-		mPanel1c.add(buttonTrigger4);
-		buttonTrigger4.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendCommand("trig 4");
-			}
-		});
-		buttonTrigger6 = new JButton();
-		buttonTrigger6.setBounds(68, 5, 40, 30);
-		buttonTrigger6.setText("6");
-		mPanel1c.add(buttonTrigger6);
-		buttonTrigger6.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendCommand("trig 6");
-			}
-		});
-		buttonTrigger8 = new JButton();
-		buttonTrigger8.setBounds(104, 5, 40, 29);
-		buttonTrigger8.setText("8");
-		mPanel1c.add(buttonTrigger8);
+	
+			buttonTrigger2 = new JButton();
+			buttonTrigger2.setBounds(-4, 5, 40, 30);
+			buttonTrigger2.setText("2");
+			mPanel1c.add(buttonTrigger2);
+			setActionListener(buttonTrigger2, "trig 2");
+			buttonTrigger4 = new JButton();
+			buttonTrigger4.setBounds(32, 5, 40, 30);
+			buttonTrigger4.setText("4");
+			mPanel1c.add(buttonTrigger4);
+			setActionListener(buttonTrigger4, "trig 4");
+			buttonTrigger6 = new JButton();
+			buttonTrigger6.setBounds(68, 5, 40, 30);
+			buttonTrigger6.setText("6");
+			mPanel1c.add(buttonTrigger6);
+			setActionListener(buttonTrigger6, "trig 6");
+			buttonTrigger8 = new JButton();
+			buttonTrigger8.setBounds(104, 5, 40, 29);
+			buttonTrigger8.setText("8");
+			setActionListener(buttonTrigger8, "trig 8");
+			mPanel1c.add(buttonTrigger8);
+		
 		enable02 = new JLabel("Enable/Disable");
-		enable02.setBounds(3, 40, 96, 38);
 		enable02.setHorizontalAlignment(SwingConstants.RIGHT);
 		panel_2.add(enable02);
-
+		
 		mPanel1d = new JPanel();
-		mPanel1d.setBackground(new Color(100, 149, 237));
+		mPanel1d.setBackground(new Color(51, 153, 204));
 		mPanel1d.setLayout(new GridLayout(1, 4, 0, 0));
-		mPanel1d.setBounds(100, 40, 140, 38);
 		panel_2.add(mPanel1d);
-
-		radioChannel2 = new JRadioButton();
-		radioChannel2.setBounds(4, 8, 28, 23);
-		mPanel1d.add(radioChannel2);
-		radioChannel2.setSelected(false);
-		setActionListener(radioChannel2, "tog 2");
-
-		radioChannel4 = new JRadioButton();
-		radioChannel4.setBounds(37, 8, 28, 23);
-		mPanel1d.add(radioChannel4);
-		radioChannel4.setSelected(false);
-		setActionListener(radioChannel4, "tog 4");
-
-		radioChannel6 = new JRadioButton();
-		radioChannel6.setBounds(70, 8, 28, 23);
-		mPanel1d.add(radioChannel6);
-		radioChannel6.setSelected(false);
-		setActionListener(radioChannel6, "tog 6");
-
-		radioChannel8 = new JRadioButton();
-		radioChannel8.setBounds(103, 8, 28, 23);
-		mPanel1d.add(radioChannel8);
-		radioChannel8.setSelected(false);
-		setActionListener(radioChannel8, "tog 8");
-		buttonTrigger8.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				sendCommand("trig 8");
-			}
-		});
-
+		
+			radioChannel2 = new JRadioButton();
+			radioChannel2.setHorizontalAlignment(SwingConstants.CENTER);
+			radioChannel2.setBounds(4, 8, 28, 23);
+			mPanel1d.add(radioChannel2);
+			radioChannel2.setSelected(false);
+			setActionListener(radioChannel2, "tog 2");
+			
+			radioChannel4 = new JRadioButton();
+			radioChannel4.setHorizontalAlignment(SwingConstants.CENTER);
+			radioChannel4.setBounds(37, 8, 28, 23);
+			mPanel1d.add(radioChannel4);
+			radioChannel4.setSelected(false);
+			setActionListener(radioChannel4, "tog 4");
+			
+			radioChannel6 = new JRadioButton();
+			radioChannel6.setHorizontalAlignment(SwingConstants.CENTER);
+			radioChannel6.setBounds(70, 8, 28, 23);
+			mPanel1d.add(radioChannel6);
+			radioChannel6.setSelected(false);
+			setActionListener(radioChannel6, "tog 6");
+			
+			radioChannel8 = new JRadioButton();
+			radioChannel8.setHorizontalAlignment(SwingConstants.CENTER);
+			radioChannel8.setBounds(103, 8, 28, 23);
+			mPanel1d.add(radioChannel8);
+			radioChannel8.setSelected(false);
+			setActionListener(radioChannel8, "tog 8");
+	
 		// bottom middle panel
 		mPanel2 = new JPanel();
-		mPanel2.setBackground(new Color(100, 149, 237));
-		mPanel2.setSize(mPanel.getWidth(), mPanel.getHeight() / 3);
+		mPanel2.setBackground(new Color(51, 153, 204));
+		mPanel2.setBounds(0, 170, 400, 330);
 		mPanel2.setLayout(null);
-
+	
 		displayText = new JTextArea();
 		displayText.setEditable(false);
 		scroll = new JScrollPane(displayText);
+		scroll.setBounds(20, 0, 360, 300);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setBounds(38, 15, 180, 125);
 		mPanel2.add(scroll);
+		displayText.setFocusable(true);
 		labelLegend = new JLabel("Queue/Running/Final");
-		labelLegend.setBounds(60, 155, 136, 16);
+		labelLegend.setBounds(132, 305, 150, 16);
 		mPanel2.add(labelLegend);
+		mPanel.setLayout(null);
 		mPanel.add(mPanel1);
 		mPanel.add(mPanel2);
+		
+	}
 
-		// right
+	private void setupRPanel() {		
 		rPanel = new JPanel();
-		rPanel.setBackground(new Color(100, 149, 237));
-		rPanel.setLocation(getContentPane().getWidth() - getContentPane().getWidth() / 3, 0);
-		rPanel.setSize(getContentPane().getWidth() / 3, getContentPane().getHeight());
+		rPanel.setBackground(new Color(51, 153, 204));
+		rPanel.setBounds(600, 0, 250, 500);
 		getContentPane().add(rPanel);
 		// top right
 		rPanel1 = new JPanel();
-		rPanel1.setBackground(new Color(100, 149, 237));
+		rPanel1.setBackground(new Color(51, 153, 204));
 		rPanel1.setLocation(0, 0);
-		rPanel1.setSize(254, 190);
-
+		rPanel1.setSize(254, 225);
+	
 		// mid right
 		rPanel2 = new JPanel();
-		rPanel2.setBackground(new Color(100, 149, 237));
-		rPanel2.setLocation(0, 188);
-		rPanel2.setSize(254, 278);
+		rPanel2.setBackground(new Color(51, 153, 204));
+		rPanel2.setLocation(0, 225);
+		rPanel2.setSize(254, 275);
 		displayText.setRows(10);
 		displayText.setColumns(15);
 		rPanel2.setLayout(null);
 		rPanel.setLayout(null);
-
+	
 		rPanel.add(rPanel1);
-
+	
 		printPower = new JButton("Printer Pwr");
-		printPower.setBounds(74, 6, 111, 50);
+		printPower.setBackground(new Color(100, 149, 237));
+		printPower.setBounds(71, 8, 111, 50);
 		printPower.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (p.isActive())
@@ -483,35 +446,50 @@ public class ChronoGui extends JFrame {
 		});
 		rPanel1.setLayout(null);
 		rPanel1.add(printPower);
-
+	
 		printerText = new JTextArea();
 		printerText.setEditable(false);
 		scroll2 = new JScrollPane(printerText);
 		rPanel1.add(scroll2);
 		scroll2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll2.setBounds(10, 66, 230, 150);
 
 		rPanel.add(rPanel2);
 		keypad = new JPanel();
-		keypad.setBackground(new Color(100, 149, 237, 0));
+		keypad.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		keypad.setBackground(new Color(51, 153, 204));
 		rPanel2.add(keypad);
 		keypad.setLayout(new GridLayout(4, 3, 0, 1));
-
+		keypad.setBounds(10, 10, 230, 258);
+	
 		button1 = new JButton("1");
+		button1.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		button2 = new JButton("2");
+		button2.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		button3 = new JButton("3");
+		button3.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		button4 = new JButton("4");
+		button4.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		button5 = new JButton("5");
+		button5.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		button6 = new JButton("6");
+		button6.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		button7 = new JButton("7");
+		button7.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		button8 = new JButton("8");
+		button8.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		button9 = new JButton("9");
+		button9.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		buttonStar = new JButton("*");
-
+		buttonStar.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+	
 		// setActionListener(buttonStar, "");
 		button0 = new JButton("0");
+		button0.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		buttonPound = new JButton("#");
-
+		buttonPound.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+	
 		buttonPound.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -525,7 +503,7 @@ public class ChronoGui extends JFrame {
 				}
 			}
 		});
-
+	
 		buttonAction(button1, 1);
 		buttonAction(button2, 2);
 		buttonAction(button3, 3);
@@ -551,11 +529,177 @@ public class ChronoGui extends JFrame {
 		keypad.add(buttonPound);
 	}
 
+	private void setNavPanel(){
+		navPanel = new JPanel();
+		navPanel.setLocation(12, 259);
+		navPanel.setLayout(new GridLayout(1,4,0,0));
+		navPanel.setBackground(new Color(51, 153, 204));
+		navPanel.setSize(175, 50);
+		
+		up = new JButton("\u25B2");
+		up.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		setNavListener(up, "up");
+		navPanel.add(up);
+		
+		down = new JButton("\u25BC");
+		down.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		setNavListener(down, "down");
+		navPanel.add(down);
+		
+		left = new JButton("\u25C0");
+		left.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		setNavListener(left, "left");
+		navPanel.add(left);
+		
+		right = new JButton("\u25BA");
+		right.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		setNavListener(right, "right");
+		navPanel.add(right);	
+		
+	}
+	
 	/**
-	 * If printer is off, print off warning
+		 * Sends command to Console
+		 * 
+		 * @param command
+		 */
+		void sendCommand(String command) {
+			String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) + "\t" + command;
+			if (c.isOn() || command == "POWER") {
+				c.input(formatted);
+				c.display(displayText);
+			}
+			if (p.isActive())
+				p.printGUI(formatted, printerText);
+			if (!c.isOn()) {
+				offWarning();
+				radioChannel1.setSelected(false);
+				radioChannel2.setSelected(false);
+				radioChannel3.setSelected(false);
+				radioChannel4.setSelected(false);
+				radioChannel5.setSelected(false);
+				radioChannel6.setSelected(false);
+				radioChannel7.setSelected(false);
+				radioChannel8.setSelected(false);
+			}
+		}
+
+	/**
+	 * Sets ActionListener for button
+	 * 
+	 * @param i
+	 * @param command
+	 */
+	void setActionListener(AbstractButton i, String command) {
+		i.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sendCommand(command);
+			}
+		});
+	}
+
+	/**
+	 * Sets ActionListener for navigation button
+	 * 
+	 * @param i
+	 * @param command
+	 */
+	void setNavListener(AbstractButton i, String arrow){
+		i.addActionListener(new ActionListener()
+        {
+            @Override
+			public void actionPerformed(ActionEvent e)
+            {// TODO - implement arrow navigation
+            	if(c.isOn() && fcnBtnOn){
+	            	String original = displayText.getText();
+	            	String[]strArr = original.split("\n");
+	                if(arrow=="up"){
+	                	if(rowSelected>0){
+	                		strArr[rowSelected]=strArr[rowSelected].substring(2);
+	                		strArr[rowSelected-1]="> "+strArr[rowSelected-1];
+	                		rowSelected--;
+	                	}
+	                } else if(arrow=="down"){
+	                	if(rowSelected<strArr.length-1){
+	                		strArr[rowSelected]=strArr[rowSelected].substring(2);
+	                		strArr[rowSelected+1]="> "+strArr[rowSelected+1];
+	                		rowSelected++;
+	                	}
+	                }else if(arrow=="left"){
+	                	// you selected that function
+	                }else {
+	                	// go back
+	                }
+	                //rebuild string
+	                StringBuilder strBuilder = new StringBuilder();
+	                for (int i = 0; i < strArr.length; i++) {
+	                   strBuilder.append(strArr[i]+'\n');
+	                }
+	                String newString = strBuilder.toString();
+	            	
+	                displayText.setText(newString);
+            	}
+            	else {
+            		if(!c.isOn())
+            			offWarning();
+            		else
+            			displayText.setText("Press function button to use arrow keys.");
+            	}
+            }
+        });
+	}
+	
+	Action actionListener = new AbstractAction() {
+	      public void actionPerformed(ActionEvent actionEvent) {
+	        JButton source = (JButton) actionEvent.getSource();
+	        System.out.println("Activated: " + source.getText());
+	        String arrow = source.getText();
+	        if(c.isOn() && fcnBtnOn){
+	        	String original = displayText.getText();
+            	String[]strArr = original.split("\n");
+                if(arrow.equalsIgnoreCase("up")){
+                	if(rowSelected>0){
+                		strArr[rowSelected]=strArr[rowSelected].substring(2);
+                		strArr[rowSelected-1]="> "+strArr[rowSelected-1];
+                		rowSelected--;
+                	}
+                } else if(arrow.equalsIgnoreCase("down")){
+                	if(rowSelected<strArr.length-1){
+                		strArr[rowSelected]=strArr[rowSelected].substring(2);
+                		strArr[rowSelected+1]="> "+strArr[rowSelected+1];
+                		rowSelected++;
+                	}
+                } else if(arrow.equalsIgnoreCase("left")){
+                	// you selected that function
+                } else if(arrow.equalsIgnoreCase("right")){
+                	// go back
+                } else {
+                	System.out.println("illegal key entry");
+                }
+                //rebuild string
+                StringBuilder strBuilder = new StringBuilder();
+                for (int i = 0; i < strArr.length; i++) {
+                   strBuilder.append(strArr[i]+'\n');
+                }
+                String newString = strBuilder.toString();
+            	
+                displayText.setText(newString);
+	        }
+	        else {
+        		if(!c.isOn())
+        			offWarning();
+        		else
+        			displayText.setText("Press function button to use arrow keys.");
+        	}
+	      }
+    };
+	private JPanel Power;
+    
+	/**
+	 * If console is off, print off warning
 	 */
 	private void offWarning() {
-		// System.out.println(offWarning);
 		displayText.setText(offWarning);
 	}
 
@@ -580,6 +724,8 @@ public class ChronoGui extends JFrame {
 			}
 		});
 	}
+	
+	
 
 	/**
 	 * The main method.
@@ -588,22 +734,10 @@ public class ChronoGui extends JFrame {
 	 */
 	public static void main(String args[]) {
 		ChronoGui frame = new ChronoGui();
-		frame.addComponentListener(new ComponentListener() {
-			public void componentResized(ComponentEvent e) {
-				frame.resizeGUI();
-			}
-
-			@Override
-			public void componentMoved(ComponentEvent e) {
-			}
-
-			@Override
-			public void componentShown(ComponentEvent e) {
-			}
-
-			@Override
-			public void componentHidden(ComponentEvent e) {
-			}
+		frame.addWindowFocusListener(new WindowAdapter() {
+		    public void windowGainedFocus(WindowEvent e) {
+		        frame.displayText.requestFocusInWindow();
+		    }
 		});
 	}
 }

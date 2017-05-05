@@ -40,7 +40,6 @@ public class Console
 	 * @return true, if successful
 	 */
 	public boolean input(String line){
-//		debug("INPUT > "+line);
 		if (line.indexOf('\t') == -1)
 			line = "DIS \"INVALID INPUT\"";
 		String timestamp = line.substring(0, line.indexOf('\t'));
@@ -51,7 +50,7 @@ public class Console
 		else{
 			command = line.substring(line.indexOf('\t')+1,line.indexOf(' '));
 			argument = line.substring(line.indexOf(' ') + 1);
-		}	
+		}
 		// POWER(if off) Create ChronoTimer, which should set to default state
 		// POWER(if on) Delete ChronoTimer
 		if (command.equalsIgnoreCase("POWER")){

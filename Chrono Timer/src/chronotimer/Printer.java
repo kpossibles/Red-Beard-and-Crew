@@ -93,7 +93,7 @@ public class Printer {
 	 * @param str the str
 	 * @param text the text
 	 */
-	public void printGUI(String str,JTextArea text){
+	public void printGUI(String str, JTextArea text){
 		text.setText(text.getText()+'\n'+str);
 		addToRecord(str);
 	}

@@ -1,6 +1,6 @@
 package chronotimer;
 import java.util.concurrent.TimeUnit;
-
+import static java.util.concurrent.TimeUnit.*;
 /**
  * The Class Racer.
  *
@@ -109,12 +109,21 @@ public class Racer {
 	 * @return the start time
 	 */
 	public String getStartTime(){
-		long second = (start / 1000) % 60;
-		long minute = (start / (1000 * 60)) % 60;
-		long hour = (start / (1000 * 60 * 60)) % 24;
-		long millis = (start - TimeUnit.SECONDS.toMillis(second));
+		final TimeUnit scale = MILLISECONDS;
+		long duration = start;
+		
+	    long days = scale.toDays( duration );
+	    duration -= DAYS.toMillis( days );
+	    long hours = scale.toHours( duration );
+	    duration -= HOURS.toMillis( hours );
+	    long minutes = scale.toMinutes( duration );
+	    duration -= MINUTES.toMillis( minutes );
+	    long seconds = scale.toSeconds( duration );
+	    duration -= SECONDS.toMillis( seconds );
+	    long millis = scale.toMillis( duration );
+	    
 		millis = Integer.parseInt(Integer.toString((int) millis).substring(0, 1));
-		String time = String.format("%02d:%02d:%02d.%d", hour, minute, second, millis);
+		String time = String.format("%02d:%02d:%02d.%d", hours, minutes, seconds, millis);
 		return time;
 	}
 	
