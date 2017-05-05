@@ -14,6 +14,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+
 public class MainDirectory {
 	private ArrayList<Employee> employees;
 	private Gson g;
@@ -100,7 +101,6 @@ public class MainDirectory {
 
 	public class DisplayHandler implements HttpHandler {
 		public void handle(HttpExchange t) throws IOException {
-
 			String response = "";
 			System.out.println("\nBeginning of response\n");
 			
@@ -144,7 +144,6 @@ public class MainDirectory {
 		}
 
 		private void employeeToHtml(StringBuilder htmlStringBuilder) {
-			// TODO: check if implemented correctly -KP
 			if(employees.size() > 0) {
 				String res = "";
 				for(int i=0;i<employees.size();i++){
@@ -163,7 +162,6 @@ public class MainDirectory {
 				
 				htmlStringBuilder.append(res);
 			}
-			
 		}
 	}
 
@@ -200,7 +198,6 @@ public class MainDirectory {
 	}
 
 	public class cssHandler implements HttpHandler{
-
 		@Override
 		public void handle(HttpExchange t) throws IOException {
 			String response=".tg {border-collapse:collapse;border-spacing:0;}"
@@ -214,6 +211,5 @@ public class MainDirectory {
 			os.write(response.getBytes());
 			os.close();
 		}
-		
 	}
 }
