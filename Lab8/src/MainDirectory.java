@@ -27,10 +27,10 @@ public class MainDirectory {
 		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
 		// create a context to get the request to display the results
-		server.createContext("/displayresults/directory", new DisplayHandler());
+		server.createContext("/displayresults/index.html", new DisplayHandler());
 		
 		// create a context to get the request to display the results
-		server.createContext("/displayresults", new cssHandler());
+		server.createContext("/displayresults/style.css", new cssHandler());
 
 		// create a context to get the request for the POST
 		server.createContext("/sendresults", new PostHandler());
@@ -111,12 +111,12 @@ public class MainDirectory {
 			try {
 				if (!sharedResponse.isEmpty()) {
 		            htmlStringBuilder.append("<html><head><title>Directory</title>");
-		            htmlStringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\"></head>");
+		            htmlStringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head>");
 		            htmlStringBuilder.append("<body>");
 		            htmlStringBuilder.append("<h1>Company Directory</h1>");
 		            htmlStringBuilder.append("<table>");
 		            //append row: Attributes
-		            htmlStringBuilder.append("<tr id=\"light\"><th><b>Title</b></th>"
+		            htmlStringBuilder.append("<tr class=\"header\"><th><b>Title</b></th>"
 		            		+ "<th><b>First Name</b></th>"
 		            		+ "<th><b>Last Name</b></th>"
 		            		+ "<th><b>Department</b></th>"
@@ -128,7 +128,6 @@ public class MainDirectory {
 		            //close html file
 		            htmlStringBuilder.append("</table></body></html>");
 		            response+=htmlStringBuilder.toString();
-					
 				}
 			} catch (JsonSyntaxException e) {
 				e.printStackTrace();
@@ -150,9 +149,9 @@ public class MainDirectory {
 				String res = "";
 				for(int i=0;i<employees.size();i++){
 					if(i%2==0)
-						res += "<tr id=\"light\">";
+						res += "<tr class=\"light\">";
 					else
-						res += "<tr id=\"dark\">";
+						res += "<tr class=\"dark\">";
 					res += "<td>"+employees.get(i).title+"</td>"
 		            		+ "<td>"+employees.get(i).firstname+"</td>"
             				+ "<td>"+employees.get(i).lastname+"</td>"
@@ -204,25 +203,16 @@ public class MainDirectory {
 
 		@Override
 		public void handle(HttpExchange t) throws IOException {
-			// TODO create style.css file in displayresults folder, NOT WORKING CORRECTLY?
-			String str="";
-            str+=".tg {border-collapse:collapse;border-spacing:0;}"
+			String response=".tg {border-collapse:collapse;border-spacing:0;}"
             		+"table, th, td {border: 1px solid black;font-family:Arial, sans-serif;font-size:14px;}"
-            		+".dark{background-color: #247BA0;color:white;}"
+					+".header{background-color:#333333;color:white;}"
+            		+".dark{background-color: #E0E0E0;color:black;}"
             		+".light{background-color: white;color:black;}";
-			
-			// creates a FileWriter Object
-			FileWriter writer = null; 
-			try{
-				writer = new FileWriter(new File("style.css"));
-				writer.write(str); 
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
 
-			writer.flush();
-			writer.close();
-
+            t.sendResponseHeaders(200, response.length());
+			OutputStream os = t.getResponseBody();
+			os.write(response.getBytes());
+			os.close();
 		}
 		
 	}
