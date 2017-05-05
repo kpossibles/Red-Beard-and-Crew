@@ -27,10 +27,10 @@ public class MainDirectory {
 		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
 		// create a context to get the request to display the results
-		server.createContext("/displayresults/index.html", new DisplayHandler());
+		server.createContext("/displayresults", new DisplayHandler());
 		
 		// create a context to get the request to display the results
-		server.createContext("/displayresults/style.css", new cssHandler());
+		server.createContext("/style.css", new cssHandler());
 
 		// create a context to get the request for the POST
 		server.createContext("/sendresults", new PostHandler());
