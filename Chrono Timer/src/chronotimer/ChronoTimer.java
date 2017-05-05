@@ -373,7 +373,7 @@ public class ChronoTimer  {
 						res += "<tr class=\"dark\">"; //Place, Number, Name, Time
 					res    += "<td>" + (i+1) + "</td>"
 							+ "<td>" + r.getId() + "</td>"
-							+ "<td>" + (NumNameMap.containsKey(r.getId())?NumNameMap.get(r.getId()):"") + "</td>" //TODO: Implement Name!
+							+ "<td>" + (NumNameMap.containsKey(r.getId())?NumNameMap.get(r.getId()):"") + "</td>"
 							+ "<td>" + (r.getDNF()?"DNF":r.getTime()=="-2"?"":r.getTime()) + "</td>";
 					res += "</tr>";
 				}
