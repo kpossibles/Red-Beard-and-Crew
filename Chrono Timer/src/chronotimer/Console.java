@@ -39,7 +39,7 @@ public class Console
 	 * @param line the line
 	 * @return true, if successful
 	 */
-	public boolean input(String line){
+	public boolean input(String line) {
 		if (line.indexOf('\t') == -1)
 			line = "DIS \"INVALID INPUT\"";
 		String timestamp = line.substring(0, line.indexOf('\t'));
@@ -60,9 +60,14 @@ public class Console
 				setOn(false);
 				System.out.println("POWER OFF");
 			} else {
-				chronotimer = new ChronoTimer(printer);
-				setOn(true);
-				System.out.println("POWER ON");
+				try {
+					chronotimer = new ChronoTimer(printer);
+					setOn(true);
+					System.out.println("POWER ON");
+				}
+				catch(Exception e){
+					System.out.println("Could not start Chronotimer. Is port 8000 already bound?");
+				}
 			}
 		}
 		else if (isOn()) {

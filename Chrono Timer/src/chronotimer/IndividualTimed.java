@@ -38,7 +38,6 @@ public class IndividualTimed extends Event {
 				channelMode[i] = "";
 			timer = _timer;
 			print = _print;
-			currentRun = new Run(1);
 		}
 
 		public void addRacer(int r){

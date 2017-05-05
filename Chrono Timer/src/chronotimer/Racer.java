@@ -77,7 +77,17 @@ public class Racer {
 	public String getTime(){
 		if(didNotFinish)
 			return "-1";
+		if(finish == 0)
+			return "-2";
 		return convertToTime(finish-start);
+	}
+
+	public long getTimeAsLong(){
+		if(didNotFinish)
+			return -1;
+		if(finish == 0)
+			return -2;
+		return finish-start;
 	}
 	
 	private String convertToTime(long time){
@@ -152,6 +162,15 @@ public class Racer {
 	 */
 	public long getFinish() {
 		return finish;
+	}
+
+	/**
+	 * * Gets whether the racer is marked as DNF
+	 *
+	 * @return True if DNF
+	 */
+	public boolean getDNF(){
+		return didNotFinish;
 	}
 
 	/**
