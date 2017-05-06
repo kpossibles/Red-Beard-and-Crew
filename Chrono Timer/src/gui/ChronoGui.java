@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -19,6 +21,7 @@ import javax.swing.border.EtchedBorder;
  */
 @SuppressWarnings("serial")
 public class ChronoGui extends JFrame{
+	private Map<String, List>nameCommandMap;
 	private Console c;
 	private Printer p;
 	private JRadioButton radioChannel1, radioChannel3, radioChannel5, radioChannel7, radioChannel2, radioChannel4,
@@ -49,7 +52,6 @@ public class ChronoGui extends JFrame{
 		setTitle("ChronoTimer 1009");
 		setupGUI();
 		setVisible(true);
-		addBindings();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 	}
@@ -100,7 +102,7 @@ public class ChronoGui extends JFrame{
 	/**
 	 * Sets up the GUI
 	 */
-	void setupGUI() {
+	public void setupGUI() {
 		setMinimumSize(new Dimension(850, WIN_HEIGHT));
 		setSize(850, WIN_HEIGHT);
 		getContentPane().setLayout(null);
@@ -110,18 +112,45 @@ public class ChronoGui extends JFrame{
 		backpanel.setBounds(0, 500, 850, 130);
 		getContentPane().add(backpanel);
 		
-		// left
 		setupLPanel();
-		
-		// middle
 		setupMPanel();
-
-		// right
 		setupRPanel();
-		
-//		displayText.addKeyListener(menu);
+		addBindings();
+		setHashMap();
 	}
 
+	private void setHashMap() {
+		// TODO Auto-generated method stub
+		nameCommandMap = new HashMap<String, List>();
+		List value = new List();
+		for(int i=1; i<9;i++)
+			value.add(i+"");
+		nameCommandMap.put("TOG", value);
+		nameCommandMap.put("TRIG", value);
+		
+		value = new List();
+		value.add("EYE");
+		value.add("GATE");
+		value.add("PAD");
+		nameCommandMap.put("CONN", value);
+		
+		value = new List();
+		value.add("IND");
+		value.add("PARIND");
+		value.add("GRP");
+		value.add("PARGRP");
+		nameCommandMap.put("EVENT", value);
+		
+		value = new List();
+		value.add("<hour>:<min>:<sec>");
+		nameCommandMap.put("TIME", value);
+	}
+
+
+
+	/**
+	 * Setup Left panel.
+	 */
 	private void setupLPanel(){
 		lPanel = new JPanel();
 		lPanel.setBackground(new Color(51, 153, 204));
@@ -204,6 +233,9 @@ public class ChronoGui extends JFrame{
 
 	}
 	
+	/**
+	 * Setup Middle panel.
+	 */
 	private void setupMPanel() {
 		mPanel = new JPanel();
 		mPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -392,6 +424,9 @@ public class ChronoGui extends JFrame{
 		
 	}
 
+	/**
+	 * Setup Right panel.
+	 */
 	private void setupRPanel() {		
 		rPanel = new JPanel();
 		rPanel.setBackground(new Color(51, 153, 204));
@@ -513,6 +548,9 @@ public class ChronoGui extends JFrame{
 		keypad.add(buttonPound);
 	}
 
+	/**
+	 * Sets the navigation buttons panel.
+	 */
 	private void setNavPanel(){
 		menu = new Menu();
 		
@@ -544,11 +582,31 @@ public class ChronoGui extends JFrame{
 	}
 	
 	/**
+	 * Adds the key bindings.
+	 */
+	private void addBindings(){
+		InputMap inputMap = displayText.getInputMap();
+		ActionMap actionMap = displayText.getActionMap();
+		
+		//Ctrl-b to go backward one character
+		KeyStroke key = KeyStroke.getKeyStroke("UP");
+		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_UP));
+		key = KeyStroke.getKeyStroke("DOWN");
+		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_DOWN));
+		key = KeyStroke.getKeyStroke("LEFT");
+		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_LEFT));
+		key = KeyStroke.getKeyStroke("RIGHT");
+		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_RIGHT));		
+	}
+
+
+
+	/**
 	 * Sends command to Console
 	 * 
 	 * @param command
 	 */
-	void sendCommand(String command) {
+	private void sendCommand(String command) {
 		String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) + "\t" + command;
 		if (c.isOn() || command == "POWER") {
 			c.input(formatted);
@@ -575,7 +633,7 @@ public class ChronoGui extends JFrame{
 	 * @param i
 	 * @param command
 	 */
-	void setTriggerListener(AbstractButton i, String command) {
+	private void setTriggerListener(AbstractButton i, String command) {
 		i.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -598,40 +656,23 @@ public class ChronoGui extends JFrame{
 	 * @param i
 	 * @param command
 	 */
-	void setNavListener(AbstractButton i, int key){
+	private void setNavListener(AbstractButton i, int key){
 		i.addActionListener(new ActionListener()
         {
             @Override
 			public void actionPerformed(ActionEvent e)
-            {// TODO - implement arrow navigation for left & right
-            	if(c.isOn() && fcnBtnOn){
-	            	menuResponse(key);
-            	}
-            	else {
-            		if(!c.isOn())
-            			offWarning();
-            		else
-            			displayText.setText("Press function button to use arrow keys.");
-            	}
+            {// TODO - implement arrow navigation for right in private method
+            	menuResponse(key);
             }
         });
 	}
 	
-	void addBindings(){
-		InputMap inputMap = displayText.getInputMap();
-		ActionMap actionMap = displayText.getActionMap();
-		
-		//Ctrl-b to go backward one character
-		KeyStroke key = KeyStroke.getKeyStroke("UP");
-		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_UP));
-		key = KeyStroke.getKeyStroke("DOWN");
-		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_DOWN));
-		key = KeyStroke.getKeyStroke("LEFT");
-		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_LEFT));
-		key = KeyStroke.getKeyStroke("RIGHT");
-		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_RIGHT));		
-	}
-	
+	/**
+	 * Sets the key binding.
+	 *
+	 * @param key the key
+	 * @return the action
+	 */
 	public Action setKeyBinding(int key) {
 		Action action = new AbstractAction(){
 
@@ -639,27 +680,41 @@ public class ChronoGui extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				// TODO implement this for R key in private method
 				menuResponse(key);
-				displayText.setText(menu.getMenu());
 			}
 			
 		};
 		
 		return action;
 	}
+	
+	/**
+	 * Menu response.
+	 *
+	 * @param key the key pressed
+	 */
 	private void menuResponse(int key){
 		// TODO implement this for R key
-		if(key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN){
-			menu.setSelected(key);
+		if(c.isOn() && fcnBtnOn){
+    	
+			if(key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN){
+				menu.setSelected(key);
+			}
+			if(key == KeyEvent.VK_LEFT){
+				debug("pressed left key");
+				menu.pressLeft();
+			}
+			if(key == KeyEvent.VK_RIGHT){
+				debug("pressed right key");
+				int selected = menu.getCurrentSelection();
+			}
+			displayText.setText(menu.getMenu());
 		}
-		if(key == KeyEvent.VK_LEFT){
-			debug("pressed left key");
-			menu.pressLeft();
-		}
-		if(key == KeyEvent.VK_RIGHT){
-			debug("pressed right key");
-			int selected = menu.getCurrentSelection();
-		}
-		displayText.setText(menu.getMenu());
+		else {
+    		if(!c.isOn())
+    			offWarning();
+    		else
+    			displayText.setText("Press function button to use arrow keys.");
+    	}
 	}
 
 
@@ -670,7 +725,7 @@ public class ChronoGui extends JFrame{
 		displayText.setText(offWarning);
 	}
 
-	void debug(String str) {
+	private void debug(String str) {
 		System.out.println("DEBUG: " + str);
 	}
 

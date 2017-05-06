@@ -13,10 +13,10 @@ public class Menu {
 	public Menu(){
 		commands = new CommandList();
 		commands.add(new Command("RESET", true));
-		commands.add(new Command("TIME"));
-		commands.add(new Command("TOG"));
-		commands.add(new Command("CONN"));
-		commands.add(new Command("EVENT"));
+		commands.add(new Command("TIME"));//✔
+		commands.add(new Command("TOG"));//✔
+		commands.add(new Command("CONN"));//✔
+		commands.add(new Command("EVENT"));//✔
 		commands.add(new Command("NEWRUN"));
 		commands.add(new Command("ENDRUN"));
 		commands.add(new Command("PRINT"));
@@ -24,7 +24,7 @@ public class Menu {
 		commands.add(new Command("NUM"));
 		commands.add(new Command("CLR"));
 		commands.add(new Command("DNF"));
-		commands.add(new Command("TRIG"));
+		commands.add(new Command("TRIG"));//✔
 		commands.add(new Command("START"));
 		commands.add(new Command("FINISH"));
 		name="Main Menu";
