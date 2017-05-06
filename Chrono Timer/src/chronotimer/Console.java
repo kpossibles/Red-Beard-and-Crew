@@ -22,6 +22,7 @@ public class Console
 	 */
 	public Console(){
 		printer = new Printer();
+		on = false;
 	}
 	
 	/**
@@ -321,6 +322,10 @@ public class Console
 
 	public void setSensor(String sensorType, int num) {
 		input(String.format("CONN %s %d", sensorType, num));		
+	}
+	
+	public boolean isChannelActive(int i){
+		return chronotimer.isChannelActive(i);
 	}
 	
 	

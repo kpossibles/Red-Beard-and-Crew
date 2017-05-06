@@ -399,4 +399,8 @@ public class ChronoTimer  {
 		}
 	}
 
+	public boolean isChannelActive(int i) {
+		return channels[i-1].isOn();
+	}
+
 }
