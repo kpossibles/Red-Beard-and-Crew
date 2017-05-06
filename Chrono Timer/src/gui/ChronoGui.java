@@ -49,6 +49,7 @@ public class ChronoGui extends JFrame{
 		setTitle("ChronoTimer 1009");
 		setupGUI();
 		setVisible(true);
+		addBindings();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 	}
@@ -118,7 +119,7 @@ public class ChronoGui extends JFrame{
 		// right
 		setupRPanel();
 		
-		displayText.addKeyListener(menu);
+//		displayText.addKeyListener(menu);
 	}
 
 	private void setupLPanel(){
@@ -141,7 +142,6 @@ public class ChronoGui extends JFrame{
 		buttonFunction.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO - import fcn list to displayText
 				fcnBtnOn = !fcnBtnOn;
 				if(fcnBtnOn && c.isOn()){
 					displayText.setText(menu.getMenu());
@@ -605,7 +605,7 @@ public class ChronoGui extends JFrame{
 			public void actionPerformed(ActionEvent e)
             {// TODO - implement arrow navigation for left & right
             	if(c.isOn() && fcnBtnOn){
-	            	menu.actionPerformed(e, displayText, key, c);
+	            	menuResponse(key);
             	}
             	else {
             		if(!c.isOn())
@@ -619,24 +619,50 @@ public class ChronoGui extends JFrame{
 	
 	void addBindings(){
 		InputMap inputMap = displayText.getInputMap();
+		ActionMap actionMap = displayText.getActionMap();
 		
 		//Ctrl-b to go backward one character
-		KeyStroke key = KeyStroke.getKeyStroke(KeyEvent.VK_B, Event.CTRL_MASK);
-		inputMap.put(key, DefaultEditorKit.backwardAction);
- 
-		//Ctrl-f to go forward one character
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_F, Event.CTRL_MASK);
-		inputMap.put(key, DefaultEditorKit.forwardAction);
- 
-		//Ctrl-p to go up one line
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK);
-		inputMap.put(key, DefaultEditorKit.upAction);
- 
-		//Ctrl-n to go down one line
-		key = KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK);
-		inputMap.put(key, DefaultEditorKit.downAction);		
+		KeyStroke key = KeyStroke.getKeyStroke("UP");
+		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_UP));
+		key = KeyStroke.getKeyStroke("DOWN");
+		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_DOWN));
+		key = KeyStroke.getKeyStroke("LEFT");
+		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_LEFT));
+		key = KeyStroke.getKeyStroke("RIGHT");
+		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_RIGHT));		
 	}
 	
+	public Action setKeyBinding(int key) {
+		Action action = new AbstractAction(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO implement this for R key in private method
+				menuResponse(key);
+				displayText.setText(menu.getMenu());
+			}
+			
+		};
+		
+		return action;
+	}
+	private void menuResponse(int key){
+		// TODO implement this for R key
+		if(key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN){
+			menu.setSelected(key);
+		}
+		if(key == KeyEvent.VK_LEFT){
+			debug("pressed left key");
+			menu.pressLeft();
+		}
+		if(key == KeyEvent.VK_RIGHT){
+			debug("pressed right key");
+			int selected = menu.getCurrentSelection();
+		}
+		displayText.setText(menu.getMenu());
+	}
+
+
 	/**
 	 * If console is off, print off warning
 	 */

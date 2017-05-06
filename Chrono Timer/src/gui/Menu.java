@@ -1,18 +1,10 @@
 package gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-//import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.text.JTextComponent;
 
-import chronotimer.Console;
-
-public class Menu implements KeyListener, ActionListener{
+public class Menu {
 	private CommandList commands;
 	private int currentSelection;
 	private Menu previous=null;
@@ -87,73 +79,46 @@ public class Menu implements KeyListener, ActionListener{
 			return temp;
 		}
 	}
-	public void keyTyped(KeyEvent e) {
-		
+	
+	public void pressLeft(){
+//		System.out.println("LEFT was pressed");
+		if(previous!=null){
+			previous=null;
+			commands=new Menu().commands;
+			name = "Main Menu";
+			currentSelection=0;
+		}		
 	}
-
-	public void keyPressed(KeyEvent e) {
-		int key = e.getKeyCode();
-		if(key==38 || key==40){
-			setSelected(key);
-			((JTextComponent) e.getSource()).setText(getMenu());
-		} else if(key==37 || key==39){
-			String text = getCommand(key, null);
-			if(text!="")
-				((JTextComponent) e.getSource()).setText(text);
-		}
-	}
-
-	private String getCommand(int key, Console c) {
+	// Changing up implementation into the GUI instead -KP
+	private void getCommand(int key) {
 		// TODO Auto-generated method stub
-		String text="";
 		switch(key){
-			case KeyEvent.VK_LEFT:
-//				System.out.println("LEFT was pressed");
-				if(previous!=null){
-					previous=null;
-					commands=new Menu().commands;
-					name = "Main Menu";
-					text = getMenu();
-					currentSelection=0;
-				}
-				break;
 			// implement action
 			case KeyEvent.VK_RIGHT:
 //				System.out.println("RIGHT was pressed");
 				if(previous==null){
 					name=name+" > "+commands.get(currentSelection).getName();
-					if(currentSelection ==)
 					commands.get(currentSelection).setSelected(false);
 					String [] temp = {"1", "2", "3", "4", "5", "6", "7", "8"};
 					previous = this;
 					commands = new Menu(this, commands.get(currentSelection).getName(), temp).commands;
 					currentSelection=0;
-					text+=getMenu();
 				}
 				break;
 		}
-		return text;
 	}
-
-	public void keyReleased(KeyEvent e) {
-		
+	
+	public int getCurrentSelection() {
+		return currentSelection;
 	}
-
-	public void actionPerformed(ActionEvent e, JTextArea textbox, int key, Console c) {
-		if(key==38 || key==40){
-			setSelected(key);
-			textbox.setText(getMenu());
-		} else if(key==37 || key==39){
-			String temp = getCommand(key, c);
-			if(temp!="")
-				textbox.setText(temp);
-		}
+	public void setCurrentSelection(int currentSelection) {
+		this.currentSelection = currentSelection;
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// does nothing
-		
+	public Menu getPrevious() {
+		return previous;
+	}
+	public void setPrevious(Menu previous) {
+		this.previous = previous;
 	}
 }
 
