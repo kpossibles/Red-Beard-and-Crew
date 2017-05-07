@@ -7,12 +7,12 @@ import java.util.ArrayList;
 public class Menu {
 	private CommandList commands;
 	private int currentSelection;
-	private Menu previous=null;
+	private String previous="";
 	private String name;
 	
 	public Menu(){
 		commands = new CommandList();
-		commands.add(new Command("RESET", true));
+		commands.add(new Command("RESET", true));//✔
 		commands.add(new Command("TIME"));//✔
 		commands.add(new Command("TOG"));//✔
 		commands.add(new Command("CONN"));//✔
@@ -27,27 +27,41 @@ public class Menu {
 		commands.add(new Command("TRIG"));//✔
 		commands.add(new Command("START"));
 		commands.add(new Command("FINISH"));
+		commands.add(new Command("CLOSE"));//✔
+		
 		name="Main Menu";
 	}
-	public Menu (Menu previous, String newName, String[]newCommands){
+	public Menu (String previous, String newName, ArrayList<String> arrayList){
 		this.previous = previous;
 		commands = new CommandList();
-		for(int i=0;i<newCommands.length;i++){
-			if(i==0)
-				commands.add(new Command(newCommands[i], true));
-			else
-				commands.add(new Command(newCommands[i]));
+		for(String s:arrayList){
+			commands.add(new Command(s));
 		}
-		name = name+" > "+newName;
+		commands.get(0).setSelected(true);
+		name = newName;
 	}
 	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name, if sub-menu, then grab sub-menu substring
+	 */
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public String getMenu(){
 		return name+"\n\n"+commands.toString();
 	}
 	
-	public void setSelected(int i){
+	public String getSelected() {
+		return commands.get(currentSelection).getName();
+	}
+	public void setSelected(int key){
 		commands.get(currentSelection).setSelected(false);
-		switch(i){
+		switch(key){
 			case KeyEvent.VK_UP:
 //				System.out.println("UP was pressed");
 				if(currentSelection>0)
@@ -67,6 +81,22 @@ public class Menu {
 		commands.get(currentSelection).setSelected(true);
 	}
 	
+	public void pressLeft(){
+//		System.out.println("LEFT was pressed");
+		if(previous!=""){
+			previous="";
+			commands=new Menu().commands;
+			name = "Main Menu";
+			currentSelection=0;
+		}		
+	}
+	public String getPrevious() {
+		return previous;
+	}
+	public void setPrevious(String previous) {
+		this.previous = previous;
+	}
+
 	@SuppressWarnings("serial")
 	private class CommandList extends ArrayList<Command>{
 		@Override
@@ -78,47 +108,6 @@ public class Menu {
 			temp = temp.substring(0, temp.length()-1);
 			return temp;
 		}
-	}
-	
-	public void pressLeft(){
-//		System.out.println("LEFT was pressed");
-		if(previous!=null){
-			previous=null;
-			commands=new Menu().commands;
-			name = "Main Menu";
-			currentSelection=0;
-		}		
-	}
-	// Changing up implementation into the GUI instead -KP
-	private void getCommand(int key) {
-		// TODO Auto-generated method stub
-		switch(key){
-			// implement action
-			case KeyEvent.VK_RIGHT:
-//				System.out.println("RIGHT was pressed");
-				if(previous==null){
-					name=name+" > "+commands.get(currentSelection).getName();
-					commands.get(currentSelection).setSelected(false);
-					String [] temp = {"1", "2", "3", "4", "5", "6", "7", "8"};
-					previous = this;
-					commands = new Menu(this, commands.get(currentSelection).getName(), temp).commands;
-					currentSelection=0;
-				}
-				break;
-		}
-	}
-	
-	public int getCurrentSelection() {
-		return currentSelection;
-	}
-	public void setCurrentSelection(int currentSelection) {
-		this.currentSelection = currentSelection;
-	}
-	public Menu getPrevious() {
-		return previous;
-	}
-	public void setPrevious(Menu previous) {
-		this.previous = previous;
 	}
 }
 

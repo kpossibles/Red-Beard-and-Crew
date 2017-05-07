@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ import javax.swing.border.EtchedBorder;
  */
 @SuppressWarnings("serial")
 public class ChronoGui extends JFrame{
-	private Map<String, List>nameCommandMap;
+	private Map<String, ArrayList<String>> nameCommandMap;
 	private Console c;
 	private Printer p;
 	private JRadioButton radioChannel1, radioChannel3, radioChannel5, radioChannel7, radioChannel2, radioChannel4,
@@ -120,28 +121,28 @@ public class ChronoGui extends JFrame{
 	}
 
 	private void setHashMap() {
-		// TODO Auto-generated method stub
-		nameCommandMap = new HashMap<String, List>();
-		List value = new List();
+		// TODO Finish generating submenu commands for Menu
+		nameCommandMap = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> value = new ArrayList<>();
 		for(int i=1; i<9;i++)
 			value.add(i+"");
 		nameCommandMap.put("TOG", value);
 		nameCommandMap.put("TRIG", value);
 		
-		value = new List();
+		value = new ArrayList<>();
 		value.add("EYE");
 		value.add("GATE");
 		value.add("PAD");
 		nameCommandMap.put("CONN", value);
 		
-		value = new List();
+		value = new ArrayList<>();
 		value.add("IND");
 		value.add("PARIND");
 		value.add("GRP");
 		value.add("PARGRP");
 		nameCommandMap.put("EVENT", value);
 		
-		value = new List();
+		value = new ArrayList<>();
 		value.add("<hour>:<min>:<sec>");
 		nameCommandMap.put("TIME", value);
 	}
@@ -171,16 +172,8 @@ public class ChronoGui extends JFrame{
 		buttonFunction.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fcnBtnOn = !fcnBtnOn;
-				if(fcnBtnOn && c.isOn()){
-					displayText.setText(menu.getMenu());
-				}
-				else{
-					if(c.isOn())
-						displayText.setText("");
-					else
-						offWarning();
-				}
+				menu = new Menu();
+				setFcnListener();
 			}
 		});
 
@@ -406,6 +399,7 @@ public class ChronoGui extends JFrame{
 		mPanel2.setLayout(null);
 	
 		displayText = new JTextArea();
+		displayText.setLineWrap(true);
 		displayText.setEditable(false);
 		displayText.setMargin(new Insets(10,10,10,10));
 		scroll = new JScrollPane(displayText);
@@ -421,7 +415,6 @@ public class ChronoGui extends JFrame{
 		mPanel.setLayout(null);
 		mPanel.add(mPanel1);
 		mPanel.add(mPanel2);
-		
 	}
 
 	/**
@@ -588,7 +581,6 @@ public class ChronoGui extends JFrame{
 		InputMap inputMap = displayText.getInputMap();
 		ActionMap actionMap = displayText.getActionMap();
 		
-		//Ctrl-b to go backward one character
 		KeyStroke key = KeyStroke.getKeyStroke("UP");
 		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_UP));
 		key = KeyStroke.getKeyStroke("DOWN");
@@ -637,13 +629,9 @@ public class ChronoGui extends JFrame{
 		i.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String[] temp = command.split(" ");
-				if(c.isOn() && temp[0].equalsIgnoreCase("trig") && !c.isChannelActive(Integer.valueOf(temp[1]))){				
-					System.out.println("SORRY, PLEASE TOGGLE "+temp[1]);
-					displayText.setText("SORRY, PLEASE TOGGLE "+temp[1]);
-				} else {
-					sendCommand(command);
-				}
+				trigTogListener(command);
+				menu = null;
+				fcnBtnOn = false;
 			}
 		});
 	}
@@ -667,13 +655,14 @@ public class ChronoGui extends JFrame{
         });
 	}
 	
+	
 	/**
-	 * Sets the key binding.
+	 * Sets the key binding for menu navigation.
 	 *
 	 * @param key the key
 	 * @return the action
 	 */
-	public Action setKeyBinding(int key) {
+	private Action setKeyBinding(int key) {
 		Action action = new AbstractAction(){
 
 			@Override
@@ -687,6 +676,33 @@ public class ChronoGui extends JFrame{
 		return action;
 	}
 	
+	private void setFcnListener() {
+		fcnBtnOn = !fcnBtnOn;
+		if(fcnBtnOn && c.isOn()){
+			displayText.setText(menu.getMenu());
+		}
+		else{
+			if(c.isOn()){
+				displayText.setText("");
+			}else
+				offWarning();
+		}
+	}
+
+
+
+	private void trigTogListener(String command) {
+		String[] temp = command.split(" ");
+		if(c.isOn() && temp[0].equalsIgnoreCase("trig") && !c.isChannelActive(Integer.valueOf(temp[1]))){				
+			System.out.println("SORRY, PLEASE TOGGLE "+temp[1]);
+			displayText.setText("SORRY, PLEASE TOGGLE "+temp[1]);
+		} else {
+			sendCommand(command);
+		}
+	}
+
+
+
 	/**
 	 * Menu response.
 	 *
@@ -694,8 +710,8 @@ public class ChronoGui extends JFrame{
 	 */
 	private void menuResponse(int key){
 		// TODO implement this for R key
-		if(c.isOn() && fcnBtnOn){
-    	
+		if(c.isOn() && fcnBtnOn && menu!=null){
+			String selected = menu.getSelected();
 			if(key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN){
 				menu.setSelected(key);
 			}
@@ -705,9 +721,32 @@ public class ChronoGui extends JFrame{
 			}
 			if(key == KeyEvent.VK_RIGHT){
 				debug("pressed right key");
-				int selected = menu.getCurrentSelection();
+				
+				if(nameCommandMap.containsKey(selected)){
+					debug("contains "+selected);
+					String previous = "Main Menu";
+					menu = new Menu(previous, selected, nameCommandMap.get(selected));
+					displayText.setText(menu.getMenu());
+					menuGuiUpdate(selected);
+				}else{
+					// TODO implement for every command & GUI response!!!
+					// doesn't contain the command key in nameCommandMap
+					// sendCommand() to console
+					String menuName = menu.getName();
+					String command;
+					if(menuName=="Main Menu"){
+						command = selected;
+					} else {
+						command = menuName + " " + selected;
+					}
+					if(selected!="NUM")
+						sendCommand(command);
+					debug("menuResponse command: "+command);
+					menuGuiUpdate(command);
+				}
 			}
-			displayText.setText(menu.getMenu());
+			if(menu!=null)
+				displayText.setText(menu.getMenu());
 		}
 		else {
     		if(!c.isOn())
@@ -717,6 +756,97 @@ public class ChronoGui extends JFrame{
     	}
 	}
 
+
+	private void menuGuiUpdate(String command) {
+		// TODO implement GUI changes for ALL commands
+		debug("menuGuiUpdate");
+		String[]split = null;
+		if(command.contains(" ")){
+			split=command.split(" ");
+		}
+		if(command == "RESET"){
+			fcnBtnOn=false;
+			menu = null;
+			radioChannel1.setSelected(false);
+			radioChannel2.setSelected(false);
+			radioChannel3.setSelected(false);
+			radioChannel4.setSelected(false);
+			radioChannel5.setSelected(false);
+			radioChannel6.setSelected(false);
+			radioChannel7.setSelected(false);
+			radioChannel8.setSelected(false);
+			displayText.setText("");
+		}if(command == "CLOSE"){
+			setFcnListener();
+			menu = null;
+		}if(command == "NUM"){
+			String temp="PRESS NUMBERS ON THE KEYPAD TO ENTER YOUR RACER NAME! PRESS # TO SUBMIT!";
+			debug(temp);
+			menu = null;
+			displayText.setText(temp);
+		}if(split!=null && split[0].equals("TOG")){
+			int index = Integer.valueOf(split[1]);
+			menuToggleRadio(index);
+		}
+	}
+
+	/**
+	 * Menu toggle radio button.
+	 *
+	 * @param num the num
+	 */
+	private void menuToggleRadio(int num) {
+		switch(num){
+			case 1:
+				if(radioChannel1.isSelected())
+					radioChannel1.setSelected(false);
+				else
+					radioChannel1.setSelected(true);
+				break;
+			case 2:
+				if(radioChannel2.isSelected())
+					radioChannel2.setSelected(false);
+				else
+					radioChannel2.setSelected(true);
+				break;
+			case 3:
+				if(radioChannel3.isSelected())
+					radioChannel3.setSelected(false);
+				else
+					radioChannel3.setSelected(true);
+				break;
+			case 4:
+				if(radioChannel4.isSelected())
+					radioChannel4.setSelected(false);
+				else
+					radioChannel4.setSelected(true);
+				break;
+			case 5:
+				if(radioChannel5.isSelected())
+					radioChannel5.setSelected(false);
+				else
+					radioChannel5.setSelected(true);
+				break;
+			case 6:
+				if(radioChannel6.isSelected())
+					radioChannel6.setSelected(false);
+				else
+					radioChannel6.setSelected(true);
+				break;
+			case 7:
+				if(radioChannel7.isSelected())
+					radioChannel7.setSelected(false);
+				else
+					radioChannel7.setSelected(true);
+				break;
+			case 8:
+				if(radioChannel8.isSelected())
+					radioChannel8.setSelected(false);
+				else
+					radioChannel8.setSelected(true);
+				break;
+		}
+	}
 
 	/**
 	 * If console is off, print off warning
