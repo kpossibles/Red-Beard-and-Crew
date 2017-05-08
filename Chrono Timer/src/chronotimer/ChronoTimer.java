@@ -26,6 +26,7 @@ public class ChronoTimer  {
 	private Timer timer;
 	private Printer print;
 	private LinkedList<Run> runs;
+	private HttpServer server;
 
 	/**
 	 * Instantiates a new ChronoTimer.
@@ -37,10 +38,9 @@ public class ChronoTimer  {
 		reset();
 
 		// set up a simple HTTP server on our local host
-		HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-
-		server.createContext("/results", new PostHandler());
-
+		server = null; 
+		server= HttpServer.create(new InetSocketAddress(8000), 0);
+		server.createContext("/results", new PostHandler());	
 		server.start();
 
 	}
@@ -131,22 +131,22 @@ public class ChronoTimer  {
 	 */
 	public void trigger(String id){
 		int index = Integer.valueOf(id);
-		if (index < channels.length)
+		if (index < channels.length && channels[index-1].isOn()){
 			channels[index-1].trigger();
-		else
-			print.print("Invalid port to trigger. ");
+		}else{
+			print.print("WARNING: Invalid port to trigger.");
+		}
 	}
-
 	/**
 	 * Triggers a certain channel.
 	 *
 	 * @param id the id
 	 */
 	public void trigger(int id) {
-		// 4/30/17: added a check if channel activated -KP
 		if(channels[id-1].isOn()){
 			event.trigger(id);
 		}else{ // TODO check if PARGRP check implemented correctly -KP
+			System.out.println("is it on? "+channels[id-1].isOn());
 			print.print(String.format("Channel %d is not active.", id));
 			// for PARGRP, marks runner in queue as DNF since channel isn't active
 			if(event.getType()=="PARGRP")
@@ -204,7 +204,9 @@ public class ChronoTimer  {
 	public void swap() {
 		if(event.getType()=="IND"){
 			event.swap();
-		}		
+		} else {
+			print.print("WARNING: Cannot swap for this type of event.");
+		}
 	}
 	
 	/**
@@ -214,6 +216,10 @@ public class ChronoTimer  {
 	 */
 	public String getEventType() {
 		return event.getType();
+	}
+	
+	public Event getEvent() {
+		return event;
 	}
 
 	/**
@@ -279,12 +285,23 @@ public class ChronoTimer  {
 		}
 	}
 
+	/**
+	 * Gets the racers currently running.
+	 *
+	 * @return the racers
+	 */
 	public ArrayList<Racer> getRacers(){
 		if(runExist())
 			return runs.getLast().getRacers();
 		return new ArrayList<Racer>();
 	}
 
+	/**
+	 * Checks if is channel active.
+	 *
+	 * @param i the i
+	 * @return true, if is channel active
+	 */
 	public boolean isChannelActive(int i) {
 		return channels[i-1].isOn();
 	}
@@ -313,6 +330,15 @@ public class ChronoTimer  {
 			outputStream.write(postResponse.getBytes());
 			outputStream.close();
 		}
+	}
+
+	public void stopServer() {
+		if(server!=null)
+			server.stop(1);
+	}
+
+	public Timer getTimer() {
+		return timer;
 	}
 
 }

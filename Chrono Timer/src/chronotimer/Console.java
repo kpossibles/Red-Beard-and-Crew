@@ -35,6 +35,34 @@ public class Console
 	}
 	
 	/**
+	 * Adds the timestamp.
+	 *
+	 * @param s the s
+	 * @return the string
+	 */
+	public String addTimestamp(String s){
+		s = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+s;
+		return s;
+	}
+	
+	public String addTimestamp(String s, int i){
+		String temp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S"));
+		int sec = Integer.valueOf(temp.substring(6,temp.length()-2))+i;
+		int min = Integer.valueOf(temp.substring(3,5));
+		int hour = Integer.valueOf(temp.substring(0,2));
+		if(sec>60){
+			sec-=60;
+			min++;
+			if(min>60){
+				min-=60;
+				hour++;
+			}
+		}
+		s= String.format("%02d:%02d:%02d.0\t%s", hour, min,sec,s);
+		return s;
+	}
+	
+	/**
 	 * Parses the input and converts the lines into commands for Chronotimer to execute.
 	 *
 	 * @param line the line
@@ -56,7 +84,9 @@ public class Console
 		// POWER(if on) Delete ChronoTimer
 		if (command.equalsIgnoreCase("POWER")){
 			if (chronotimer != null){
-				chronotimer.reset();
+				System.out.println("SERVER STOPPED");
+				chronotimer.stopServer();
+//				chronotimer.reset();
 				chronotimer = null;
 				setOn(false);
 				System.out.println("POWER OFF");
@@ -79,7 +109,10 @@ public class Console
 			}
 			// TIME <hour>:<min>:<sec> Set the current time
 			else if (command.equalsIgnoreCase("TIME")){
-				chronotimer.setTime(argument);
+				if(argument!="" && argument.length()==10)
+					chronotimer.setTime(argument);
+				else
+					printer.print("ERROR: ENTER NEW TIME AS ##:##:##.#");
 			}
 			// TOG <channel> Toggle the state of the channel <channel>
 			else if (command.equalsIgnoreCase("TOG")){
@@ -178,7 +211,6 @@ public class Console
 		try {
 			File f = new File(path);
 			Scanner file_in = new Scanner(f);
-//			System.out.println("DEBUGGING: "+path);
 			while(file_in.hasNextLine()){
 				String nextline = file_in.nextLine();
 				if(nextline.equals("EXIT"))
@@ -279,12 +311,12 @@ public class Console
 	}
 	
 	/**
-	 * Gets the racer list size.
+	 * Gets the event.
 	 *
-	 * @return the racer list size
+	 * @return the event
 	 */
-	public int getRacerListSize(){
-		return chronotimer.getRacers().size();
+	public Event getEvent(){
+		return chronotimer.getEvent();
 	}
 	
 	/**
@@ -368,8 +400,13 @@ public class Console
 				}
 				input.close();
 				System.out.println("\nThank you for using ChronoTimer. GOODBYE");
+				System.exit(0);
 			}
 		}
+
+	public int getRacerListSize() {
+		return chronotimer.getRacers().size();
+	}
 	
 	
 }

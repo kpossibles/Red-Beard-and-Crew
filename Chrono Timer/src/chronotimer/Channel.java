@@ -77,6 +77,8 @@ public class Channel {
 	public void trigger(){
 		if(on){
 			chronotimer.trigger(id);
+		}else{ //extra check if something goes wrong
+			System.out.println("Channel "+id+" is not on");
 		}
 	}
 	

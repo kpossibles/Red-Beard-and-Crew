@@ -515,12 +515,12 @@ public class ChronoGui extends JFrame{
 						boolean checkLetter = false;
 						char[]temp = tempRacer.toCharArray();
 						String newTime = String.format("%s%s:%s%s:%s%s.0", 
-										temp.length>0?tempRacer.charAt(0):"H",
-										temp.length>1?tempRacer.charAt(1):"H",
-										temp.length>2?tempRacer.charAt(2):"M",
-										temp.length>3?tempRacer.charAt(3):"M",
-										temp.length>4?tempRacer.charAt(4):"S",
-										temp.length>5?tempRacer.charAt(5):"S");
+										temp.length>0?tempRacer.charAt(0):"#",
+										temp.length>1?tempRacer.charAt(1):"#",
+										temp.length>2?tempRacer.charAt(2):"#",
+										temp.length>3?tempRacer.charAt(3):"#",
+										temp.length>4?tempRacer.charAt(4):"#",
+										temp.length>5?tempRacer.charAt(5):"#");
 						for(char c:newTime.toCharArray()){
 							if(Character.isLetter(c)){
 								checkLetter = true;
@@ -532,7 +532,7 @@ public class ChronoGui extends JFrame{
 							sendCommand("TIME " + newTime);
 						else{
 							debug("YOU NEED TO SUBMIT A COMPLETE TIME! YOU SENT: "+newTime);
-							displayText.setText("YOU NEED TO SUBMIT A COMPLETE TIME! YOU SENT: "+newTime);
+							displayText.setText("YOU NEED TO SUBMIT A COMPLETE TIME!\nYOU SENT: "+newTime);
 						}
 						isTimeOn = false;
 					} else
@@ -879,7 +879,7 @@ public class ChronoGui extends JFrame{
 		}if(command == "SWAP" && c.getEventType()=="IND" && c.getRacerListSize()>=2){
 			menu = null;
 		}if(command == "TIME"){
-			String temp="SETTING: <HH:MM:SS>";
+			String temp="SETTING: <##:##:##>";
 			menu = null;
 			isTimeOn = true;
 			debug(temp);
