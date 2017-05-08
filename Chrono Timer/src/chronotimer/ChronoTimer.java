@@ -212,7 +212,7 @@ public class ChronoTimer  {
 	 *
 	 * @return the type
 	 */
-	public String getType() {
+	public String getEventType() {
 		return event.getType();
 	}
 

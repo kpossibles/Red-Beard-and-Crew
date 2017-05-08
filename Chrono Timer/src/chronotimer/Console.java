@@ -270,43 +270,35 @@ public class Console
 	}
 	
 	/**
-	 * The main method.
+	 * Gets the event type.
 	 *
-	 * @param args the textfile
+	 * @return the event type
 	 */
-	public static void main(String[] args){
-		Console simulator = new Console();
-		if (args.length>0){
-			simulator.readFromText(args[0]);
-		}
-		else {
-			String nextLine = "";
-			printCommands("welcome");
-			Scanner input = new Scanner(System.in);
-			nextLine = input.nextLine();
-			while(!nextLine.equalsIgnoreCase("EXIT")){
-				if(nextLine.equalsIgnoreCase("help")){
-					printCommands("help");
-					printCommands("waiting for command");
-					nextLine = input.nextLine();
-				}
-				else {
-					nextLine = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+ nextLine;
-					if(!simulator.input(nextLine)){
-						System.out.println("Sorry, cannot accept that command.");
-					}
-//					else
-//						simulator.addToRecord(nextLine);
-					printCommands("waiting for command");
-					nextLine = input.nextLine();
-				}
-			}
-			input.close();
-			System.out.println("\nThank you for using ChronoTimer. GOODBYE");
-		}
+	public String getEventType(){
+		return chronotimer.getEventType();
 	}
-
+	
 	/**
+	 * Gets the racer list size.
+	 *
+	 * @return the racer list size
+	 */
+	public int getRacerListSize(){
+		return chronotimer.getRacers().size();
+	}
+	
+	/**
+	 * Gets the racers.
+	 *
+	 * @return the racers
+	 */
+	public ArrayList<Racer> getRacers(){
+		return chronotimer.getRacers();
+	}
+	
+	/**
+	 * Checks if is on.
+	 *
 	 * @return the on
 	 */
 	public boolean isOn() {
@@ -314,19 +306,70 @@ public class Console
 	}
 
 	/**
+	 * Sets the on.
+	 *
 	 * @param on the on to set
 	 */
 	public void setOn(boolean on) {
 		this.on = on;
 	}
 
+	/**
+	 * Sets the sensor.
+	 *
+	 * @param sensorType the sensor type
+	 * @param num the num
+	 */
 	public void setSensor(String sensorType, int num) {
 		input(String.format("CONN %s %d", sensorType, num));		
 	}
 	
+	/**
+	 * Checks if is channel active.
+	 *
+	 * @param i the i
+	 * @return true, if is channel active
+	 */
 	public boolean isChannelActive(int i){
 		return chronotimer.isChannelActive(i);
 	}
+
+	/**
+		 * The main method.
+		 *
+		 * @param args the textfile
+		 */
+		public static void main(String[] args){
+			Console simulator = new Console();
+			if (args.length>0){
+				simulator.readFromText(args[0]);
+			}
+			else {
+				String nextLine = "";
+				printCommands("welcome");
+				Scanner input = new Scanner(System.in);
+				nextLine = input.nextLine();
+				while(!nextLine.equalsIgnoreCase("EXIT")){
+					if(nextLine.equalsIgnoreCase("help")){
+						printCommands("help");
+						printCommands("waiting for command");
+						nextLine = input.nextLine();
+					}
+					else {
+						nextLine = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+ nextLine;
+						if(!simulator.input(nextLine)){
+							System.out.println("Sorry, cannot accept that command.");
+						}
+	//					else
+	//						simulator.addToRecord(nextLine);
+						printCommands("waiting for command");
+						nextLine = input.nextLine();
+					}
+				}
+				input.close();
+				System.out.println("\nThank you for using ChronoTimer. GOODBYE");
+			}
+		}
 	
 	
 }

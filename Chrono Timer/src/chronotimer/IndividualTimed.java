@@ -64,8 +64,8 @@ public class IndividualTimed extends Event {
 			}
 		}
 		
-		public void setTimer(Timer timer){
-			timer = timer;
+		public void setTimer(Timer _timer){
+			timer = _timer;
 		}
 		
 		public void setRun(Run _run){
@@ -153,7 +153,7 @@ public class IndividualTimed extends Event {
 				for(Object r: temp){
 					racing.add((Racer)r);
 				}
-				System.out.println("Swapped 2 racers at front of queue.");
+				print.print("Swapped 2 racers at front of queue.");
 				
 			}
 		}

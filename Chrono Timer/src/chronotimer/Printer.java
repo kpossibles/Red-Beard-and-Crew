@@ -24,15 +24,6 @@ public class Printer {
 	}
 	
 	/**
-	 * Instantiates a new printer.
-	 *
-	 * @param d the d
-	 */
-	public Printer(JTextArea d){
-		record = new LinkedList<String>();
-	}
-	
-	/**
 	 * Adds the event changes to record.
 	 *
 	 * @param str the str

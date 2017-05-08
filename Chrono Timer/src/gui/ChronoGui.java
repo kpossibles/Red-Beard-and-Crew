@@ -12,6 +12,8 @@ import javax.swing.*;
 
 import chronotimer.Console;
 import chronotimer.Printer;
+import chronotimer.Racer;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
@@ -32,14 +34,13 @@ public class ChronoGui extends JFrame{
 	private JButton buttonPower, buttonFunction, buttonEndRun, buttonSwap, printPower, button1, button2, button3,
 			button4, button5, button6, button7, button8, button9, buttonStar, button0, buttonPound, buttonTrigger1,
 			buttonTrigger3, buttonTrigger5, buttonTrigger7, buttonTrigger2, buttonTrigger6, buttonTrigger4,
-			buttonTrigger8;
+			buttonTrigger8, up, down, left, right;
 	private JPanel lPanel, mPanel, mPanel1, mPanel1_trig, mPanel1_tog, mPanel1_trig2, mPanel1_tog2, mPanel2, panel_1, panel_2, rPanel,
 			rPanel1, rPanel2, keypad, navPanel, powerStatus;
 	private String tempRacer = "", offWarning = "The Chronotimer is currently off.\nTry 'POWER' to turn it on.";
 	private JScrollPane scroll, scroll2;
 	private BackPanel backpanel;
-	private JButton up, down, left, right;
-	private boolean fcnBtnOn;
+	private boolean isfcnBtnOn, isClearOn, isTimeOn;
 	private static final int WIN_HEIGHT = 650;
 	private Menu menu;
 
@@ -189,7 +190,6 @@ public class ChronoGui extends JFrame{
 
 		setNavPanel();
 		lPanel.add(navPanel);
-//		navPanel.setActionListener(up, "up", displayText);
 		lPanel.add(buttonSwap);
 		buttonEndRun.setBounds(12, 397, 175, 50);
 		lPanel.add(buttonEndRun);
@@ -211,16 +211,14 @@ public class ChronoGui extends JFrame{
 							sendCommand("NEWRUN");
 							powerStatus.setBackground(Color.GREEN);
 							// custom welcome screen
-							String temp="　　　　　　　ＷＥＬＣＯＭＥ　ＴＯ\n"
-										+"　　　　ＣＨＲＯＮＯＴＩＭＥＲ　１００９！\n\n"
-										+"　　　»»-------------¤-------------««";
+							String temp="WELCOME TO CHRONOTIMER 1009!";
 							displayText.setText(temp);
 						}
 						else{
 							powerStatus.setBackground(Color.RED);
 							displayText.setText("");
 						}
-						fcnBtnOn=false;
+						isfcnBtnOn=false;
 					}
 				});
 
@@ -503,12 +501,42 @@ public class ChronoGui extends JFrame{
 		buttonPound.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 	
 		buttonPound.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!c.isOn()) {
 					offWarning();
 				} else if (tempRacer.length() > 0) {
-					sendCommand("num " + tempRacer);
+					if(isClearOn){
+						debug("clr " + tempRacer);
+						sendCommand("clr " + tempRacer);
+						isClearOn = false;
+					}else if(isTimeOn){
+						boolean checkLetter = false;
+						char[]temp = tempRacer.toCharArray();
+						String newTime = String.format("%s%s:%s%s:%s%s.0", 
+										temp.length>0?tempRacer.charAt(0):"H",
+										temp.length>1?tempRacer.charAt(1):"H",
+										temp.length>2?tempRacer.charAt(2):"M",
+										temp.length>3?tempRacer.charAt(3):"M",
+										temp.length>4?tempRacer.charAt(4):"S",
+										temp.length>5?tempRacer.charAt(5):"S");
+						for(char c:newTime.toCharArray()){
+							if(Character.isLetter(c)){
+								checkLetter = true;
+								break;
+							}
+						}
+						debug("sending time: " + newTime);
+						if(!checkLetter)
+							sendCommand("TIME " + newTime);
+						else{
+							debug("YOU NEED TO SUBMIT A COMPLETE TIME! YOU SENT: "+newTime);
+							displayText.setText("YOU NEED TO SUBMIT A COMPLETE TIME! YOU SENT: "+newTime);
+						}
+						isTimeOn = false;
+					} else
+						sendCommand("num " + tempRacer);
 					tempRacer = "";
 				} else {
 					System.out.println("Enter a number, then press #.");
@@ -516,17 +544,17 @@ public class ChronoGui extends JFrame{
 			}
 		});
 	
-		keypadAction(button1, 1);
-		keypadAction(button2, 2);
-		keypadAction(button3, 3);
-		keypadAction(button4, 4);
-		keypadAction(button5, 5);
-		keypadAction(button6, 6);
-		keypadAction(button7, 7);
-		keypadAction(button8, 8);
-		keypadAction(button9, 9);
-		keypadAction(button0, 0);
-		keypadAction(buttonStar, -1);
+		setKeypadAction(button1, 1);
+		setKeypadAction(button2, 2);
+		setKeypadAction(button3, 3);
+		setKeypadAction(button4, 4);
+		setKeypadAction(button5, 5);
+		setKeypadAction(button6, 6);
+		setKeypadAction(button7, 7);
+		setKeypadAction(button8, 8);
+		setKeypadAction(button9, 9);
+		setKeypadAction(button0, 0);
+		setKeypadAction(buttonStar, -1);
 		keypad.add(button1);
 		keypad.add(button2);
 		keypad.add(button3);
@@ -582,13 +610,13 @@ public class ChronoGui extends JFrame{
 		ActionMap actionMap = displayText.getActionMap();
 		
 		KeyStroke key = KeyStroke.getKeyStroke("UP");
-		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_UP));
+		actionMap.put(inputMap.get(key), setMenuKeyBinding(KeyEvent.VK_UP));
 		key = KeyStroke.getKeyStroke("DOWN");
-		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_DOWN));
+		actionMap.put(inputMap.get(key), setMenuKeyBinding(KeyEvent.VK_DOWN));
 		key = KeyStroke.getKeyStroke("LEFT");
-		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_LEFT));
+		actionMap.put(inputMap.get(key), setMenuKeyBinding(KeyEvent.VK_LEFT));
 		key = KeyStroke.getKeyStroke("RIGHT");
-		actionMap.put(inputMap.get(key), setKeyBinding(KeyEvent.VK_RIGHT));		
+		actionMap.put(inputMap.get(key), setMenuKeyBinding(KeyEvent.VK_RIGHT));		
 	}
 
 
@@ -620,7 +648,7 @@ public class ChronoGui extends JFrame{
 	}
 
 	/**
-	 * Sets ActionListener for button
+	 * Sets ActionListener for trigger button
 	 * 
 	 * @param i
 	 * @param command
@@ -629,9 +657,9 @@ public class ChronoGui extends JFrame{
 		i.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				trigTogListener(command);
+				trigListener(command);
 				menu = null;
-				fcnBtnOn = false;
+				isfcnBtnOn = false;
 			}
 		});
 	}
@@ -662,7 +690,7 @@ public class ChronoGui extends JFrame{
 	 * @param key the key
 	 * @return the action
 	 */
-	private Action setKeyBinding(int key) {
+	private Action setMenuKeyBinding(int key) {
 		Action action = new AbstractAction(){
 
 			@Override
@@ -676,9 +704,48 @@ public class ChronoGui extends JFrame{
 		return action;
 	}
 	
+	/**
+	 * Sets up actionPerformed for keypad button.
+	 *
+	 * @param b the b
+	 * @param i the i
+	 */
+	private void setKeypadAction(JButton b, int i) {
+		b.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (c.isOn() && i > 0){
+					isfcnBtnOn=false;
+					tempRacer += i;
+					String intro="SETTING RACER NAME: " + tempRacer;
+					if(isClearOn){
+						intro="RACER TO BE CLEARED: " + tempRacer;
+					} else if(isTimeOn){
+						char[]temp = tempRacer.toCharArray();
+						intro = String.format("SETTING <%s%s:%s%s:%s%s>", 
+										temp.length>0?tempRacer.charAt(0):"H",
+										temp.length>1?tempRacer.charAt(1):"H",
+										temp.length>2?tempRacer.charAt(2):"M",
+										temp.length>3?tempRacer.charAt(3):"M",
+										temp.length>4?tempRacer.charAt(4):"S",
+										temp.length>5?tempRacer.charAt(5):"S");
+					}
+					displayText.setText(intro+"\n\nPRESS # BUTTON TO SUBMIT!");
+				} else if (!c.isOn()){
+					offWarning();
+				}
+			}
+		});
+	}
+
+
+
+	/**
+	 * Sets the buttonFunction listener.
+	 */
 	private void setFcnListener() {
-		fcnBtnOn = !fcnBtnOn;
-		if(fcnBtnOn && c.isOn()){
+		isfcnBtnOn = !isfcnBtnOn;
+		if(isfcnBtnOn && c.isOn()){
 			displayText.setText(menu.getMenu());
 		}
 		else{
@@ -691,12 +758,18 @@ public class ChronoGui extends JFrame{
 
 
 
-	private void trigTogListener(String command) {
+	/**
+	 * Trigger listener.
+	 *
+	 * @param command the command
+	 */
+	private void trigListener(String command) {
 		String[] temp = command.split(" ");
 		if(c.isOn() && temp[0].equalsIgnoreCase("trig") && !c.isChannelActive(Integer.valueOf(temp[1]))){				
 			System.out.println("SORRY, PLEASE TOGGLE "+temp[1]);
 			displayText.setText("SORRY, PLEASE TOGGLE "+temp[1]);
 		} else {
+			isfcnBtnOn=false;
 			sendCommand(command);
 		}
 	}
@@ -710,13 +783,13 @@ public class ChronoGui extends JFrame{
 	 */
 	private void menuResponse(int key){
 		// TODO implement this for R key
-		if(c.isOn() && fcnBtnOn && menu!=null){
+		if(c.isOn() && isfcnBtnOn && menu!=null){
 			String selected = menu.getSelected();
 			if(key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN){
 				menu.setSelected(key);
 			}
 			if(key == KeyEvent.VK_LEFT){
-				debug("pressed left key");
+				tempRacer="";
 				menu.pressLeft();
 			}
 			if(key == KeyEvent.VK_RIGHT){
@@ -739,10 +812,12 @@ public class ChronoGui extends JFrame{
 					} else {
 						command = menuName + " " + selected;
 					}
-					if(selected!="NUM")
+					if(selected!="NUM" && selected!="START" && selected!="FINISH" && selected!="CLR"){
 						sendCommand(command);
+					}
 					debug("menuResponse command: "+command);
 					menuGuiUpdate(command);
+					isfcnBtnOn=false;
 				}
 			}
 			if(menu!=null)
@@ -765,7 +840,6 @@ public class ChronoGui extends JFrame{
 			split=command.split(" ");
 		}
 		if(command == "RESET"){
-			fcnBtnOn=false;
 			menu = null;
 			radioChannel1.setSelected(false);
 			radioChannel2.setSelected(false);
@@ -787,6 +861,29 @@ public class ChronoGui extends JFrame{
 		}if(split!=null && split[0].equals("TOG")){
 			int index = Integer.valueOf(split[1]);
 			menuToggleRadio(index);
+		}if(command == "START"){
+			trigListener("TRIG 1");
+			displayText.setText("");
+		}if(command == "FINISH"){
+			trigListener("TRIG 2");
+			displayText.setText("");
+		}if(split!=null && split[0].equals("TRIG")){
+			trigListener(command);
+			displayText.setText("");
+		}if(command == "CLR"){
+			String temp="PRESS NUMBERS ON THE KEYPAD TO CLEAR RACER! PRESS # TO SUBMIT!";
+			menu = null;
+			isClearOn = true;
+			debug(temp);
+			displayText.setText(temp);
+		}if(command == "SWAP" && c.getEventType()=="IND" && c.getRacerListSize()>=2){
+			menu = null;
+		}if(command == "TIME"){
+			String temp="SETTING: <HH:MM:SS>";
+			menu = null;
+			isTimeOn = true;
+			debug(temp);
+			displayText.setText(temp);
 		}
 	}
 
@@ -858,28 +955,6 @@ public class ChronoGui extends JFrame{
 	private void debug(String str) {
 		System.out.println("DEBUG: " + str);
 	}
-
-	/**
-	 * Sets up actionPerformed for Runner button
-	 * 
-	 * @param b
-	 * @param i
-	 */
-	private void keypadAction(JButton b, int i) {
-		b.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (c.isOn() && i > 0){
-					tempRacer += i;
-					displayText.setText("SETTING RACER NAME: "+tempRacer+"\n\nPRESS # BUTTON TO SUBMIT!");
-				} else if (!c.isOn()){
-					offWarning();
-				}
-			}
-		});
-	}
-	
-	
 
 	/**
 	 * The main method.

@@ -16,17 +16,19 @@ public class Menu {
 		commands.add(new Command("TIME"));//✔
 		commands.add(new Command("TOG"));//✔
 		commands.add(new Command("CONN"));//✔
+		commands.add(new Command("DISC"));//✔
 		commands.add(new Command("EVENT"));//✔
-		commands.add(new Command("NEWRUN"));
-		commands.add(new Command("ENDRUN"));
-		commands.add(new Command("PRINT"));
+		commands.add(new Command("NEWRUN"));//✔
+		commands.add(new Command("ENDRUN"));//✔
+		commands.add(new Command("PRINT"));//✔
 		commands.add(new Command("EXPORT"));
-		commands.add(new Command("NUM"));
-		commands.add(new Command("CLR"));
-		commands.add(new Command("DNF"));
+		commands.add(new Command("NUM"));//✔
+		commands.add(new Command("CLR"));//✔
+		commands.add(new Command("SWAP"));//✔
+		commands.add(new Command("DNF"));//✔
 		commands.add(new Command("TRIG"));//✔
-		commands.add(new Command("START"));
-		commands.add(new Command("FINISH"));
+		commands.add(new Command("START"));//✔
+		commands.add(new Command("FINISH"));//✔
 		commands.add(new Command("CLOSE"));//✔
 		
 		name="Main Menu";
