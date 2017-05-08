@@ -119,7 +119,7 @@ public class Console
 				chronotimer.toggle(argument);
 //				System.out.println("Toggled "+argument);
 			}
-			// CONN <sensor><num> Connect a type of sensor to channel <num>
+			// CONN <sensor> <num> Connect a type of sensor to channel <num>
 			// <sensor> = {EYE, GATE, PAD}
 			else if (command.equalsIgnoreCase("CONN")){
 				chronotimer.connect(argument, true);

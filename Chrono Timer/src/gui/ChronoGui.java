@@ -36,13 +36,15 @@ public class ChronoGui extends JFrame{
 			buttonTrigger3, buttonTrigger5, buttonTrigger7, buttonTrigger2, buttonTrigger6, buttonTrigger4,
 			buttonTrigger8, up, down, left, right;
 	private JPanel lPanel, mPanel, mPanel1, mPanel1_trig, mPanel1_tog, mPanel1_trig2, mPanel1_tog2, mPanel2, panel_1, panel_2, rPanel,
-			rPanel1, rPanel2, keypad, navPanel, powerStatus;
+			rPanel1, rPanel2, keypad, navPanel, powerStatus, sensorChannels, backPanel;
 	private String tempRacer = "", offWarning = "The Chronotimer is currently off.\nTry 'POWER' to turn it on.";
 	private JScrollPane scroll, scroll2;
-	private BackPanel backpanel;
 	private boolean isfcnBtnOn, isClearOn, isTimeOn;
 	private static final int WIN_HEIGHT = 650;
 	private Menu menu;
+	private boolean[] sensorActive;
+	private JRadioButton s1,s2,s3,s4,s5,s6,s7,s8;
+	private SensorGui sensorGui;
 
 	/**
 	 * Instantiates a new Chronotimer GUI.
@@ -58,49 +60,6 @@ public class ChronoGui extends JFrame{
 		pack();
 	}
 	
-	
-
-	/**
-	 * Sets the ActionListener for sensor.
-	 *
-	 * @param i the i
-	 * @param num the panel number
-	 */
-//	public void setSensorListener(JPanel i, int num) {
-//		i.addMouseListener(new MouseListener() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				// TODO - implement sensor type selection
-//				Object[] options = { "EYE", "GATE", "PAD" };
-//				ImageIcon icon = null;
-//				String s = (String) JOptionPane.showInputDialog(null, "Select a sensor below.", "Sensor Selection",
-//						JOptionPane.PLAIN_MESSAGE, icon, options, options[0]);
-//
-//				// If a string was returned, set a sensor.
-//				if ((s != null) && (s.length() > 0)) {
-//					backpanel.toggle(num);
-//					c.setSensor(s, num);
-//				}
-//			}
-//
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//			}
-//
-//			@Override
-//			public void mouseReleased(MouseEvent e) {
-//			}
-//
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//			}
-//
-//			@Override
-//			public void mouseExited(MouseEvent e) {
-//			}
-//		});
-//	}
-
 	/**
 	 * Sets up the GUI
 	 */
@@ -109,14 +68,10 @@ public class ChronoGui extends JFrame{
 		setSize(850, WIN_HEIGHT);
 		getContentPane().setLayout(null);
 		
-		// back panel
-		backpanel = new BackPanel();
-		backpanel.setBounds(0, 500, 850, 130);
-		getContentPane().add(backpanel);
-		
 		setupLPanel();
 		setupMPanel();
 		setupRPanel();
+		setupBackPanel();
 		addBindings();
 		setHashMap();
 	}
@@ -129,6 +84,9 @@ public class ChronoGui extends JFrame{
 			value.add(i+"");
 		nameCommandMap.put("TOG", value);
 		nameCommandMap.put("TRIG", value);
+		nameCommandMap.put("EYE", value);
+		nameCommandMap.put("PAD", value);
+		nameCommandMap.put("GATE", value);
 		
 		value = new ArrayList<>();
 		value.add("EYE");
@@ -603,6 +561,140 @@ public class ChronoGui extends JFrame{
 	}
 	
 	/**
+	 * Instantiates a new back panel.
+	 */
+	private void setupBackPanel() {
+		backPanel=new JPanel();
+		backPanel.setBounds(0, 500, 850, 130);
+		backPanel.setBackground(new Color(25, 25, 112));
+		getContentPane().add(backPanel);
+		
+		sensorActive = new boolean[8];
+		backPanel.setLayout(null);
+
+		JLabel lblChannel = new JLabel("CHANNEL");
+		lblChannel.setForeground(new Color(255, 255, 255));
+		lblChannel.setFont(new Font("Lucida Grande", Font.BOLD, 21));
+		lblChannel.setBounds(18, 52, 103, 26);
+		backPanel.add(lblChannel);
+
+		sensorChannels = new JPanel();
+		sensorChannels.setBackground(new Color(25, 25, 112));
+		sensorChannels.setBounds(130, 5, 370, 118);
+		backPanel.add(sensorChannels);
+		sensorChannels.setLayout(new GridLayout(0, 4, 0, 0));
+
+		JLabel label_1 = new JLabel("1");
+		label_1.setForeground(new Color(255, 255, 255));
+		label_1.setHorizontalAlignment(SwingConstants.CENTER);
+		label_1.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		sensorChannels.add(label_1);
+
+		JLabel label_3 = new JLabel("3");
+		label_3.setForeground(new Color(255, 255, 255));
+		label_3.setHorizontalAlignment(SwingConstants.CENTER);
+		label_3.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		sensorChannels.add(label_3);
+
+		JLabel label_5 = new JLabel("5");
+		label_5.setForeground(new Color(255, 255, 255));
+		label_5.setHorizontalAlignment(SwingConstants.CENTER);
+		label_5.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		sensorChannels.add(label_5);
+
+		JLabel label_7 = new JLabel("7");
+		label_7.setForeground(new Color(255, 255, 255));
+		label_7.setHorizontalAlignment(SwingConstants.CENTER);
+		label_7.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		sensorChannels.add(label_7);
+		
+		s1 = new JRadioButton("");
+		s1.setForeground(new Color(25, 25, 112));
+		s1.setHorizontalAlignment(SwingConstants.CENTER);
+		sensorChannels.add(s1);
+		s3 = new JRadioButton("");
+		s3.setForeground(new Color(25, 25, 112));
+		s3.setHorizontalAlignment(SwingConstants.CENTER);
+		sensorChannels.add(s3);
+		s5 = new JRadioButton("");
+		s5.setForeground(new Color(25, 25, 112));
+		s5.setHorizontalAlignment(SwingConstants.CENTER);
+		sensorChannels.add(s5);
+		s7 = new JRadioButton("");
+		s7.setForeground(new Color(25, 25, 112));
+		s7.setHorizontalAlignment(SwingConstants.CENTER);
+		sensorChannels.add(s7);
+		
+		JLabel label_2 = new JLabel("2");
+		label_2.setForeground(new Color(255, 255, 255));
+		label_2.setHorizontalAlignment(SwingConstants.CENTER);
+		label_2.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		sensorChannels.add(label_2);
+
+		JLabel label_4 = new JLabel("4");
+		label_4.setForeground(new Color(255, 255, 255));
+		label_4.setHorizontalAlignment(SwingConstants.CENTER);
+		label_4.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		sensorChannels.add(label_4);
+
+		JLabel label_6 = new JLabel("6");
+		label_6.setForeground(new Color(255, 255, 255));
+		label_6.setHorizontalAlignment(SwingConstants.CENTER);
+		label_6.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		sensorChannels.add(label_6);
+
+		JLabel label_8 = new JLabel("8");
+		label_8.setForeground(new Color(255, 255, 255));
+		label_8.setHorizontalAlignment(SwingConstants.CENTER);
+		label_8.setFont(new Font("Lucida Grande", Font.BOLD, 18));
+		sensorChannels.add(label_8);
+		
+		s2 = new JRadioButton("");
+		s2.setForeground(new Color(25, 25, 112));
+		s2.setHorizontalAlignment(SwingConstants.CENTER);
+		sensorChannels.add(s2);
+		s4 = new JRadioButton("");
+		s4.setForeground(new Color(25, 25, 112));
+		s4.setHorizontalAlignment(SwingConstants.CENTER);
+		sensorChannels.add(s4);
+		s6 = new JRadioButton("");
+		s6.setForeground(new Color(25, 25, 112));
+		s6.setHorizontalAlignment(SwingConstants.CENTER);
+		sensorChannels.add(s6);
+		s8 = new JRadioButton("");
+		s8.setForeground(new Color(25, 25, 112));
+		s8.setHorizontalAlignment(SwingConstants.CENTER);
+		sensorChannels.add(s8);
+
+		JPanel usb = new JPanel();
+		usb.setBackground(new Color(0,0,0,0));
+		usb.setBounds(500, 0, 350, 130);
+		backPanel.add(usb);
+		usb.setLayout(null);
+
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(192, 192, 192));
+		panel.setBounds(70, 52, 60, 26);
+		usb.add(panel);
+		
+		JLabel lblNewLabel = new JLabel("USB PORT");
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 21));
+		lblNewLabel.setBounds(175, 52, 105, 26);
+		usb.add(lblNewLabel);
+
+		
+		setSensorListener(s1,1);
+		setSensorListener(s2,2);
+		setSensorListener(s3,3);
+		setSensorListener(s4,4);
+		setSensorListener(s5,5);
+		setSensorListener(s6,6);
+		setSensorListener(s7,7);
+		setSensorListener(s8,8);
+	}
+	
+	/**
 	 * Adds the key bindings.
 	 */
 	private void addBindings(){
@@ -741,6 +833,61 @@ public class ChronoGui extends JFrame{
 
 
 	/**
+	 * Sets the sensor listener.
+	 *
+	 * @param i the JRadiobutton
+	 * @param num the num
+	 */
+	private void setSensorListener(AbstractButton i, int num) {
+		i.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object[] options = { "EYE", "GATE", "PAD" };
+				ImageIcon icon = null;
+				String s = (String) JOptionPane.showInputDialog(null, "Select a sensor below.", "Sensor Selection",
+						JOptionPane.PLAIN_MESSAGE, icon, options, options[0]);
+	
+				// If a string was returned, set a sensor.
+				if ((s != null) && (s.length() > 0)) {
+					sendSensor(s,num,true);
+				}
+			}
+		});
+	}
+
+	private void sendSensor(String s, int num, boolean connect) {
+		if(connect==true){
+			if(!sensorActive[num - 1]){
+				sensorActive[num - 1] = !sensorActive[num - 1];
+				sendCommand(String.format("CONN %s %d", s,num));
+				if(sensorGui==null){
+					sensorGui=new SensorGui();
+					System.out.println("adding "+num+" "+s);
+					sensorGui.addSensorButton(s,num);
+				}else{
+					System.out.println("adding "+num);
+					sensorGui.setVisible(false);
+					sensorGui.addSensorButton(s, num);
+					sensorGui.setVisible(true);
+				}
+			}else {
+				System.out.println("WARNING: A SENSOR IS ALREADY CONNECTED.");
+			}
+		} else { //disconnect
+			if(sensorActive[num - 1] && sensorGui!=null){
+				sensorActive[num - 1] = !sensorActive[num - 1];
+				sendCommand(String.format("DISC %d", num));
+				System.out.println("adding "+num);
+				sensorGui.setVisible(false);
+				sensorGui.removeSensorButton(num);
+				sensorGui.setVisible(true);
+			}else {
+				System.out.println("WARNING: SENSOR IS NOT CONNECTED. CANNOT DISCONNECT.");
+			}
+		}
+	}
+
+	/**
 	 * Sets the buttonFunction listener.
 	 */
 	private void setFcnListener() {
@@ -812,7 +959,8 @@ public class ChronoGui extends JFrame{
 					} else {
 						command = menuName + " " + selected;
 					}
-					if(selected!="NUM" && selected!="START" && selected!="FINISH" && selected!="CLR"){
+					if(selected!="NUM" && selected!="START" && selected!="FINISH" && selected!="CLR"
+							&& selected!="EYE"&& selected!="PAD"&& selected!="GATE"){
 						sendCommand(command);
 					}
 					debug("menuResponse command: "+command);
@@ -884,6 +1032,12 @@ public class ChronoGui extends JFrame{
 			isTimeOn = true;
 			debug(temp);
 			displayText.setText(temp);
+		}if(split!=null && (split[0].equals("EYE")||split[0].equals("PAD")||split[0].equals("GATE"))){
+			int num = Integer.valueOf(split[1]);
+			sendSensor(split[0], num, true);
+		}if(split!=null && split[0].equals("DISC")){
+			int num = Integer.valueOf(split[1]);
+			sendSensor(split[0], num, false);
 		}
 	}
 
