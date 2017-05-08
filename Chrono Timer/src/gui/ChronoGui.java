@@ -170,6 +170,20 @@ public class ChronoGui extends JFrame{
 							powerStatus.setBackground(Color.GREEN);
 							// custom welcome screen
 							String temp="WELCOME TO CHRONOTIMER 1009!";
+							//set action listener for display text box to update at set time.
+							// TODO - James needs to check that this works!!!
+							ActionListener task = new ActionListener() {
+								public void actionPerformed(ActionEvent evt) {
+									if (isfcnBtnOn==false)
+									{
+										c.display(displayText);
+									}
+								}
+							};
+							Timer timer = new Timer(1000 ,task); // Execute task each 1000 miliseconds
+							timer.setRepeats(true);
+							timer.start();
+							
 							displayText.setText(temp);
 						}
 						else{
@@ -728,6 +742,8 @@ public class ChronoGui extends JFrame{
 			p.printGUI(formatted, printerText);
 		if (!c.isOn()) {
 			offWarning();
+			if(sensorGui!=null)
+				sensorGui.close();
 			radioChannel1.setSelected(false);
 			radioChannel2.setSelected(false);
 			radioChannel3.setSelected(false);
@@ -736,6 +752,15 @@ public class ChronoGui extends JFrame{
 			radioChannel6.setSelected(false);
 			radioChannel7.setSelected(false);
 			radioChannel8.setSelected(false);
+			sensorActive = new boolean[8];
+			s1.setSelected(false);
+			s2.setSelected(false);
+			s3.setSelected(false);
+			s4.setSelected(false);
+			s5.setSelected(false);
+			s6.setSelected(false);
+			s7.setSelected(false);
+			s8.setSelected(false);
 		}
 	}
 
@@ -842,14 +867,22 @@ public class ChronoGui extends JFrame{
 		i.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Object[] options = { "EYE", "GATE", "PAD" };
-				ImageIcon icon = null;
-				String s = (String) JOptionPane.showInputDialog(null, "Select a sensor below.", "Sensor Selection",
-						JOptionPane.PLAIN_MESSAGE, icon, options, options[0]);
-	
-				// If a string was returned, set a sensor.
-				if ((s != null) && (s.length() > 0)) {
-					sendSensor(s,num,true);
+				if(c.isOn() && !sensorActive[num - 1]){
+					Object[] options = { "EYE", "GATE", "PAD" };
+					ImageIcon icon = null;
+					String s = (String) JOptionPane.showInputDialog(null, "Select a sensor below.", "Sensor Selection",
+							JOptionPane.PLAIN_MESSAGE, icon, options, options[0]);
+		
+					// If a string was returned, set a sensor.
+					if ((s != null) && (s.length() > 0)) {
+						sendSensor(s,num,true);
+						
+					}
+				}else if(c.isOn()){
+					sendSensor("",num,false);
+				}else{
+					offWarning();
+					((JRadioButton)e.getSource()).setSelected(false);;
 				}
 			}
 		});
@@ -861,7 +894,7 @@ public class ChronoGui extends JFrame{
 				sensorActive[num - 1] = !sensorActive[num - 1];
 				sendCommand(String.format("CONN %s %d", s,num));
 				if(sensorGui==null){
-					sensorGui=new SensorGui();
+					sensorGui=new SensorGui(c);
 					System.out.println("adding "+num+" "+s);
 					sensorGui.addSensorButton(s,num);
 				}else{
@@ -875,12 +908,24 @@ public class ChronoGui extends JFrame{
 			}
 		} else { //disconnect
 			if(sensorActive[num - 1] && sensorGui!=null){
+				debug("disconnecting sensor...");
 				sensorActive[num - 1] = !sensorActive[num - 1];
 				sendCommand(String.format("DISC %d", num));
 				System.out.println("adding "+num);
 				sensorGui.setVisible(false);
 				sensorGui.removeSensorButton(num);
-				sensorGui.setVisible(true);
+				boolean checkIfAnyLeft=false;
+				for(boolean b:sensorActive){
+					if(b==true){
+						checkIfAnyLeft=true;
+						break;
+					}
+				}
+				if(checkIfAnyLeft)
+					sensorGui.setVisible(true);
+				else
+					sensorGui.close();
+				
 			}else {
 				System.out.println("WARNING: SENSOR IS NOT CONNECTED. CANNOT DISCONNECT.");
 			}

@@ -30,7 +30,7 @@ public class ChronoServer {
     private Map<Integer, String> NumNameMap;
     public ChronoServer () throws IOException {
         // set up a simple HTTP server on our local host
-        HttpServer server = HttpServer.create(new InetSocketAddress(80), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
 		// create a context to get the request to display the results
 		server.createContext("/displayresults", new DisplayHandler());

@@ -38,7 +38,7 @@ public class ChronoTimer  {
 		reset();
 
 		// set up a simple HTTP server on our local host
-		server = null; 
+//		server = null; 
 		server= HttpServer.create(new InetSocketAddress(8000), 0);
 		server.createContext("/results", new PostHandler());	
 		server.start();
@@ -232,13 +232,18 @@ public class ChronoTimer  {
 	 */
 	public void connect(String i, boolean on) {
 		String[] args = i.split(" ");
-		int id = Integer.valueOf(args[1]);
+		int id;
+		if(i.length()==1)
+			id = Integer.valueOf(i);
+		else{
+			id = Integer.valueOf(args[1]);
+		}
 		
 		if (id < channels.length){
 			if(on){
-				channels[id-1].setOn(args[0]);
+				channels[id-1].setOn(i.length()==1?i:args[0]);
 			} else{
-				channels[id-1].setOff(args[0]);
+				channels[id-1].setOff(i.length()==1?i:args[0]);
 			}
 		}
 	}

@@ -126,6 +126,7 @@ public class Console
 			}
 			// DISC <num> Disconnect a sensor from channel <num>
 			else if (command.equalsIgnoreCase("DISC")){
+				debug(argument);
 				chronotimer.connect(argument, false);
 			} 
 			// EVENT <type> IND | PARIND | GRP | PARGRP

@@ -6,7 +6,7 @@ import javax.swing.*;
 
 import com.google.gson.Gson;
 	
-public class ClientGui extends JFrame implements ActionListener, WindowListener{
+public class ClientGui extends JFrame{
 	private static final long serialVersionUID = 1L;
 	JLabel firstNameLabel, lastNameLabel, departmentLabel, phoneLabel, genderLabel;
 	JTextArea firstNameText, lastNameText, departmentText, phoneText;
@@ -219,52 +219,5 @@ public class ClientGui extends JFrame implements ActionListener, WindowListener{
 		new ClientGui();
 	}
 
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 }  
 
