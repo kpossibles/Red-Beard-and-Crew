@@ -175,7 +175,7 @@ public class ChronoTimer  {
 	 */
 	public void createRun() {
 		runs.add(new Run(runs.size() + 1));
-		event.setRun(runs.getFirst());
+		event.setRun(runs.getLast());
 	}
 	
 	/**
