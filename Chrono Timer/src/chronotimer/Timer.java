@@ -1,26 +1,40 @@
 package chronotimer;
 //import java.sql.Timestamp;
-//import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant; // EB - Solution for epoch (linux) time in millis
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.concurrent.*;
 
 /**
  * The Class Timer.
  *
  * @author Red Beard & Crew
  */
-public class Timer {
+public class Timer implements Runnable {
 	//private Date timer;
 	//private SimpleDateFormat sdf = new SimpleDateFormat("sssss.SS");
 	private long unixTimestamp;
 	private String time="";
-	
+	private final ScheduledExecutorService scheduler =
+		     Executors.newScheduledThreadPool(1);
+	final Runnable addMillis = new Runnable() {
+	       public void run() { 
+	    	   unixTimestamp++;
+	       }
+	     };
+
 	/**
 	 * Timer() will start the time now and set it to unix time
 	 */
 	public Timer(){ 
 		unixTimestamp = Instant.now().getEpochSecond();
+	}
+	
+	public Timer(long time){ 
+		unixTimestamp = time;
 	}
 	
 	/**
@@ -30,9 +44,14 @@ public class Timer {
 	 */
 	public void setTime(String number){
 		time = number;
-		String tempDate = "Jul 07 1996 " + number + " UTC"; // Set to arbitrary day (my birthday :]) for math reasons, must be constant.
-        DateTimeFormatter dtf  = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss.S zzz");
-        ZonedDateTime     zdt  = ZonedDateTime.parse(tempDate,dtf);        
+		LocalDateTime ldf = LocalDateTime.now();
+		String str = String.format("%s %02d %d %s CDT", ldf.getMonth().toString().substring(0, 1)+ldf.getMonth().toString().substring(1, 3).toLowerCase(), ldf.getDayOfMonth(), ldf.getYear(), number);
+		DateTimeFormatter dtf  = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss.S zzz");
+
+//		String tempDate = "Jul 07 1996 " + number + " UTC"; // Set to arbitrary day (my birthday :]) for math reasons, must be constant.
+        
+//      ZonedDateTime     zdt  = ZonedDateTime.parse(tempDate,dtf);
+        ZonedDateTime     zdt  = ZonedDateTime.parse(str,dtf);
         unixTimestamp = zdt.toInstant().toEpochMilli();
 	}
 	
@@ -51,6 +70,28 @@ public class Timer {
 	 * @return current time as string object
 	 */
 	public String getTimeString(){
-		return "" + time;
+		Date date = new Date(unixTimestamp);
+		SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss.S");
+		String time = localDateFormat.format(date);
+		return time.substring(0,10);
+//		return time;
+	}
+
+	@Override
+	public void run() {
+		scheduler.scheduleAtFixedRate(addMillis, 1, 1, TimeUnit.MILLISECONDS);
+		Runnable updating = new Runnable(){
+			public void run() { 
+				String temp = getTimeString();
+//				System.out.println(temp);		    	   
+			}};
+		scheduler.scheduleAtFixedRate(updating, 0, 100, TimeUnit.MILLISECONDS);
+	}
+	//testing that it's working
+	public static void main(String[] args){
+		Timer test = new Timer();
+		test.run();
+		
+		
 	}
 }

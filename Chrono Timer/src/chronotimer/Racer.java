@@ -119,21 +119,9 @@ public class Racer {
 	 * @return the start time
 	 */
 	public String getStartTime(){
-		final TimeUnit scale = MILLISECONDS;
-		long duration = start;
-		
-	    long days = scale.toDays( duration );
-	    duration -= DAYS.toMillis( days );
-	    long hours = scale.toHours( duration );
-	    duration -= HOURS.toMillis( hours );
-	    long minutes = scale.toMinutes( duration );
-	    duration -= MINUTES.toMillis( minutes );
-	    long seconds = scale.toSeconds( duration );
-	    duration -= SECONDS.toMillis( seconds );
-	    long millis = scale.toMillis( duration );
-	    
-		millis = Integer.parseInt(Integer.toString((int) millis).substring(0, 1));
-		String time = String.format("%02d:%02d:%02d.%d", hours, minutes, seconds, millis);
+		Timer temp = new Timer(start);
+		temp.getTimeString();
+		String time = temp.getTimeString();
 		return time;
 	}
 	

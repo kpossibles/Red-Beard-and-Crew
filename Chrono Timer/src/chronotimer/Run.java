@@ -30,6 +30,8 @@ public class Run {
 	public void add(Racer racer) {
 		if (active)
 			racers.add(racer);
+		else
+			System.out.println("ERROR: Could not add Racer"+racer.getId());
 	}
 	 
 	/**
@@ -92,7 +94,10 @@ public class Run {
 	 * @return the racer
 	 */
 	public Racer getRacer(){
-		return racers.get(0);
+		if(racers.size()>0)
+			return racers.get(0);
+		else
+			return null;
 	}
 	
 	/**

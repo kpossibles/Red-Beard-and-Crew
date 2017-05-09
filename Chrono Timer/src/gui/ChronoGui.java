@@ -7,6 +7,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import javax.swing.*;
 
@@ -45,7 +47,9 @@ public class ChronoGui extends JFrame{
 	private boolean[] sensorActive;
 	private JRadioButton s1,s2,s3,s4,s5,s6,s7,s8;
 	private SensorGui sensorGui;
-
+	private Thread thread;
+	private Timer timer;
+	
 	/**
 	 * Instantiates a new Chronotimer GUI.
 	 */
@@ -87,6 +91,7 @@ public class ChronoGui extends JFrame{
 		nameCommandMap.put("EYE", value);
 		nameCommandMap.put("PAD", value);
 		nameCommandMap.put("GATE", value);
+		nameCommandMap.put("DISC", value);
 		
 		value = new ArrayList<>();
 		value.add("EYE");
@@ -176,17 +181,25 @@ public class ChronoGui extends JFrame{
 								public void actionPerformed(ActionEvent evt) {
 									if (isfcnBtnOn==false)
 									{
-										c.display(displayText);
+										boolean check=false;
+										for(Racer r: c.getRacers()){
+											if(r.getStart()>0)
+												check=true;
+												break;
+										}
+										if(check)
+											displayText.setText(c.getDisplayText());
 									}
 								}
 							};
-							Timer timer = new Timer(1000 ,task); // Execute task each 1000 miliseconds
+							Timer timer = new Timer(100 ,task); // Execute task each 1000 miliseconds
 							timer.setRepeats(true);
 							timer.start();
 							
 							displayText.setText(temp);
 						}
 						else{
+							debug("off");
 							powerStatus.setBackground(Color.RED);
 							displayText.setText("");
 						}
@@ -733,14 +746,20 @@ public class ChronoGui extends JFrame{
 	 * @param command
 	 */
 	private void sendCommand(String command) {
+		debug(command);
 		String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) + "\t" + command;
 		if (c.isOn() || command == "POWER") {
+			// TODO - it will set a time but then when you try to 
+			if(c.checkChronotimer())
+				formatted = c.getTime()+ "\t" + command;
 			c.input(formatted);
 			c.display(displayText);
 		}
 		if (p.isActive())
 			p.printGUI(formatted, printerText);
 		if (!c.isOn()) {
+			if(timer!=null)
+				timer.stop();
 			offWarning();
 			if(sensorGui!=null)
 				sensorGui.close();
@@ -876,13 +895,12 @@ public class ChronoGui extends JFrame{
 					// If a string was returned, set a sensor.
 					if ((s != null) && (s.length() > 0)) {
 						sendSensor(s,num,true);
-						
 					}
 				}else if(c.isOn()){
 					sendSensor("",num,false);
 				}else{
 					offWarning();
-					((JRadioButton)e.getSource()).setSelected(false);;
+					((JRadioButton)e.getSource()).setSelected(false);
 				}
 			}
 		});
@@ -911,7 +929,7 @@ public class ChronoGui extends JFrame{
 				debug("disconnecting sensor...");
 				sensorActive[num - 1] = !sensorActive[num - 1];
 				sendCommand(String.format("DISC %d", num));
-				System.out.println("adding "+num);
+				System.out.println("disconnecting "+num);
 				sensorGui.setVisible(false);
 				sensorGui.removeSensorButton(num);
 				boolean checkIfAnyLeft=false;
@@ -1008,9 +1026,7 @@ public class ChronoGui extends JFrame{
 							&& selected!="EYE"&& selected!="PAD"&& selected!="GATE"){
 						sendCommand(command);
 					}
-					debug("menuResponse command: "+command);
 					menuGuiUpdate(command);
-					isfcnBtnOn=false;
 				}
 			}
 			if(menu!=null)
@@ -1025,15 +1041,21 @@ public class ChronoGui extends JFrame{
 	}
 
 
-	private void menuGuiUpdate(String command) {
-		// TODO implement GUI changes for ALL commands
+	public void menuGuiUpdate(String command) {
+		// TODO implement export
 		debug("menuGuiUpdate");
 		String[]split = null;
 		if(command.contains(" ")){
 			split=command.split(" ");
 		}
 		if(command == "RESET"){
+			isfcnBtnOn=false;
 			menu = null;
+			if(sensorGui!=null){
+				sensorGui.close();
+				sensorGui=null;
+				sensorActive=new boolean[8];
+			}
 			radioChannel1.setSelected(false);
 			radioChannel2.setSelected(false);
 			radioChannel3.setSelected(false);
@@ -1042,6 +1064,14 @@ public class ChronoGui extends JFrame{
 			radioChannel6.setSelected(false);
 			radioChannel7.setSelected(false);
 			radioChannel8.setSelected(false);
+			s1.setSelected(false);
+			s2.setSelected(false);
+			s3.setSelected(false);
+			s4.setSelected(false);
+			s5.setSelected(false);
+			s6.setSelected(false);
+			s7.setSelected(false);
+			s8.setSelected(false);
 			displayText.setText("");
 		}if(command == "CLOSE"){
 			setFcnListener();
@@ -1049,6 +1079,7 @@ public class ChronoGui extends JFrame{
 		}if(command == "NUM"){
 			String temp="PRESS NUMBERS ON THE KEYPAD TO ENTER YOUR RACER NAME! PRESS # TO SUBMIT!";
 			debug(temp);
+			isfcnBtnOn=false;
 			menu = null;
 			displayText.setText(temp);
 		}if(split!=null && split[0].equals("TOG")){
@@ -1079,10 +1110,24 @@ public class ChronoGui extends JFrame{
 			displayText.setText(temp);
 		}if(split!=null && (split[0].equals("EYE")||split[0].equals("PAD")||split[0].equals("GATE"))){
 			int num = Integer.valueOf(split[1]);
-			sendSensor(split[0], num, true);
+			if(!sensorActive[num-1]){
+				sendSensor(split[0], num, true);
+				menuToggleSensorRadio(num, true);
+			}else{
+				System.out.println(num + " is already connected!");
+//				isfcnBtnOn=false;
+				displayText.setText(num + " is already connected!");
+			}
 		}if(split!=null && split[0].equals("DISC")){
 			int num = Integer.valueOf(split[1]);
-			sendSensor(split[0], num, false);
+			if(sensorActive[num-1]){
+				sendSensor(split[0], num, false);
+				menuToggleSensorRadio(num, false);
+			}else{
+				System.out.println(num + " is already disconnected!");
+//				isfcnBtnOn=false;
+				displayText.setText(num + " is already disconnected!");
+			}
 		}
 	}
 
@@ -1140,6 +1185,59 @@ public class ChronoGui extends JFrame{
 					radioChannel8.setSelected(false);
 				else
 					radioChannel8.setSelected(true);
+				break;
+		}
+	}
+	
+	private void menuToggleSensorRadio(int num, boolean on) {
+		switch(num){
+			case 1:
+				if(on)
+					s1.setSelected(true);
+				else
+					s1.setSelected(false);
+				break;
+			case 2:
+				if(on)
+					s2.setSelected(true);
+				else
+					s2.setSelected(false);
+				break;
+			case 3:
+				if(on)
+					s3.setSelected(true);
+				else
+					s3.setSelected(false);
+				break;
+			case 4:
+				if(on)
+					s4.setSelected(true);
+				else
+					s4.setSelected(false);
+				break;
+			case 5:
+				if(on)
+					s5.setSelected(true);
+				else
+					s5.setSelected(true);
+				break;
+			case 6:
+				if(on)
+					s6.setSelected(true);
+				else
+					s6.setSelected(false);
+				break;
+			case 7:
+				if(on)
+					s7.setSelected(true);
+				else
+					s7.setSelected(false);
+				break;
+			case 8:
+				if(on)
+					s8.setSelected(true);
+				else
+					s8.setSelected(false);
 				break;
 		}
 	}

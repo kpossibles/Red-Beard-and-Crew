@@ -78,42 +78,6 @@ public class ParallelTimed extends Event {
 			print.print("No racer queued to finish.");
 	}
 
-	private void finish(int lane) {
-		Racer racer = null;
-		for (Racer r: racing){
-			if (r.getLane() == lane){
-				racer = r;
-				break;
-			}
-		}
-		if(racer != null && racing.size()>0){
-			racer.setFinish(timer.getTime());
-//			print.print(String.format("Racer %d\t%s", racer.getId(), timer.getTimeString()));
-			print.print(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
-			racing.remove(racer);
-		}
-		else
-			print.print("No racer queued to finish.");
-	}
-	
-	/**
-	 * Gets the run size.
-	 *
-	 * @return the run size
-	 */
-	public int getRunSize(){
-		return currentRun.size();
-	}
-	
-	/**
-	 * Gets the racing size.
-	 *
-	 * @return the racing size
-	 */
-	public int getRacingSize(){
-		return racing.size();
-	}
-	
 	@Override
 	public String getType() {
 		return "PARIND";
@@ -149,26 +113,6 @@ public class ParallelTimed extends Event {
 		timer = _timer;
 	}
 
-	private void start(int lane){
-		if (currentRun != null && currentRun.isActive()) {
-			Racer started = null;
-			for (Racer r : racing) {
-				if (r.getStart() == 0) {
-					r.setLane(lane);
-					r.setStart(timer.getTime());
-					started = r;
-					break;
-				}
-			}
-			if (started != null)
-				print.print(String.format("Racer %d\t%s", started.getId(), timer.getTimeString()));
-			else
-				print.print("No racer queued to start.");
-		}
-		else
-			print.print("Current Run is not active. ");
-	}
-
 	@Override
 	public void swap() {
 		print.print("WARNING: Cannot swap for this type of event.");
@@ -189,8 +133,83 @@ public class ParallelTimed extends Event {
 				print.print("No racer queued to start.");
 		}
 	}
-	
+
+	/**
+	 * Start.
+	 *
+	 * @param lane the lane
+	 */
+	private void start(int lane){
+		if (currentRun != null && currentRun.isActive()) {
+			Racer started = null;
+			for (Racer r : racing) {
+				if (r.getStart() == 0) {
+					r.setLane(lane);
+					r.setStart(timer.getTime());
+					started = r;
+					break;
+				}
+			}
+			if (started != null)
+				print.print(String.format("Racer %d\t%s", started.getId(), timer.getTimeString()));
+			else
+				print.print("No racer queued to start.");
+		}
+		else
+			print.print("Current Run is not active. ");
+	}
+
+	/**
+		 * Finish.
+		 *
+		 * @param lane the lane
+		 */
+		private void finish(int lane) {
+			Racer racer = null;
+			for (Racer r: racing){
+				if (r.getLane() == lane){
+					racer = r;
+					break;
+				}
+			}
+			if(racer != null && racing.size()>0){
+				racer.setFinish(timer.getTime());
+	//			print.print(String.format("Racer %d\t%s", racer.getId(), timer.getTimeString()));
+				print.print(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
+				racing.remove(racer);
+			}
+			else
+				print.print("No racer queued to finish.");
+		}
+
+	/**
+	 * Gets the run size.
+	 *
+	 * @return the run size
+	 */
+	public int getRunSize(){
+		return currentRun.size();
+	}
+
+	/**
+	 * Gets the racing size.
+	 *
+	 * @return the racing size
+	 */
+	public int getRacingSize(){
+		return racing.size();
+	}
+
+	/**
+	 * Gets the record.
+	 *
+	 * @return the record
+	 */
 	public String getRecord(){
 		return print.getRecord();
+	}
+	
+	public String getTime(){
+		return timer.getTimeString();
 	}
 }

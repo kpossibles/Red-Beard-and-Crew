@@ -56,6 +56,18 @@ public class IndividualTimed extends Event {
 			timer = _timer;
 			print = _print;
 		}
+		
+		public IndividualTimed(Timer _timer, Printer _print, Run run){
+			currentRun = run;
+			racing = new LinkedList<Racer>();
+			channelMode = new String[8];
+			channelMode[0] = "START";
+			channelMode[1] = "FINISH";
+			for(int i=2;i<8;i++)
+				channelMode[i] = "";
+			timer = _timer;
+			print = _print;
+		}
 
 		public void addRacer(int r){
 			if(currentRun!=null && currentRun.isActive()){

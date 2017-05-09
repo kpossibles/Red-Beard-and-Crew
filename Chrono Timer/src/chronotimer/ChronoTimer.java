@@ -42,7 +42,6 @@ public class ChronoTimer  {
 		server= HttpServer.create(new InetSocketAddress(8000), 0);
 		server.createContext("/results", new PostHandler());	
 		server.start();
-
 	}
 
 	/**
@@ -50,6 +49,7 @@ public class ChronoTimer  {
 	 */
 	public void reset() {
 		timer = new Timer();
+		timer.run();
 		event = new IndividualTimed(timer, print);
 		channels = new Channel[8];
 		for(int i = 0; i < 8; i++){
@@ -78,7 +78,7 @@ public class ChronoTimer  {
 	public void setEvent(String type) {
 		//IND | PARIND | GRP | PARGRP
 		if (type.equalsIgnoreCase("IND")) {
-			event = new IndividualTimed(timer, print);
+			event = new IndividualTimed(timer, print, runs.peek());
 			print.print("Event set to Individual");
 		} else if (type.equalsIgnoreCase("PARIND")) {
 			event = new ParallelTimed(timer, print);
@@ -257,6 +257,7 @@ public class ChronoTimer  {
 		// TODO double check to see if display is working correctly
 		String q = "", r="", f="";
 		Run run = runs.peek();
+		
 		if(!run.isEmpty()){
 			int j=0;
 			for(int i=0; i<run.size(); i++){
@@ -288,6 +289,45 @@ public class ChronoTimer  {
 			else
 				textbox.setText(q+"\n"+r+"\n"+f);
 		}
+	}
+	
+	public String getDisplayText() {
+		// TODO double check to see if display is working correctly
+		String q = "", r="", f="";
+		Run run = runs.peek();
+		
+		if(!run.isEmpty()){
+			int j=0;
+			for(int i=0; i<run.size(); i++){
+				if(i>run.size()-1)
+					break;
+				Racer racer = run.getRacers().get(i);
+				
+				if(racer.getStart()==0 && j<3){
+					q+=(racer.getId()+" Q\n");
+					j++;
+				}
+				if(racer.getStart()>0 && racer.getFinish()==0){
+					if(racer.DNF())
+						f+=(racer.getId()+"  "+" DNF\n");
+					else
+						r+=(racer.getId()+"  "+racer.getStartTime()+" R\n");
+				}
+			}
+			if(run.getLast()!=null)
+				f+=(run.getLast().getId()+"  "+run.getLast().getTime()+" F\n");
+			
+			// update display textbox with queue, racing, and finish
+			if(q==""){
+				if(r=="")
+					return f;
+				else
+					return r + "\n" + f;
+			}
+			else
+				return q +"\n"+r+"\n"+f;
+		}
+		return "";
 	}
 
 	/**

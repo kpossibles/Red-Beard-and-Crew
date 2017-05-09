@@ -14,6 +14,7 @@ public class Printer {
 	private Queue<String> record;
 	private PrintWriter writer = null;
 	private boolean active;
+	private JTextArea displayText;
 	
 	/**
 	 * Instantiates a new printer.
@@ -21,6 +22,12 @@ public class Printer {
 	public Printer(){
 		record = new LinkedList<String>();
 		setActive(false);
+	}
+	
+	public Printer(JTextArea _display){
+		record = new LinkedList<String>();
+		displayText = _display;
+		System.out.println(_display.getName());
 	}
 	
 	/**
@@ -40,6 +47,9 @@ public class Printer {
 	public void print(String str) {
 		System.out.println(str);
 		addToRecord(str);
+		if(displayText!=null){
+			displayText.setText(str);
+		}
 	}
 
 	/**

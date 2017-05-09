@@ -6,7 +6,9 @@ import org.junit.*;
 
 import chronotimer.Console;
 import chronotimer.ParallelTimed;
+import chronotimer.Racer;
 import chronotimer.Run;
+import chronotimer.Timer;
 
 public class PARIND_test {
 	static Console c;
@@ -17,10 +19,19 @@ public class PARIND_test {
 		c = new Console();
 		c.setOn(true);
 		c.input(c.addTimestamp("POWER"));
+	}
+	
+	@Before
+	public void setUpBeforeEach() throws Exception {
+		c.reset();
+		c.setOn(true);
 		c.input(c.addTimestamp("EVENT PARIND"));
 		c.input(c.addTimestamp("NEWRUN"));
 		
 		event = new ParallelTimed();
+
+		System.out.println("\n============");
+		System.out.println("EVENT: "+c.getEventType());
 	}
 	
 	private void println(String str){
@@ -41,12 +52,6 @@ public class PARIND_test {
 		c.input(c.addTimestamp("tog 2"));
 		c.input(c.addTimestamp("tog 3"));
 		c.input(c.addTimestamp("tog 4"));
-	}
-	
-	@Before
-	public void setUp() throws Exception {
-		System.out.println("\n============");
-		System.out.println("EVENT: "+c.getEventType());
 	}
 
 	@Test
@@ -183,12 +188,30 @@ public class PARIND_test {
 
 	@Test
 	public void testSetRun() {
-		fail("Not yet implemented"); // TODO
+		Run testRun = new Run(1);
+		assertTrue(testRun.getRacer()==null);
+		testRun.add(new Racer(1));
+		testRun.add(new Racer(5));
+		testRun.add(new Racer(300));
+		testRun.removeLast();
+		assertEquals(testRun.getRacers().size(),2);
+		
+		event.setRun(testRun);
+		assertEquals(event.getRunSize()==3, false);
 	}
 
 	@Test
 	public void testSetTimer() {
-		fail("Not yet implemented"); // TODO
+//		fail("Not yet implemented"); // TODO
+		Timer temp = new Timer();
+		temp.setTime("11:11:11.1");
+		assertEquals(temp.getTimeString(), "11:11:11.1");
+		event.setTimer(temp);
+		assertEquals(event.getTime(), "11:11:11.1");
+		System.out.println(event.getTime());
+		event.setTimer(new Timer());
+		assertEquals(event.getTime()=="11:11:11.1",false);
+		System.out.println(event.getTime());
 	}
 
 	@Test
@@ -201,22 +224,6 @@ public class PARIND_test {
 
 	@Test
 	public void testParallelTimed() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testGetClass() {
-//		fail("Not yet implemented"); // TODO
-		println(event.getClass().getSimpleName());
-	}
-
-	@Test
-	public void testEquals() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testToString() {
 		fail("Not yet implemented"); // TODO
 	}
 

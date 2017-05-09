@@ -41,12 +41,16 @@ public class Console
 	 * @return the string
 	 */
 	public String addTimestamp(String s){
-		s = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) +"\t"+s;
+		if(s.equalsIgnoreCase("POWER"))
+			s= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S"))+"\t"+s;
+		else
+			s = chronotimer.getTimer().getTimeString() +"\t"+s;
+		System.out.println(s);
 		return s;
 	}
 	
 	public String addTimestamp(String s, int i){
-		String temp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S"));
+		String temp = chronotimer.getTimer().getTimeString();
 		int sec = Integer.valueOf(temp.substring(6,temp.length()-2))+i;
 		int min = Integer.valueOf(temp.substring(3,5));
 		int hour = Integer.valueOf(temp.substring(0,2));
@@ -84,10 +88,7 @@ public class Console
 		// POWER(if on) Delete ChronoTimer
 		if (command.equalsIgnoreCase("POWER")){
 			if (chronotimer != null){
-				System.out.println("SERVER STOPPED");
-				chronotimer.stopServer();
-//				chronotimer.reset();
-				chronotimer = null;
+				chronotimer.reset();
 				setOn(false);
 				System.out.println("POWER OFF");
 			} else {
@@ -109,9 +110,17 @@ public class Console
 			}
 			// TIME <hour>:<min>:<sec> Set the current time
 			else if (command.equalsIgnoreCase("TIME")){
-				if(argument!="" && argument.length()==10)
-					chronotimer.setTime(argument);
-				else
+				if(argument!="" && argument.length()==10){
+					String []split = argument.split(":");
+					if(Integer.valueOf(split[0])>23 || Integer.valueOf(split[0])<0)
+						printer.print("ERROR: HOURS - enter numbers from 00 to 23");
+					else if(Integer.valueOf(split[1])>59 || Integer.valueOf(split[1])<0)
+						printer.print("ERROR: MIN - enter numbers from 00 to 59");
+					else if(Double.valueOf(split[2])>59 || Double.valueOf(split[2])<0)
+						printer.print("ERROR: SEC - enter numbers from 00 to 59");
+					else
+						chronotimer.setTime(argument);
+				}else
 					printer.print("ERROR: ENTER NEW TIME AS ##:##:##.#");
 			}
 			// TOG <channel> Toggle the state of the channel <channel>
@@ -321,7 +330,7 @@ public class Console
 	}
 	
 	/**
-	 * Gets the racers.
+	 * Gets the racers currently running.
 	 *
 	 * @return the racers
 	 */
@@ -405,9 +414,38 @@ public class Console
 			}
 		}
 
+	/**
+	 * Gets the racer list size.
+	 *
+	 * @return the racer list size
+	 */
 	public int getRacerListSize() {
 		return chronotimer.getRacers().size();
 	}
+
+	/**
+	 * Gets the time.
+	 *
+	 * @return the time
+	 */
+	public String getTime() {
+		return chronotimer.getTimer().getTimeString();
+	}
+
+	/**
+	 * Gets the display text.
+	 *
+	 * @return the display text
+	 */
+	public String getDisplayText() {
+		return chronotimer.getDisplayText();
+	}
 	
+	/**
+	 * Reset.
+	 */
+	public void reset(){
+		chronotimer.reset();
+	}
 	
 }

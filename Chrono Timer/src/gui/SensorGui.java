@@ -24,7 +24,7 @@ public class SensorGui extends JFrame{
 		setTitle("Sensors");
 		setupGUI();
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	public SensorGui(Console c) {
@@ -33,7 +33,7 @@ public class SensorGui extends JFrame{
 		setTitle("Sensors");
 		setupGUI();
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	/**
