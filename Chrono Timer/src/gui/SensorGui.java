@@ -2,16 +2,14 @@ package gui;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import chronotimer.ChronoTimer;
 import chronotimer.Console;
-import chronotimer.Sensor;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.FlowLayout;
+import javax.swing.border.EtchedBorder;
 
+@SuppressWarnings("serial")
 public class SensorGui extends JFrame{
 	private JPanel p1,p2,p3,p4,p5,p6,p7,p8;
 	private Console mainGui;
@@ -21,6 +19,7 @@ public class SensorGui extends JFrame{
 	 */
 	public SensorGui() {
 		setSize(500, 500);
+		setBackground(new Color(135,206,250));
 		setTitle("Sensors");
 		setupGUI();
 		setVisible(true);
@@ -43,34 +42,50 @@ public class SensorGui extends JFrame{
 		getContentPane().setLayout(new GridLayout(4, 2, 0, 0));
 		
 		p1 = new JPanel();
+		p1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		p1.setBackground(new Color(51, 153, 204));
 		getContentPane().add(p1);
 		p1.setLayout(new BorderLayout(0, 0));
 		
 		p2 = new JPanel();
+		p2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		p2.setBackground(new Color(51, 153, 204));
 		getContentPane().add(p2);
 		p2.setLayout(new BorderLayout(0, 0));
 		
 		p3 = new JPanel();
+		p3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		p3.setBackground(new Color(51, 153, 204));
 		getContentPane().add(p3);
 		p3.setLayout(new BorderLayout(0, 0));
 		
 		p4 = new JPanel();
+		p4.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		p4.setBackground(new Color(51, 153, 204));
 		getContentPane().add(p4);
 		p4.setLayout(new BorderLayout(0, 0));
 		
 		p5 = new JPanel();
+		p5.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		p5.setBackground(new Color(51, 153, 204));
 		getContentPane().add(p5);
 		p5.setLayout(new BorderLayout(0, 0));
 		
 		p6 = new JPanel();
+		p6.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		p6.setBackground(new Color(51, 153, 204));
 		getContentPane().add(p6);
 		p6.setLayout(new BorderLayout(0, 0));
 		
 		p7 = new JPanel();
+		p7.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		p7.setBackground(new Color(51, 153, 204));
 		getContentPane().add(p7);
 		p7.setLayout(new BorderLayout(0, 0));
 		
 		p8 = new JPanel();
+		p8.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		p8.setBackground(new Color(51, 153, 204));
 		getContentPane().add(p8);
 		p8.setLayout(new BorderLayout(0, 0));
 	}
@@ -85,7 +100,6 @@ public class SensorGui extends JFrame{
 		JButton sensor = new JButton("Sensor "+i+", "+type);
 		sensor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO add implementation
 				System.out.println("Sensor "+i+" pressed!");
 				mainGui.input(mainGui.addTimestamp("TRIG "+i));
 			}

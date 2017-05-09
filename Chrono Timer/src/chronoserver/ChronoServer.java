@@ -198,6 +198,7 @@ public class ChronoServer {
     public static void main(String[] args){
         try {
             ChronoServer server = new ChronoServer();
+            System.out.println("ChronoServer IS ON!!!");
         }
         catch(IOException e){
             System.out.println("Could not bind to port 80.  Is there a server already started?");
