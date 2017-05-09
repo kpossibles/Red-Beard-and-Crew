@@ -161,6 +161,7 @@ public class GRP_test {
 
 	@Test
 	public void testDnf() {
+		
 		add2Racers();
 		toggleAllChannels();
 		c.input(c.addTimestamp("TRIG 1"));
