@@ -14,6 +14,12 @@ public class ParallelTimed extends Event {
 	private Timer timer;
 	private Printer print;
 
+	/**
+	 * Instantiates a new parallel timed with a new Timer and Printer
+	 *
+	 * @param _timer the timer
+	 * @param _print the printer
+	 */
 	public ParallelTimed() {
 		racing = new LinkedList<>();
 		timer = new Timer();

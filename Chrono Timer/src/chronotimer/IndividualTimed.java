@@ -22,7 +22,24 @@ public class IndividualTimed extends Event {
 		Timer timer;
 		Printer print;
 		Racer started = null, racer;
-
+		
+		/**
+		 * Instantiates a new individual timed with a new Timer and Printer
+		 *
+		 * @param _timer the timer
+		 * @param _print the printer
+		 */
+		public IndividualTimed(){
+			racing = new LinkedList<Racer>();
+			channelMode = new String[8];
+			channelMode[0] = "START";
+			channelMode[1] = "FINISH";
+			for(int i=2;i<8;i++)
+				channelMode[i] = "";
+			timer = new Timer();
+			print = new Printer();
+		}
+		
 		/**
 		 * Instantiates a new individual timed.
 		 *

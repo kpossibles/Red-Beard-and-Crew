@@ -22,6 +22,20 @@ public class GroupTimed extends Event {
 	 * @param _timer the timer
 	 * @param _print the printer
 	 */
+	public GroupTimed(){
+		timer = new Timer();
+		print = new Printer();
+		channelMode = new String[8];
+		channelMode[0] = "START";
+		channelMode[1] = "FINISH";
+	}
+	
+	/**
+	 * Instantiates a new group timed.
+	 *
+	 * @param _timer the timer
+	 * @param _print the printer
+	 */
 	public GroupTimed(Timer _timer, Printer _print){
 		timer = _timer;
 		print = _print;

@@ -14,6 +14,28 @@ public class ParallelGroupTimed extends Event {
 	private Timer timer;
 	private Printer print;
 	
+	/**
+	 * Instantiates a new parallel group timed with a new Timer and Printer
+	 *
+	 * @param _timer the timer
+	 * @param _print the printer
+	 */
+	public ParallelGroupTimed(){
+		racing = new LinkedList<>();
+		timer = new Timer();
+		print = new Printer();
+		channelMode = new String[8];
+		for(int i=0;i<8;i++){
+			channelMode[i]="START"+i;
+		}
+	}
+	
+	/**
+	 * Instantiates a new parallel group timed with a new Timer and Printer
+	 *
+	 * @param _timer the timer
+	 * @param _print the printer
+	 */
 	public ParallelGroupTimed(Timer _timer, Printer _print){
 		racing = new LinkedList<>();
 		timer = _timer;
@@ -23,6 +45,7 @@ public class ParallelGroupTimed extends Event {
 			channelMode[i]="START"+i;
 		}
 	}
+	
 	@Override
 	public void addRacer(int r) {
 		// TODO check if working correctly -KP
@@ -151,5 +174,27 @@ public class ParallelGroupTimed extends Event {
 		}
 		else
 			print.print("Current Run is not active.");
+	}
+
+	/**
+	 * Gets the run size.
+	 *
+	 * @return the run size
+	 */
+	public int getRunSize(){
+		return currentRun.size();
+	}
+
+	/**
+	 * Gets the racing size.
+	 *
+	 * @return the racing size
+	 */
+	public int getRacingSize(){
+		return racing.size();
+	}
+
+	public String getRecord(){
+		return print.getRecord();
 	}
 }
