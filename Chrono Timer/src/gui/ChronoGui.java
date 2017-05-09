@@ -831,7 +831,7 @@ public class ChronoGui extends JFrame{
 		b.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (c.isOn() && i > 0){
+				if (c.isOn() && i >= 0){
 					isfcnBtnOn=false;
 					tempRacer += i;
 					String intro="SETTING RACER NAME: " + tempRacer;
