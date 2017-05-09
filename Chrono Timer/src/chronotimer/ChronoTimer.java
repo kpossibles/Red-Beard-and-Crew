@@ -87,11 +87,11 @@ public class ChronoTimer  {
 			event = new GroupTimed(timer, print);
 			print.print("Event set to Group");
 		}
+		else if(type.equalsIgnoreCase("PARGRP")){
+			event = new ParallelGroupTimed(timer, print);
+			print.print("Event Set to Parallel Group");
+		}
 		createRun();
-//		else if(type.equalsIgnoreCase("PARGRP")){
-//			event = new ParallelGroupTimed(timer, print);
-//			print.print("Event Set to Parallel Group");
-//		}
 	}
 
 	/**

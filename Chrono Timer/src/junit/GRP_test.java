@@ -5,22 +5,22 @@ import static org.junit.Assert.*;
 import org.junit.*;
 
 import chronotimer.Console;
-import chronotimer.ParallelGroupTimed;
+import chronotimer.GroupTimed;
 import chronotimer.Run;
 
-public class PARGRP_test {
+public class GRP_test {
 	static Console c;
-	static ParallelGroupTimed event;
+	static GroupTimed event;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		c = new Console();
 		c.setOn(true);
 		c.input(c.addTimestamp("POWER"));
-		c.input(c.addTimestamp("EVENT PARGRP"));
+		c.input(c.addTimestamp("EVENT GRP"));
 		c.input(c.addTimestamp("NEWRUN"));
 		
-		event = new ParallelGroupTimed();
+		event = new GroupTimed();
 	}
 	
 	private void println(String str){
@@ -63,7 +63,7 @@ public class PARGRP_test {
 		c.input(c.addTimestamp("NUM 1"));
 		c.input(c.addTimestamp("NUM 2"));
 		c.input(c.addTimestamp("PRINT"));
-		ParallelGroupTimed temp = (ParallelGroupTimed) c.getEvent();
+		GroupTimed temp = (GroupTimed) c.getEvent();
 		System.out.println("CONSOLE # RACERS: "+ temp.getRunSize());
 		
 		event.addRacer(1); // fail because no run
@@ -88,27 +88,22 @@ public class PARGRP_test {
 		add2Racers();
 		
 		c.input(c.addTimestamp("TRIG 1"));//warning
-		c.input(c.addTimestamp("START1"));//warning
-		c.input(c.addTimestamp("FINISH1"));//warning
+		c.input(c.addTimestamp("START"));//warning
+		c.input(c.addTimestamp("FINISH"));//warning
 		
-		ParallelGroupTimed temp = (ParallelGroupTimed) c.getEvent();
+		GroupTimed temp = (GroupTimed) c.getEvent();
 		
 		toggleAllChannels();
 		c.input(c.addTimestamp("TRIG 1"));
-		c.input(c.addTimestamp("TRIG 3"));
 		System.out.println("CONSOLE # RACING: "+ temp.getRacingSize());
 		c.input(c.addTimestamp("TRIG 2", 8));
-		c.input(c.addTimestamp("TRIG 4", 3));
 		System.out.println("CONSOLE # RACING: "+ temp.getRacingSize());
-		c.input(c.addTimestamp("START2"));//warning
-		c.input(c.addTimestamp("FINISH2"));//warning
+		c.input(c.addTimestamp("START"));//warning
+		c.input(c.addTimestamp("FINISH"));//warning
 		
 		event.trigger(10);//fail
 		event.trigger(1);
-		event.trigger(3);
 		event.trigger(2);
-		event.trigger(4);
-		event.trigger(4);
 		System.out.print("EVENT # CURRENTLY RACING: "+event.getRacingSize());
 		//success
 		
@@ -129,7 +124,7 @@ public class PARGRP_test {
 		println("testRemove1Racer");
 
 		add2Racers();
-		ParallelGroupTimed temp = (ParallelGroupTimed) c.getEvent();
+		GroupTimed temp = (GroupTimed) c.getEvent();
 		System.out.println("CONSOLE # RACERS: "+ temp.getRunSize());//2
 		c.input(c.addTimestamp("CLR 1"));
 		c.input(c.addTimestamp("CLR 10"));//warning
@@ -146,7 +141,7 @@ public class PARGRP_test {
 		println("testRemove2Racer");
 
 		add2Racers();
-		ParallelGroupTimed temp = (ParallelGroupTimed) c.getEvent();
+		GroupTimed temp = (GroupTimed) c.getEvent();
 		System.out.println("CONSOLE # RACERS: "+ temp.getRunSize());//2
 		c.input(c.addTimestamp("CLR 1"));
 		c.input(c.addTimestamp("CLR 10"));//warning
@@ -170,14 +165,10 @@ public class PARGRP_test {
 		toggleAllChannels();
 		c.input(c.addTimestamp("TRIG 1"));
 		c.input(c.addTimestamp("TRIG 2"));
-		c.input(c.addTimestamp("TRIG 3"));
 		c.input(c.addTimestamp("DNF"));
-		c.input(c.addTimestamp("TRIG 4",5));
 		c.input(c.addTimestamp("PRINT"));//should have dnf on record
 		
 		event.trigger(1);
-		event.trigger(3);
-		event.trigger(4);
 		event.dnf();
 		System.out.println(event.getRecord());
 	}
@@ -218,9 +209,8 @@ public class PARGRP_test {
 
 	@Test
 	public void testToString() {
-		println("ParallelGroupTimed ==" + event.getClass().toString());
+		println("GroupTimed ==" + event.getClass().toString());
 		println("Console ==" + c.getClass().toString());
-		//			fail("Not yet implemented"); // TODO
 	}
 
 }

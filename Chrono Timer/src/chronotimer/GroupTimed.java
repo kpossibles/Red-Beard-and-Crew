@@ -166,4 +166,26 @@ public class GroupTimed extends Event {
 	@Override
 	public void swap() {
 	}
+
+	/**
+	 * Gets the run size.
+	 *
+	 * @return the run size
+	 */
+	public int getRunSize(){
+		return currentRun.size();
+	}
+
+	/**
+	 * Gets the racing size.
+	 *
+	 * @return the racing size
+	 */
+	public int getRacingSize(){
+		return unnamed.size();
+	}
+
+	public String getRecord(){
+		return print.getRecord();
+	}
 }
