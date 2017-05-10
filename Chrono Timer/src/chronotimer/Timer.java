@@ -87,12 +87,12 @@ public class Timer implements Runnable {
 	@Override
 	public void run() {
 		scheduler.scheduleAtFixedRate(addMillis, 1, 1, TimeUnit.MILLISECONDS);
-		Runnable updating = new Runnable(){
-			public void run() { 
-				String temp = getTimeString();
-//				System.out.println(temp);		    	   
-			}};
-		scheduler.scheduleAtFixedRate(updating, 0, 100, TimeUnit.MILLISECONDS);
+//		Runnable updating = new Runnable(){
+//			public void run() { 
+//				String temp = getTimeString();
+////				System.out.println(temp);		    	   
+//			}};
+//		scheduler.scheduleAtFixedRate(updating, 0, 100, TimeUnit.MILLISECONDS);
 	}
 	//testing that it's working
 //	public static void main(String[] args){

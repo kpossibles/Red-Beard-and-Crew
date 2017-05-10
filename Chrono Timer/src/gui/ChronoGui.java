@@ -47,7 +47,6 @@ public class ChronoGui extends JFrame{
 	private boolean[] sensorActive;
 	private JRadioButton s1,s2,s3,s4,s5,s6,s7,s8;
 	private SensorGui sensorGui;
-	private Thread thread;
 	private Timer timer;
 	
 	/**
@@ -200,7 +199,7 @@ public class ChronoGui extends JFrame{
 							displayText.setText(temp);
 						}
 						else{
-							debug("off");
+//							debug("off");
 							powerStatus.setBackground(Color.RED);
 							displayText.setText("");
 						}
@@ -494,7 +493,7 @@ public class ChronoGui extends JFrame{
 					offWarning();
 				} else if (tempRacer.length() > 0) {
 					if(isClearOn){
-						debug("clr " + tempRacer);
+//						debug("clr " + tempRacer);
 						sendCommand("clr " + tempRacer);
 						isClearOn = false;
 					}else if(isTimeOn){
@@ -513,11 +512,11 @@ public class ChronoGui extends JFrame{
 								break;
 							}
 						}
-						debug("sending time: " + newTime);
+//						debug("sending time: " + newTime);
 						if(!checkLetter)
 							sendCommand("TIME " + newTime);
 						else{
-							debug("YOU NEED TO SUBMIT A COMPLETE TIME! YOU SENT: "+newTime);
+//							debug("YOU NEED TO SUBMIT A COMPLETE TIME! YOU SENT: "+newTime);
 							displayText.setText("YOU NEED TO SUBMIT A COMPLETE TIME!\nYOU SENT: "+newTime);
 						}
 						isTimeOn = false;
@@ -747,7 +746,7 @@ public class ChronoGui extends JFrame{
 	 * @param command
 	 */
 	private void sendCommand(String command) {
-		debug(command);
+//		debug(command);
 		String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) + "\t" + command;
 		if (c.isOn() || command == "POWER") {
 			// TODO - it will set a time but then when you try to 
@@ -913,7 +912,7 @@ public class ChronoGui extends JFrame{
 				sensorActive[num - 1] = !sensorActive[num - 1];
 				sendCommand(String.format("CONN %s %d", s,num));
 				if(sensorGui==null){
-					sensorGui=new SensorGui(c);
+					sensorGui=new SensorGui(c,displayText);
 					System.out.println("adding "+num+" "+s);
 					sensorGui.addSensorButton(s,num);
 				}else{
@@ -927,7 +926,7 @@ public class ChronoGui extends JFrame{
 			}
 		} else { //disconnect
 			if(sensorActive[num - 1] && sensorGui!=null){
-				debug("disconnecting sensor...");
+//				debug("disconnecting sensor...");
 				sensorActive[num - 1] = !sensorActive[num - 1];
 				sendCommand(String.format("DISC %d", num));
 				System.out.println("disconnecting "+num);
@@ -1004,10 +1003,10 @@ public class ChronoGui extends JFrame{
 				menu.pressLeft();
 			}
 			if(key == KeyEvent.VK_RIGHT){
-				debug("pressed right key");
+//				debug("pressed right key");
 				
 				if(nameCommandMap.containsKey(selected)){
-					debug("contains "+selected);
+//					debug("contains "+selected);
 					String previous = "Main Menu";
 					menu = new Menu(previous, selected, nameCommandMap.get(selected));
 					displayText.setText(menu.getMenu());
@@ -1044,7 +1043,7 @@ public class ChronoGui extends JFrame{
 
 	public void menuGuiUpdate(String command) {
 		// TODO implement export
-		debug("menuGuiUpdate");
+//		debug("menuGuiUpdate");
 		String[]split = null;
 		if(command.contains(" ")){
 			split=command.split(" ");
@@ -1079,7 +1078,7 @@ public class ChronoGui extends JFrame{
 			menu = null;
 		}if(command == "NUM"){
 			String temp="PRESS NUMBERS ON THE KEYPAD TO ENTER YOUR RACER NAME! PRESS # TO SUBMIT!";
-			debug(temp);
+//			debug(temp);
 			isfcnBtnOn=false;
 			menu = null;
 			displayText.setText(temp);
@@ -1099,7 +1098,7 @@ public class ChronoGui extends JFrame{
 			String temp="PRESS NUMBERS ON THE KEYPAD TO CLEAR RACER! PRESS # TO SUBMIT!";
 			menu = null;
 			isClearOn = true;
-			debug(temp);
+//			debug(temp);
 			displayText.setText(temp);
 		}if(command == "SWAP" && c.getEventType()=="IND" && c.getRacerListSize()>=2){
 			menu = null;
@@ -1107,7 +1106,7 @@ public class ChronoGui extends JFrame{
 			String temp="SETTING: <##:##:##>";
 			menu = null;
 			isTimeOn = true;
-			debug(temp);
+//			debug(temp);
 			displayText.setText(temp);
 		}if(split!=null && (split[0].equals("EYE")||split[0].equals("PAD")||split[0].equals("GATE"))){
 			int num = Integer.valueOf(split[1]);
@@ -1128,6 +1127,13 @@ public class ChronoGui extends JFrame{
 				System.out.println(num + " is already disconnected!");
 //				isfcnBtnOn=false;
 				displayText.setText(num + " is already disconnected!");
+			}if(command.equals("NEWRUN")){
+				isfcnBtnOn=false;
+				displayText.setText("NEW RUN CREATED");
+			}if(command.equals("ENDRUN")){
+				isfcnBtnOn=false;
+				displayText.setText("RUN ENDED");
+				
 			}
 		}
 	}
@@ -1252,6 +1258,10 @@ public class ChronoGui extends JFrame{
 
 	private void debug(String str) {
 		System.out.println("DEBUG: " + str);
+	}
+	
+	public void setDisplay(String str){
+		displayText.setText(str);
 	}
 
 	/**

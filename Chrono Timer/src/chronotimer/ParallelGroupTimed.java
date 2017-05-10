@@ -152,6 +152,7 @@ public class ParallelGroupTimed extends Event {
 			print.print(String.format("Racer %d\t%s", racer.getId(), racer.getFinishTime()));
 			print.print(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
 			racing.remove(racer);
+			channelMode[racer.getId()] = "START"+racer.getId();
 		}
 		else
 			print.print(String.format("No racer queued to finish in lane %d.", lane));

@@ -95,21 +95,25 @@ public class PARGRP_test {
 		
 		toggleAllChannels();
 		c.input(c.addTimestamp("TRIG 1"));
-		c.input(c.addTimestamp("TRIG 3"));
+//		c.input(c.addTimestamp("TRIG 3"));
 		System.out.println("CONSOLE # RACING: "+ temp.getRacingSize());
+		assertEquals(temp.getRacingSize(),2);
+		c.input(c.addTimestamp("TRIG 1", 2));
 		c.input(c.addTimestamp("TRIG 2", 8));
-		c.input(c.addTimestamp("TRIG 4", 3));
+		c.input(c.addTimestamp("TRIG 4", 3));//warning
 		System.out.println("CONSOLE # RACING: "+ temp.getRacingSize());
 		c.input(c.addTimestamp("START2"));//warning
 		c.input(c.addTimestamp("FINISH2"));//warning
 		
 		event.trigger(10);//fail
 		event.trigger(1);
-		event.trigger(3);
+		assertEquals(event.getRacingSize(),2);
+		event.trigger(3);//warning
 		event.trigger(2);
-		event.trigger(4);
-		event.trigger(4);
+		event.trigger(1);
+		event.trigger(4);//warning
 		System.out.print("EVENT # CURRENTLY RACING: "+event.getRacingSize());
+		assertEquals(event.getRacingSize(),1);
 		//success
 		
 		

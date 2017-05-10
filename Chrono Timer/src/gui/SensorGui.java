@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 
 import chronotimer.Console;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +15,7 @@ import javax.swing.border.EtchedBorder;
 public class SensorGui extends JFrame{
 	private JPanel p1,p2,p3,p4,p5,p6,p7,p8;
 	private Console mainGui;
+	private JTextArea display;
 	
 	/**
 	 * Instantiates a new sensor gui Jframe (popup).
@@ -26,8 +29,9 @@ public class SensorGui extends JFrame{
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
-	public SensorGui(Console c) {
+	public SensorGui(Console c, JTextArea displayText) {
 		mainGui = c;
+		display = displayText;
 		setSize(500, 500);
 		setTitle("Sensors");
 		setupGUI();
@@ -100,7 +104,6 @@ public class SensorGui extends JFrame{
 		JButton sensor = new JButton("Sensor "+i+", "+type);
 		sensor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Sensor "+i+" pressed!");
 				mainGui.input(mainGui.addTimestamp("TRIG "+i));
 			}
 		});
@@ -130,12 +133,13 @@ public class SensorGui extends JFrame{
 				p8.add(sensor);
 				break;
 		}
+		display.setText("SENSOR: Added Sensor " + type +" "+i);
 		revalidate();
 		
 	}
 
 	public void removeSensorButton(int i){
-		System.out.println("SENSOR: Disconnecting sensor "+i);
+		display.setText("SENSOR: Disconnecting sensor "+i);
 		switch(i){
 			case 1:
 				p1.removeAll();
