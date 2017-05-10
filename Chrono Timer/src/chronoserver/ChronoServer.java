@@ -7,10 +7,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-import java.awt.Image;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -35,6 +33,8 @@ import javax.imageio.ImageIO;
  */
 public class ChronoServer {
     private Map<Integer, String> NumNameMap;
+    private int refreshTime=5;
+    
     public ChronoServer () throws IOException {
         // set up a simple HTTP server on our local host
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
@@ -72,7 +72,7 @@ public class ChronoServer {
 
             //set up content
             htmlStringBuilder.append("<html><head><title>Race Results</title>");
-            htmlStringBuilder.append("<meta http-equiv=\"refresh\" content=\"10\">");
+            htmlStringBuilder.append("<meta http-equiv=\"refresh\" content=\""+refreshTime+"\">");
             htmlStringBuilder.append("<link href=\"https://fonts.googleapis.com/css?family=Scope+One\" rel=\"stylesheet\">");
             htmlStringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head>");
             htmlStringBuilder.append("<body><div class=\"wrapper\">");
@@ -84,12 +84,20 @@ public class ChronoServer {
                     + "<th><b>Name</b></th>"
                     + "<th><b>Time</b></th>");
             //append with content from directory
-            try{
-            	racerToHtml(htmlStringBuilder);
-            } catch(Exception e){
+            boolean clientActive = racerToHtml(htmlStringBuilder);
+            if(!clientActive){
+            	htmlStringBuilder.append("<tr class=\"light\"><td>---</td><td>---</td><td>---</td><td>---</td></tr>");
             }
             //close html file
-            htmlStringBuilder.append("</table><div></body></html>");
+            htmlStringBuilder.append("</table>");
+            if(!clientActive){
+            	htmlStringBuilder.append("<h2>Client is not active!</h2>");
+            	htmlStringBuilder.append("<h3>Press refresh to get the most recent additions and results.</h3>");
+            	refreshTime=100;
+            }else{
+            	refreshTime=5;
+            }
+            htmlStringBuilder.append("<div></body></html>");
             response+=htmlStringBuilder.toString();
 
 //			System.out.println(response);
@@ -102,7 +110,7 @@ public class ChronoServer {
             os.close();
         }
 
-        private void racerToHtml(StringBuilder htmlStringBuilder) {
+        private boolean racerToHtml(StringBuilder htmlStringBuilder) {
             ArrayList<chronotimer.Racer> racers = new ArrayList<>();
             try {
                 // Connect to the Chronotimer Server
@@ -139,8 +147,10 @@ public class ChronoServer {
                     racers.add(r);
                 }
             } catch(MalformedURLException e){
+            	return false;
 //                e.printStackTrace();
             } catch(IOException e){
+            	return false;
 //                e.printStackTrace();
             }
 
@@ -189,6 +199,7 @@ public class ChronoServer {
 
                 htmlStringBuilder.append(res);
             }
+            return true;
         }
     }
 
@@ -230,7 +241,7 @@ public class ChronoServer {
 
     public static void main(String[] args){
         try {
-            ChronoServer server = new ChronoServer();
+            new ChronoServer();
             System.out.println("ChronoServer IS ON!!!");
         }
         catch(IOException e){

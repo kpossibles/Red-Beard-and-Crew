@@ -35,7 +35,7 @@ public class Console
 	}
 	
 	/**
-	 * Adds the timestamp.
+	 * Adds the timestamp for JUnit testing.
 	 *
 	 * @param s the s
 	 * @return the string
@@ -49,6 +49,13 @@ public class Console
 		return s;
 	}
 	
+	/**
+	 * Adds the timestamp for JUnit testing.
+	 *
+	 * @param s the s
+	 * @param i the i
+	 * @return the string
+	 */
 	public String addTimestamp(String s, int i){
 		String temp = chronotimer.getTimer().getTimeString();
 		int sec = Integer.valueOf(temp.substring(6,temp.length()-2))+i;

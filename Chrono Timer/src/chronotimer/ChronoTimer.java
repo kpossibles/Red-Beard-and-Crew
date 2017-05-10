@@ -1,5 +1,4 @@
 package chronotimer;
-import chronoserver.ChronoServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -56,8 +55,8 @@ public class ChronoTimer  {
 			channels[i] = new Channel(this, i+1);
 		}
 		runs = new LinkedList<Run>();
-		runs.add(new Run(1));
-		event.setRun(runs.getFirst());
+//		runs.add(new Run(1));
+//		event.setRun(runs.getFirst());
 	}
 
 	/**
@@ -184,7 +183,7 @@ public class ChronoTimer  {
 	 * @return true, if successful
 	 */
 	public boolean runExist() {
-		if(runs.getLast().isActive())
+		if(runs.size()>0 && runs.getLast().isActive())
 			return true;
 		return false;
 	}
@@ -258,7 +257,7 @@ public class ChronoTimer  {
 		String q = "", r="", f="";
 		Run run = runs.peek();
 		
-		if(!run.isEmpty()){
+		if(run!=null && !run.isEmpty()){
 			int j=0;
 			for(int i=0; i<run.size(); i++){
 				if(i>run.size()-1)
@@ -303,19 +302,24 @@ public class ChronoTimer  {
 					break;
 				Racer racer = run.getRacers().get(i);
 				
-				if(racer.getStart()==0 && j<3){
-					q+=(racer.getId()+" Q\n");
+				if(racer.getStart()==0){
+					if((event.getType()=="IND" && j<3) || event.getType()=="PARGRP" || 
+							(event.getType()=="PARIND" && j<3) || (event.getType()=="PARGRP" &&j<1))
+						q+=(racer.getId()+" Q\n");
 					j++;
 				}
 				if(racer.getStart()>0 && racer.getFinish()==0){
 					if(racer.DNF())
-						f+=(racer.getId()+"  "+" DNF\n");
-					else
-						r+=(racer.getId()+"  "+racer.getStartTime()+" R\n");
+						f+=(racer.getId()+" "+" DNF\n");
+					else{
+						long timeDifference = timer.getTime()-racer.getStart();
+						r+=(racer.getId()+" "+"00:"+timer.convertToTime(timeDifference).substring(3)+" R\n");
+					}
+						
 				}
 			}
 			if(run.getLast()!=null)
-				f+=(run.getLast().getId()+"  "+run.getLast().getTime()+" F\n");
+				f+=(run.getLast().getId()+" "+run.getLast().getTime()+" F\n");
 			
 			// update display textbox with queue, racing, and finish
 			if(q==""){
@@ -338,7 +342,8 @@ public class ChronoTimer  {
 	public ArrayList<Racer> getRacers(){
 		if(runExist())
 			return runs.getLast().getRacers();
-		return new ArrayList<Racer>();
+		else
+			return null;
 	}
 
 	/**

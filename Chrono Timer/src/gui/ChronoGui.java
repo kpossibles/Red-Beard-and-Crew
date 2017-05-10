@@ -171,7 +171,6 @@ public class ChronoGui extends JFrame{
 					public void actionPerformed(ActionEvent e) {
 						sendCommand("POWER");
 						if (c.isOn()) {
-							sendCommand("NEWRUN");
 							powerStatus.setBackground(Color.GREEN);
 							// custom welcome screen
 							String temp="WELCOME TO CHRONOTIMER 1009!";
@@ -182,10 +181,12 @@ public class ChronoGui extends JFrame{
 									if (isfcnBtnOn==false)
 									{
 										boolean check=false;
-										for(Racer r: c.getRacers()){
-											if(r.getStart()>0)
-												check=true;
-												break;
+										if(c.getRacers()!=null){
+											for(Racer r: c.getRacers()){
+												if(r.getStart()>0)
+													check=true;
+													break;
+											}
 										}
 										if(check)
 											displayText.setText(c.getDisplayText());

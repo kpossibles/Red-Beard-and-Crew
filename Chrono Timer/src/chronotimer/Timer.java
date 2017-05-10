@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.concurrent.*;
 
 /**
- * The Class Timer.
+ * The Class Timed.
  *
  * @author Red Beard & Crew
  */
@@ -76,6 +76,13 @@ public class Timer implements Runnable {
 		return time.substring(0,10);
 //		return time;
 	}
+	
+	public String convertToTime(long timeDifference){
+		Date date = new Date(timeDifference);
+		SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss.S");
+		String time = localDateFormat.format(date);
+		return time.substring(0,10);
+	}
 
 	@Override
 	public void run() {
@@ -88,10 +95,10 @@ public class Timer implements Runnable {
 		scheduler.scheduleAtFixedRate(updating, 0, 100, TimeUnit.MILLISECONDS);
 	}
 	//testing that it's working
-	public static void main(String[] args){
-		Timer test = new Timer();
-		test.run();
-		
-		
-	}
+//	public static void main(String[] args){
+//		Timed test = new Timed();
+//		test.run();
+//		
+//		
+//	}
 }
