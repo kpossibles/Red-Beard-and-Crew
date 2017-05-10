@@ -2,17 +2,14 @@ package gui;
 
 public class Command {
 	private final String name;
-	private final String selectName;
 	private boolean selected;
 	
 	public Command(String name){
 		this.name = name;
-		selectName = "> "+name;
 	}
 	
 	public Command(String name, boolean selected){
 		this.name = name;
-		selectName = "> "+name;
 		this.selected = selected;
 	}
 
@@ -21,7 +18,7 @@ public class Command {
 	}
 	
 	public String getSelectName() {
-		return selectName;
+		return "> " + name;
 	}
 
 	public boolean isSelected() {
@@ -30,7 +27,7 @@ public class Command {
 
 	public String setSelected(boolean selected) {
 		this.selected = selected;
-		return selectName;
+		return "> " + name;
 	}
 	
 	/* 
@@ -38,7 +35,7 @@ public class Command {
 	 */
 	@Override
 	public String toString(){
-		return selected ? selectName : name;
+		return selected ? "> " + name : name;
 		
 	}
 	

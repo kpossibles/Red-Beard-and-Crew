@@ -7,7 +7,10 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import java.awt.Image;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -16,10 +19,14 @@ import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
+
+import javax.imageio.ImageIO;
 
 /**
  * Created by Evan on 5/6/2017.
@@ -37,6 +44,9 @@ public class ChronoServer {
 
 		// create a context to get the request to display the results
 		server.createContext("/style.css", new cssHandler());
+		
+		// create a context to get the request to display the results
+		server.createContext("/bgd.png", new imageHandler());
 
         server.start();
 
@@ -62,21 +72,24 @@ public class ChronoServer {
 
             //set up content
             htmlStringBuilder.append("<html><head><title>Race Results</title>");
-            htmlStringBuilder.append("<meta http-equiv=\"refresh\" content=\"1\">");
+            htmlStringBuilder.append("<meta http-equiv=\"refresh\" content=\"10\">");
+            htmlStringBuilder.append("<link href=\"https://fonts.googleapis.com/css?family=Scope+One\" rel=\"stylesheet\">");
             htmlStringBuilder.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\"></head>");
-            htmlStringBuilder.append("<body>");
+            htmlStringBuilder.append("<body><div class=\"wrapper\">");
             htmlStringBuilder.append("<h1>Race Results</h1>");
-            htmlStringBuilder.append("<table>");
+            htmlStringBuilder.append("<table class=\"center\">");
             //append row: Attributes
             htmlStringBuilder.append("<tr class=\"header\"><th><b>Place</b></th>"
                     + "<th><b>Number</b></th>"
                     + "<th><b>Name</b></th>"
                     + "<th><b>Time</b></th>");
             //append with content from directory
-            racerToHtml(htmlStringBuilder);
-
+            try{
+            	racerToHtml(htmlStringBuilder);
+            } catch(Exception e){
+            }
             //close html file
-            htmlStringBuilder.append("</table></body></html>");
+            htmlStringBuilder.append("</table><div></body></html>");
             response+=htmlStringBuilder.toString();
 
 //			System.out.println(response);
@@ -126,9 +139,9 @@ public class ChronoServer {
                     racers.add(r);
                 }
             } catch(MalformedURLException e){
-                e.printStackTrace();
+//                e.printStackTrace();
             } catch(IOException e){
-                e.printStackTrace();
+//                e.printStackTrace();
             }
 
             // First, sort the racers in a new list based on place.
@@ -182,15 +195,35 @@ public class ChronoServer {
     public class cssHandler implements HttpHandler{
         @Override
         public void handle(HttpExchange t) throws IOException {
-            String response=".tg {border-collapse:collapse;border-spacing:0;}"
-                    +"table, th, td {border: 1px solid black;font-family:Arial, sans-serif;font-size:14px;}"
-                    +".header{background-color:#333333;color:white;}"
-                    +".dark{background-color: #E0E0E0;color:black;}"
-                    +".light{background-color: white;color:black;}";
+        	File css = new File("style.css"); // load a css file
+        	Scanner in = new Scanner(css);
+			String response = "";
+			while(in.hasNextLine()) {
+				response += in.nextLine();
+			}
+			in.close();
 
             t.sendResponseHeaders(200, response.length());
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());
+            os.close();
+        }
+    }
+    
+    public class imageHandler implements HttpHandler{
+        @Override
+        public void handle(HttpExchange t) throws IOException {
+        	File file = new File("bgd.png"); // load an image
+        	Scanner in = new Scanner(file);
+			String response = "";
+			while(in.hasNextLine()) {
+				response += in.nextLine();
+			}
+			in.close();
+			
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            Files.copy(file.toPath(), os);
             os.close();
         }
     }
