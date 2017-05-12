@@ -14,13 +14,7 @@ public class IndividualTimed extends Event {
 	//end event is fifo for racers association.  
 	//for each event handle the response in the Chronotimer.  
 	//Should be able to detect a start, a finish (with times) and calculate the total time for a race, DNF is possible.
-		/** This is a list of the racers who are actively racing. */
-		Queue<Racer> racing;
-		/** The run stores all racers who have ever raced and who are planned to race. */
-		Run currentRun; 
-		String channelMode[];
-		Timer timer;
-		Printer printer;
+		
 		Racer started = null, racer;
 		
 		/**

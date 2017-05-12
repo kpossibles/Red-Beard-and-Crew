@@ -1,7 +1,6 @@
 package chronotimer;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * The Class ParallelGroupTimed.
@@ -9,11 +8,6 @@ import java.util.Queue;
  * @author Red Beard & Crew
  */
 public class ParallelGroupTimed extends Event {
-	private ArrayList<Racer> racing;
-	private Run currentRun;
-	private String channelMode[];
-	private Timer timer;
-	private Printer printer;
 	
 	/**
 	 * Instantiates a new parallel group timed with a new Timer and Printer
@@ -22,7 +16,7 @@ public class ParallelGroupTimed extends Event {
 	 * @param _print the printer
 	 */
 	public ParallelGroupTimed(){
-		racing = new ArrayList<>();
+		racing = new LinkedList<>();
 		timer = new Timer();
 		printer = new Printer();
 		channelMode = new String[8];
@@ -38,7 +32,7 @@ public class ParallelGroupTimed extends Event {
 	 * @param _print the printer
 	 */
 	public ParallelGroupTimed(Timer _timer, Printer _print){
-		racing = new ArrayList<>();
+		racing = new LinkedList<>();
 		timer = _timer;
 		printer = _print;
 		channelMode = new String[8];
@@ -71,14 +65,14 @@ public class ParallelGroupTimed extends Event {
 	@Override
 	public void cancel() {
 		// TODO check if working correctly -KP
-		racing.get(0).reset();
+		racing.peek().reset();
 		printer.feedback("Start was not valid. Racer will retry.");
 	}
 
 	@Override
 	public void didNotFinish() {
 		// TODO check if working correctly -KP
-		Racer racer = racing.get(0);
+		Racer racer = racing.poll();
 		if (racer != null && racer.getStart() != 0){
 			racer.didNotFinish();
 			currentRun.getRacer(racer.getId()).didNotFinish();

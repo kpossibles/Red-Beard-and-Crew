@@ -8,11 +8,6 @@ import java.util.Queue;
  * @author Red Beard & Crew
  */
 public class ParallelTimed extends Event {
-	private Queue<Racer> racing;
-	private Run currentRun;
-	private String channelMode[];
-	private Timer timer;
-	private Printer printer;
 
 	/**
 	 * Instantiates a new parallel timed with a new Timer and Printer

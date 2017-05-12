@@ -8,11 +8,7 @@ import java.util.Queue;
  * @author Red Beard & Crew
  */
 public class GroupTimed extends Event {
-	private Queue<Racer> unnamed;
-	private Run currentRun;
-	private String channelMode[];
-	private Timer timer;
-	private Printer printer;
+	
 	private long startTime;
 	private int raceCount;
 
@@ -87,7 +83,7 @@ public class GroupTimed extends Event {
 				finishedRacer.setStart(startTime);
 				finishedRacer.setFinish(timer.getTime());
 				currentRun.add(finishedRacer);
-				unnamed.add(finishedRacer);
+				racing.add(finishedRacer);
 				printer.feedback(String.format("Racer %05d has finished at %s.", raceCount, timer.getTimeString()));
 				printer.feedback(String.format("Racer %05d's time was %s. ", raceCount, finishedRacer.getTime()));
 			} else {
@@ -124,7 +120,7 @@ public class GroupTimed extends Event {
 			finishedRacer.setStart(startTime);
 			finishedRacer.didNotFinish();
 			currentRun.add(finishedRacer);
-			unnamed.add(finishedRacer);
+			racing.add(finishedRacer);
 			printer.feedback(String.format("Racer %1$05d did not finish.", raceCount));
 		} else {
 			printer.feedback("The current run is already complete or no run has been started.");
@@ -135,15 +131,15 @@ public class GroupTimed extends Event {
 	public void setRun(Run _run) {
 		startTime = 0;
 		raceCount = 0;
-		unnamed = new LinkedList<>();
+		racing = new LinkedList<>();
 		currentRun = _run;
 		printer.feedback(String.format("Run %1$02d started.", _run.getId()));
 	}
 
 	@Override
 	public void addRacer(int r) {
-		if (unnamed.size() > 0){
-			Racer toUpdate = unnamed.poll();
+		if (racing.size() > 0){
+			Racer toUpdate = racing.poll();
 			int oldNumber = toUpdate.getId();
 			toUpdate.setId(r);
 			printer.feedback(String.format("Racer %1$05d was renamed to %2$05d.", oldNumber, r));
@@ -182,7 +178,7 @@ public class GroupTimed extends Event {
 	 * @return the racing size
 	 */
 	public int getRacingSize(){
-		return unnamed.size();
+		return racing.size();
 	}
 	
 	/**

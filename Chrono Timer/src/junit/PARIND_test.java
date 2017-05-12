@@ -15,6 +15,7 @@ public class PARIND_test {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		new TC00(); //run basic test
 		c = new ChronoTimer();
 		c.setOn(true);
 		c.input(c.addTimestamp("POWER"));
@@ -22,11 +23,18 @@ public class PARIND_test {
 	
 	@Before
 	public void setUpBeforeEach() throws Exception {
-		c.addTimestamp("RESET");
+		c.input(c.addTimestamp("RESET"));
 		c.setOn(true);
 		c.input(c.addTimestamp("EVENT PARIND"));
+		c.input(c.addTimestamp("tog 1"));
+		c.input(c.addTimestamp("tog 2"));
+		c.input(c.addTimestamp("tog 3"));
+		c.input(c.addTimestamp("tog 4"));
+		for(int i=1; i<=4;i++){
+			assertEquals(c.isChannelActive(i),true);
+		}
 		
-		System.out.println("\n============");
+		System.out.println("\n============\n");
 		System.out.println("EVENT: "+c.getEventType());
 	}
 	
@@ -38,44 +46,28 @@ public class PARIND_test {
 	private void add2Racers(){
 		c.input(c.addTimestamp("NUM 1"));
 		c.input(c.addTimestamp("NUM 2"));
+		assertEquals(c.getRacerListSize(), 2);
 	}
-	private void toggleAllChannels(){
-		c.input(c.addTimestamp("tog 1"));
-		c.input(c.addTimestamp("tog 2"));
-		c.input(c.addTimestamp("tog 3"));
-		c.input(c.addTimestamp("tog 4"));
-	}
+	
 	@Test
-	public void testNewRun() {
-		c.input(c.addTimestamp("NEWRUN"));
-	}
-	@Test
-	public void testAddRacer() {
-		println("testAddRacer");
+	public void testAdd1Racer() {
+		println("testAdd1Racer");
 		
 		c.input(c.addTimestamp("NUM 1"));
 		ParallelTimed temp = (ParallelTimed) c.getEvent();
 		assertEquals(temp.getRunSize(),1);
 		assertFalse(temp.getRunSize()==0);
-		
 	}
 	
 	@Test
 	public void testAdd2Racer() {
 		println("testAdd2Racer");
 		
-		c.input(c.addTimestamp("NUM 1"));
-		c.input(c.addTimestamp("NUM 2"));
+		add2Racers();
 		ParallelTimed temp = (ParallelTimed) c.getEvent();
 		assertEquals(temp.getRunSize(),2);
 		assertTrue(temp.getRunSize()>0);
 		
-	}
-
-	@Test
-	public void testGetType() {
-		println("testGetType");
-		System.out.println("CONSOLE - TYPE: "+c.getEventType());
 	}
 
 	/**
@@ -84,15 +76,15 @@ public class PARIND_test {
 	@Test
 	public void testTrigger() {
 		println("testTrigger");
-		add2Racers();
 		
 		c.input(c.addTimestamp("TRIG 1"));//warning
 		c.input(c.addTimestamp("START"));//warning
 		c.input(c.addTimestamp("FINISH"));//warning
-
+		
 		ParallelTimed temp = (ParallelTimed) c.getEvent();
 		assertEquals(temp.getRacingSize(),0);
-		toggleAllChannels();
+		add2Racers();
+		assertEquals(temp.getRacingSize(),2);
 		c.input(c.addTimestamp("TRIG 1"));
 		c.input(c.addTimestamp("TRIG 3"));
 		assertEquals(temp.getRacingSize(),2);
@@ -104,12 +96,16 @@ public class PARIND_test {
 	}
 
 	@Test
-	public void testDiscard() {
+	public void testCancel() {
 		add2Racers();
 		c.input(c.addTimestamp("tog 1"));
 		c.input(c.addTimestamp("tog 2"));
 		c.input(c.addTimestamp("tog 3"));
 		c.input(c.addTimestamp("tog 4"));
+		c.input(c.addTimestamp("trig 1"));
+		c.input(c.addTimestamp("CANCEL"));
+		ParallelTimed temp = (ParallelTimed) c.getEvent();
+		assertEquals(temp.getRunSize(),2);
 	}
 
 	@Test
@@ -142,7 +138,6 @@ public class PARIND_test {
 	@Test
 	public void testDnf() {
 		add2Racers();
-		toggleAllChannels();
 		c.input(c.addTimestamp("TRIG 1"));
 		c.input(c.addTimestamp("TRIG 3"));
 		c.input(c.addTimestamp("DNF"));
@@ -163,10 +158,10 @@ public class PARIND_test {
 
 	@Test
 	public void testSetTimer() {
-//		fail("Not yet implemented"); // TODO
-		Timer temp = new Timer();
-		temp.setTime("11:11:11.1");
-		assertEquals(temp.getTimeString(), "11:11:11.1");
+		c.input(c.addTimestamp("TIME 11:11:11.1"));
+		assertEquals(c.getTime(),"11:11:11.1");
+		c.input(c.addTimestamp("TIME 99:99:99.9"));
+		assertEquals(c.getTime(),"11:11:11.1");
 	}
 
 	@Test

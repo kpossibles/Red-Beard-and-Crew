@@ -389,7 +389,7 @@ public class ChronoTimer  {
 	/**
 	 * Checks if is channel active.
 	 *
-	 * @param i the i
+	 * @param i the channel lane number (1-8)
 	 * @return true, if is channel active
 	 */
 	public boolean isChannelActive(int i) {
@@ -458,7 +458,7 @@ public class ChronoTimer  {
 	 */
 	
 	/**
-	 * Adds the timestamp.
+	 * Adds the timestamp for JUnit testing.
 	 *
 	 * @param s the s
 	 * @return the string

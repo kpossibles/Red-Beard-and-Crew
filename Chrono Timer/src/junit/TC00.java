@@ -1,0 +1,70 @@
+package junit;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import chronotimer.ChronoTimer;
+
+/**
+ * The Class TC00 - basic testing for general console commands
+ */
+public class TC00 {
+	static ChronoTimer c;
+	static int junit_counter=1;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		c = new ChronoTimer();
+		System.out.println("EVENT: "+c.getEventType());
+		System.out.println("============");
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		System.out.println(String.format("\nTC00_%02d", junit_counter++));
+		System.out.println("============");
+	}
+	
+	private void basicSetup(){
+		c.input(c.addTimestamp("POWER"));
+		c.input(c.addTimestamp("RESET"));
+		c.setOn(true);
+		c.input(c.addTimestamp("tog 1"));
+		c.input(c.addTimestamp("tog 2"));
+		assertEquals(c.isChannelActive(1),true);
+		assertEquals(c.isChannelActive(2),true);
+	}
+
+	@Test
+	public void TC00_01() {
+		c.input(c.addTimestamp("POWER"));
+		assertEquals(c.isOn(),true);
+		assertEquals(c.getEventType(),"IND");
+		c.input(c.addTimestamp("POWER"));
+		assertEquals(c.isOn(),false);
+		c.input(c.addTimestamp("POWER"));
+		assertEquals(c.isOn(),true);
+		assertEquals(c.getEventType(),"IND");
+	}
+	
+	@Test
+	public void TC00_02() {
+		c.input(c.addTimestamp("POWER"));
+		c.input(c.addTimestamp("TRIG 1"));//warning
+		assertFalse(c.isChannelActive(1));
+	}
+	
+	@Test
+	public void TC00_03() {
+		basicSetup();
+	}
+	
+	@Test
+	public void TC00_04() {
+		basicSetup();
+	}
+
+}

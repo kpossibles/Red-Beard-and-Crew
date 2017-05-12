@@ -33,13 +33,6 @@ public class Exporter extends ChronoTimer{
 	        for(Racer racer:run.getRacers()){
 	        	mainRootElement.appendChild(getRacer(doc, racer));
 	        }
-	
-	        // output DOM XML to console 
-//	        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-//	        transformer.setOutputProperty(OutputKeys.INDENT, "yes"); 
-//	        DOMSource source = new DOMSource(doc);
-//	        StreamResult console = new StreamResult(System.out);
-//	        transformer.transform(source, console);
 	        
 	        // write the content into xml file
 			Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -49,10 +42,10 @@ public class Exporter extends ChronoTimer{
 			StreamResult result = new StreamResult(new File("usb/"+filename));
 
 			// Output to console for testing
-			 StreamResult testresult = new StreamResult(System.out);
+//			 StreamResult testresult = new StreamResult(System.out);
 
 			transformer.transform(src, result);
-			transformer.transform(src, testresult);
+//			transformer.transform(src, testresult);
 
 			System.out.println("File saved!");
 	        System.out.println("\nXML DOM Created Successfully.");

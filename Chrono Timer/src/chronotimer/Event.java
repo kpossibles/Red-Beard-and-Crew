@@ -1,5 +1,7 @@
 package chronotimer;
 
+import java.util.Queue;
+
 //import java.util.*;
 
 /**
@@ -8,6 +10,11 @@ package chronotimer;
  * @author Red Beard & Crew
  */
 public abstract class Event {
+	protected Queue<Racer> racing;
+	protected Run currentRun;
+	protected String channelMode[];
+	protected Timer timer;
+	protected Printer printer;
 	
 	/**
 	 * Adds the racer.
