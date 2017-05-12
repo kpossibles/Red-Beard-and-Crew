@@ -131,7 +131,14 @@ public class Racer {
 	 * @return the finish time
 	 */
 	public String getFinishTime(){
-		return didNotFinish ? "DNF" : convertToTime(finish-start);
+		if(didNotFinish)
+			return "DNF";
+		else{
+			Timer temp = new Timer(finish);
+			temp.getTimeString();
+			String time = temp.getTimeString();
+			return time;
+		}
 	}
 	
 	/**
@@ -169,7 +176,7 @@ public class Racer {
 	}
 	
 	/**
-	 * Did not finish.
+	 * Marks racer as did not finish.
 	 */
 	public void didNotFinish() {
 		didNotFinish = true;
@@ -192,5 +199,13 @@ public class Racer {
 	 */
 	public int getId() {
 		return id;
+	}
+	/**
+	 * Customized - gets the Racer.
+	 *
+	 * @return the Racer in formatted form
+	 */
+	public String toString(){
+		return String.format("%d\t|| %s\t|| %s\t|| %s\t", id, getStartTime(), getFinishTime(), getTime());
 	}
 }

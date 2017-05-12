@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Run_001>
+<Racer id="001_lane00">
+<Racer>100</Racer>
+<Start>02:45:25.9</Start>
+<Finish>02:45:30.2</Finish>
+<Total_Time>00:00:04.2</Total_Time>
+</Racer>
+<Racer id="001_lane00">
+<Racer>200</Racer>
+<Start>02:45:26.8</Start>
+<Finish>02:45:31.5</Finish>
+<Total_Time>00:00:04.7</Total_Time>
+</Racer>
+<Racer id="001_lane00">
+<Racer>300</Racer>
+<Start>02:45:27.9</Start>
+<Finish>02:45:32.5</Finish>
+<Total_Time>00:00:04.6</Total_Time>
+</Racer>
+<Racer id="001_lane00">
+<Racer>400</Racer>
+<Start>02:45:28.8</Start>
+<Finish>02:45:33.6</Finish>
+<Total_Time>00:00:04.7</Total_Time>
+</Racer>
+</Run_001>

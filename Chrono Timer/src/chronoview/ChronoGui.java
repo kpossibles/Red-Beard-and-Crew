@@ -1,23 +1,21 @@
-package gui;
+package chronoview;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.swing.*;
-
-import chronotimer.Console;
-import chronotimer.Printer;
-import chronotimer.Racer;
-
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
+
+import chronotimer.ChronoTimer;
+import chronotimer.Printer;
+import chronotimer.Racer;
 
 /**
  * The Class ChronoGui.
@@ -27,11 +25,14 @@ import javax.swing.border.EtchedBorder;
 @SuppressWarnings("serial")
 public class ChronoGui extends JFrame{
 	private Map<String, ArrayList<String>> nameCommandMap;
-	private Console c;
-	private Printer p;
+	private ChronoTimer console;
+	private Printer printer;
+	private Menu menu;
+	private SensorGui sensorGui;
+	private Timer timer;
 	private JRadioButton radioChannel1, radioChannel3, radioChannel5, radioChannel7, radioChannel2, radioChannel4,
-			radioChannel6, radioChannel8;
-	private JTextArea displayText, printerText;
+			radioChannel6, radioChannel8, s1, s2, s3, s4, s5, s6, s7, s8;
+	private JTextArea displayView, printerView;
 	private JLabel labelLegend, enable01, enable02, lblStart, lblFinish;
 	private JButton buttonPower, buttonFunction, buttonEndRun, buttonSwap, printPower, button1, button2, button3,
 			button4, button5, button6, button7, button8, button9, buttonStar, button0, buttonPound, buttonTrigger1,
@@ -41,26 +42,30 @@ public class ChronoGui extends JFrame{
 			rPanel1, rPanel2, keypad, navPanel, powerStatus, sensorChannels, backPanel;
 	private String tempRacer = "", offWarning = "The Chronotimer is currently off.\nTry 'POWER' to turn it on.";
 	private JScrollPane scroll, scroll2;
-	private boolean isfcnBtnOn, isClearOn, isTimeOn;
-	private static final int WIN_HEIGHT = 650;
-	private Menu menu;
+	private boolean isfcnBtnOn, isClearOn, isTimeOn, isPrintOn;
 	private boolean[] sensorActive;
-	private JRadioButton s1,s2,s3,s4,s5,s6,s7,s8;
-	private SensorGui sensorGui;
-	private Timer timer;
+	private static final int WIN_HEIGHT = 650;
+	
 	
 	/**
-	 * Instantiates a new Chronotimer GUI.
+	 * Instantiates a new ChronoTimer GUI.
 	 */
 	public ChronoGui() {
 		getContentPane().setBackground(new Color(51, 153, 204));
-		c = new Console();
-		p = new Printer();
+		
 		setTitle("ChronoTimer 1009");
 		setupGUI();
 		setVisible(true);
+		try {
+			printer = new Printer(displayView, printerView);
+			console = new ChronoTimer(printer, displayView);
+		} catch (IOException e) {
+			debug("CHRONOTIMER COULD NOT BE CREATED");
+		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
+
+		System.out.println("ChronoTimer 1009 Application has started.");
 	}
 	
 	/**
@@ -110,8 +115,6 @@ public class ChronoGui extends JFrame{
 		nameCommandMap.put("TIME", value);
 	}
 
-
-
 	/**
 	 * Setup Left panel.
 	 */
@@ -146,7 +149,14 @@ public class ChronoGui extends JFrame{
 		buttonSwap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sendCommand("SWAP");
+				if(console.getEventType()!="IND"){
+					displayView.setText("ERROR: WRONG EVENT TYPE.\nCAN ONLY SWAP WITH IND.");
+				}
+				if(!console.runExist() && console.getEventType()=="IND"){
+					displayView.setText("ERROR: CANNOT SWAP.");
+				}else{
+					sendCommand("SWAP");
+				}
 			}
 		});
 
@@ -156,57 +166,57 @@ public class ChronoGui extends JFrame{
 		buttonEndRun.setBounds(12, 397, 175, 50);
 		lPanel.add(buttonEndRun);
 		
-				buttonPower = new JButton("Power");
-				buttonPower.setBounds(12, 26, 125, 50);
-				lPanel.add(buttonPower);
-				
-				powerStatus = new JPanel();
-				powerStatus.setBounds(155, 38, 25, 25);
-				lPanel.add(powerStatus);
-				powerStatus.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-				powerStatus.setBackground(Color.RED);
-				buttonPower.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						sendCommand("POWER");
-						if (c.isOn()) {
-							powerStatus.setBackground(Color.GREEN);
-							// custom welcome screen
-							String temp="WELCOME TO CHRONOTIMER 1009!";
-							//set action listener for display text box to update at set time.
-							// TODO - James needs to check that this works!!!
-							ActionListener task = new ActionListener() {
-								public void actionPerformed(ActionEvent evt) {
-									if (isfcnBtnOn==false)
-									{
-										boolean check=false;
-										if(c.getRacers()!=null){
-											for(Racer r: c.getRacers()){
-												if(r.getStart()>0)
-													check=true;
-													break;
-											}
-										}
-										if(check)
-											displayText.setText(c.getDisplayText());
+		buttonPower = new JButton("Power");
+		buttonPower.setBounds(12, 26, 125, 50);
+		lPanel.add(buttonPower);
+		
+		powerStatus = new JPanel();
+		powerStatus.setBounds(155, 38, 25, 25);
+		lPanel.add(powerStatus);
+		powerStatus.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		powerStatus.setBackground(Color.RED);
+		buttonPower.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sendCommand("POWER");
+				if (console.isOn()) {
+					enableAll(true);
+					powerStatus.setBackground(Color.GREEN);
+					// custom welcome screen
+					String temp="WELCOME TO CHRONOTIMER 1009!";
+					displayView.setText(temp);
+					
+					//set action listener for display text box to update at set time.
+					// TODO - James needs to check that this works!!!
+					ActionListener task = new ActionListener() {
+						public void actionPerformed(ActionEvent evt) {
+							if (!isfcnBtnOn)
+							{
+								boolean check=false;
+								if(console.getCurrentRacers()!=null){
+									for(Racer r: console.getCurrentRacers()){
+										if(r.getStart()>0 && (!r.getDNF() || r.getFinish()!=0))
+											check=true;
+											break;
 									}
 								}
-							};
-							Timer timer = new Timer(100 ,task); // Execute task each 1000 miliseconds
-							timer.setRepeats(true);
-							timer.start();
-							
-							displayText.setText(temp);
+								if(check)
+									console.display();
+							}
 						}
-						else{
-//							debug("off");
-							powerStatus.setBackground(Color.RED);
-							displayText.setText("");
-						}
-						isfcnBtnOn=false;
-					}
-				});
-
+					};
+					Timer timer = new Timer(100 ,task); // Execute task each 1000 miliseconds
+					timer.setRepeats(true);
+					timer.start();
+				}
+				else{
+					debug("off");
+					enableAll(false);
+					menuGuiUpdate("RESET");
+					powerStatus.setBackground(Color.RED);
+				}
+			}
+		});
 	}
 	
 	/**
@@ -229,7 +239,7 @@ public class ChronoGui extends JFrame{
 		panel_1.setBounds(20, 10, 360, 80);
 		panel_1.setBackground(new Color(51, 153, 204));
 		mPanel1.add(panel_1);
-		panel_1.setLayout(new GridLayout(0, 2, 0, 0));
+		panel_1.setLayout(new GridLayout(2, 2, 10, 0));
 	
 		// m1: split into 4 panels
 		lblStart = new JLabel("Start");
@@ -246,22 +256,22 @@ public class ChronoGui extends JFrame{
 			buttonTrigger1.setBounds(0, 5, 40, 30);
 			buttonTrigger1.setText("1");
 			mPanel1_trig.add(buttonTrigger1);
-			setTriggerListener(buttonTrigger1, "trig 1");
+			setBtnListener(buttonTrigger1, "TRIG 1", "trigger");
 			buttonTrigger3 = new JButton();
 			buttonTrigger3.setBounds(32, 5, 40, 30);
 			buttonTrigger3.setText("3");
 			mPanel1_trig.add(buttonTrigger3);
-			setTriggerListener(buttonTrigger3, "trig 3");
+			setBtnListener(buttonTrigger3, "TRIG 3", "trigger");
 			buttonTrigger5 = new JButton();
 			buttonTrigger5.setBounds(68, 5, 40, 30);
 			buttonTrigger5.setText("5");
 			mPanel1_trig.add(buttonTrigger5);
-			setTriggerListener(buttonTrigger5, "trig 5");
+			setBtnListener(buttonTrigger5, "TRIG 5", "trigger");
 			buttonTrigger7 = new JButton();
 			buttonTrigger7.setBounds(104, 5, 40, 30);
 			buttonTrigger7.setText("7");
 			mPanel1_trig.add(buttonTrigger7);
-			setTriggerListener(buttonTrigger7, "trig 7");
+			setBtnListener(buttonTrigger7, "TRIG 7", "trigger");
 		
 		enable01 = new JLabel("Enable/Disable");
 		enable01.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -273,31 +283,35 @@ public class ChronoGui extends JFrame{
 		panel_1.add(mPanel1_tog);
 	
 			radioChannel1 = new JRadioButton();
+			radioChannel1.setEnabled(false);
 			radioChannel1.setHorizontalAlignment(SwingConstants.CENTER);
 			radioChannel1.setBounds(5, 8, 28, 23);
 			radioChannel1.setSelected(false);
-			setTriggerListener(radioChannel1, "tog 1");
+			setBtnListener(radioChannel1, "TOG 1", "toggle");
 			mPanel1_tog.add(radioChannel1);
 		
 			radioChannel3 = new JRadioButton();
+			radioChannel3.setEnabled(false);
 			radioChannel3.setHorizontalAlignment(SwingConstants.CENTER);
 			radioChannel3.setBounds(38, 8, 28, 23);
 			radioChannel3.setSelected(false);
-			setTriggerListener(radioChannel3, "tog 3");
+			setBtnListener(radioChannel3, "TOG 3", "toggle");
 			mPanel1_tog.add(radioChannel3);
 		
 			radioChannel5 = new JRadioButton();
+			radioChannel5.setEnabled(false);
 			radioChannel5.setHorizontalAlignment(SwingConstants.CENTER);
 			radioChannel5.setBounds(71, 8, 28, 23);
 			radioChannel5.setSelected(false);
-			setTriggerListener(radioChannel5, "tog 5");
+			setBtnListener(radioChannel5, "TOG 5", "toggle");
 			mPanel1_tog.add(radioChannel5);
 		
 			radioChannel7 = new JRadioButton();
+			radioChannel7.setEnabled(false);
 			radioChannel7.setHorizontalAlignment(SwingConstants.CENTER);
 			radioChannel7.setBounds(104, 8, 28, 23);
 			radioChannel7.setSelected(false);
-			setTriggerListener(radioChannel7, "tog 7");
+			setBtnListener(radioChannel7, "TOG 7", "toggle");
 			mPanel1_tog.add(radioChannel7);
 		
 		// m2: split into 4 panels
@@ -305,7 +319,7 @@ public class ChronoGui extends JFrame{
 		panel_2.setBounds(20, 90, 360, 80);
 		panel_2.setBackground(new Color(51, 153, 204));
 		mPanel1.add(panel_2);
-		panel_2.setLayout(new GridLayout(0, 2, 0, 0));
+		panel_2.setLayout(new GridLayout(2, 2, 10, 0));
 		
 		lblFinish = new JLabel("Finish");
 		lblFinish.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -321,21 +335,21 @@ public class ChronoGui extends JFrame{
 			buttonTrigger2.setBounds(-4, 5, 40, 30);
 			buttonTrigger2.setText("2");
 			mPanel1_trig2.add(buttonTrigger2);
-			setTriggerListener(buttonTrigger2, "trig 2");
+			setBtnListener(buttonTrigger2, "TRIG 2", "trigger");
 			buttonTrigger4 = new JButton();
 			buttonTrigger4.setBounds(32, 5, 40, 30);
 			buttonTrigger4.setText("4");
 			mPanel1_trig2.add(buttonTrigger4);
-			setTriggerListener(buttonTrigger4, "trig 4");
+			setBtnListener(buttonTrigger4, "TRIG 4", "trigger");
 			buttonTrigger6 = new JButton();
 			buttonTrigger6.setBounds(68, 5, 40, 30);
 			buttonTrigger6.setText("6");
 			mPanel1_trig2.add(buttonTrigger6);
-			setTriggerListener(buttonTrigger6, "trig 6");
+			setBtnListener(buttonTrigger6, "TRIG 6", "trigger");
 			buttonTrigger8 = new JButton();
 			buttonTrigger8.setBounds(104, 5, 40, 29);
 			buttonTrigger8.setText("8");
-			setTriggerListener(buttonTrigger8, "trig 8");
+			setBtnListener(buttonTrigger8, "TRIG 8", "trigger");
 			mPanel1_trig2.add(buttonTrigger8);
 		
 		enable02 = new JLabel("Enable/Disable");
@@ -348,32 +362,36 @@ public class ChronoGui extends JFrame{
 		panel_2.add(mPanel1_tog2);
 		
 			radioChannel2 = new JRadioButton();
+			radioChannel2.setEnabled(false);
 			radioChannel2.setHorizontalAlignment(SwingConstants.CENTER);
 			radioChannel2.setBounds(4, 8, 28, 23);
 			mPanel1_tog2.add(radioChannel2);
 			radioChannel2.setSelected(false);
-			setTriggerListener(radioChannel2, "tog 2");
+			setBtnListener(radioChannel2, "TOG 2", "toggle");
 			
 			radioChannel4 = new JRadioButton();
+			radioChannel4.setEnabled(false);
 			radioChannel4.setHorizontalAlignment(SwingConstants.CENTER);
 			radioChannel4.setBounds(37, 8, 28, 23);
 			mPanel1_tog2.add(radioChannel4);
 			radioChannel4.setSelected(false);
-			setTriggerListener(radioChannel4, "tog 4");
+			setBtnListener(radioChannel4, "TOG 4", "toggle");
 			
 			radioChannel6 = new JRadioButton();
+			radioChannel6.setEnabled(false);
 			radioChannel6.setHorizontalAlignment(SwingConstants.CENTER);
 			radioChannel6.setBounds(70, 8, 28, 23);
 			mPanel1_tog2.add(radioChannel6);
 			radioChannel6.setSelected(false);
-			setTriggerListener(radioChannel6, "tog 6");
+			setBtnListener(radioChannel6, "TOG 6", "toggle");
 			
 			radioChannel8 = new JRadioButton();
+			radioChannel8.setEnabled(false);
 			radioChannel8.setHorizontalAlignment(SwingConstants.CENTER);
 			radioChannel8.setBounds(103, 8, 28, 23);
 			mPanel1_tog2.add(radioChannel8);
 			radioChannel8.setSelected(false);
-			setTriggerListener(radioChannel8, "tog 8");
+			setBtnListener(radioChannel8, "TOG 8", "toggle");
 	
 		// bottom middle panel
 		mPanel2 = new JPanel();
@@ -381,17 +399,17 @@ public class ChronoGui extends JFrame{
 		mPanel2.setBounds(0, 170, 400, 330);
 		mPanel2.setLayout(null);
 	
-		displayText = new JTextArea();
-		displayText.setLineWrap(true);
-		displayText.setEditable(false);
-		displayText.setMargin(new Insets(10,10,10,10));
-		scroll = new JScrollPane(displayText);
-		scroll.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		displayView = new JTextArea();
+		displayView.setLineWrap(true);
+		displayView.setEditable(false);
+		displayView.setMargin(new Insets(10,10,10,10));
+		scroll = new JScrollPane(displayView);
+		scroll.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		scroll.setBounds(20, 0, 360, 300);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		mPanel2.add(scroll);
-		displayText.setFocusable(true);
+		displayView.setFocusable(true);
 		labelLegend = new JLabel("Queue/Running/Final");
 		labelLegend.setBounds(132, 305, 150, 16);
 		mPanel2.add(labelLegend);
@@ -419,7 +437,7 @@ public class ChronoGui extends JFrame{
 		rPanel2.setBackground(new Color(51, 153, 204));
 		rPanel2.setLocation(0, 225);
 		rPanel2.setSize(254, 275);
-		displayText.setRows(10);
+		displayView.setRows(10);
 		rPanel2.setLayout(null);
 		rPanel.setLayout(null);
 	
@@ -430,21 +448,25 @@ public class ChronoGui extends JFrame{
 		printPower.setBounds(71, 8, 111, 50);
 		printPower.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (p.isActive())
-					p.setActive(false);
-				else
-					p.setActive(true);
+				if (printer.isOn()){
+					printer.setActive(false);
+					scroll2.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+				} else{
+					printer.setActive(true);
+					scroll2.setViewportBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+				}
+					
 			}
 		});
 		rPanel1.setLayout(null);
 		rPanel1.add(printPower);
 	
-		printerText = new JTextArea();
-		printerText.setColumns(15);
-		printerText.setWrapStyleWord(true);
-		printerText.setEditable(false);
-		scroll2 = new JScrollPane(printerText);
-		scroll2.setViewportBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		printerView = new JTextArea();
+		printerView.setColumns(15);
+		printerView.setWrapStyleWord(true);
+		printerView.setEditable(false);
+		scroll2 = new JScrollPane(printerView);
+		scroll2.setViewportBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		rPanel1.add(scroll2);
 		scroll2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -489,57 +511,55 @@ public class ChronoGui extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (!c.isOn()) {
-					offWarning();
-				} else if (tempRacer.length() > 0) {
-					if(isClearOn){
-//						debug("clr " + tempRacer);
-						sendCommand("clr " + tempRacer);
-						isClearOn = false;
-					}else if(isTimeOn){
+				if(console.isOn() && tempRacer.length()>0){
+					debug(String.format("is time command on? %s\nis print command on? %s", isTimeOn, isPrintOn));
+					if(isPrintOn){
+						sendCommand("PRINT "+tempRacer);
+					} else if(isTimeOn){
 						boolean checkLetter = false;
 						char[]temp = tempRacer.toCharArray();
 						String newTime = String.format("%s%s:%s%s:%s%s.0", 
-										temp.length>0?tempRacer.charAt(0):"#",
-										temp.length>1?tempRacer.charAt(1):"#",
-										temp.length>2?tempRacer.charAt(2):"#",
-										temp.length>3?tempRacer.charAt(3):"#",
-										temp.length>4?tempRacer.charAt(4):"#",
-										temp.length>5?tempRacer.charAt(5):"#");
+										temp.length>0?tempRacer.charAt(0):"H",
+										temp.length>1?tempRacer.charAt(1):"H",
+										temp.length>2?tempRacer.charAt(2):"M",
+										temp.length>3?tempRacer.charAt(3):"M",
+										temp.length>4?tempRacer.charAt(4):"S",
+										temp.length>5?tempRacer.charAt(5):"S");
 						for(char c:newTime.toCharArray()){
-							if(Character.isLetter(c)){
+							if(Character.isLetter(c)){//illegal character
 								checkLetter = true;
 								break;
 							}
 						}
-//						debug("sending time: " + newTime);
+						debug("sending time: " + newTime);
 						if(!checkLetter)
 							sendCommand("TIME " + newTime);
 						else{
 //							debug("YOU NEED TO SUBMIT A COMPLETE TIME! YOU SENT: "+newTime);
-							displayText.setText("YOU NEED TO SUBMIT A COMPLETE TIME!\nYOU SENT: "+newTime);
+							displayView.setText("YOU NEED TO SUBMIT A COMPLETE TIME!\nYOU SENT: "+newTime);
 						}
 						isTimeOn = false;
-					} else
-						sendCommand("num " + tempRacer);
+					}else{
+						sendCommand("NUM "+tempRacer);
+						console.display();
+					}
 					tempRacer = "";
-				} else {
-					System.out.println("Enter a number, then press #.");
+					
 				}
 			}
 		});
 	
-		setKeypadAction(button1, 1);
-		setKeypadAction(button2, 2);
-		setKeypadAction(button3, 3);
-		setKeypadAction(button4, 4);
-		setKeypadAction(button5, 5);
-		setKeypadAction(button6, 6);
-		setKeypadAction(button7, 7);
-		setKeypadAction(button8, 8);
-		setKeypadAction(button9, 9);
-		setKeypadAction(button0, 0);
-		setKeypadAction(buttonStar, -1);
+		setBtnListener(button1, "1", "keypad");
+		setBtnListener(button2, "2", "keypad");
+		setBtnListener(button3, "3", "keypad");
+		setBtnListener(button4, "4", "keypad");
+		setBtnListener(button5, "5", "keypad");
+		setBtnListener(button6, "6", "keypad");
+		setBtnListener(button7, "7", "keypad");
+		setBtnListener(button8, "8", "keypad");
+		setBtnListener(button9, "9", "keypad");
+		setBtnListener(button0, "0", "keypad");
+		setBtnListener(buttonStar, "-1", "keypad");
 		keypad.add(button1);
 		keypad.add(button2);
 		keypad.add(button3);
@@ -568,22 +588,22 @@ public class ChronoGui extends JFrame{
 		
 		up = new JButton("\u25B2");
 		up.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		setNavListener(up, KeyEvent.VK_UP);
+		setBtnListener(up, ""+KeyEvent.VK_UP, "nav");
 		navPanel.add(up);
 		
 		down = new JButton("\u25BC");
 		down.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		setNavListener(down, KeyEvent.VK_DOWN);
+		setBtnListener(down, ""+KeyEvent.VK_DOWN, "nav");
 		navPanel.add(down);
 		
 		left = new JButton("\u25C0");
 		left.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		setNavListener(left, KeyEvent.VK_LEFT);
+		setBtnListener(left, ""+KeyEvent.VK_LEFT, "nav");
 		navPanel.add(left);
 		
 		right = new JButton("\u25BA");
 		right.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
-		setNavListener(right, KeyEvent.VK_RIGHT);
+		setBtnListener(right, ""+KeyEvent.VK_RIGHT, "nav");
 		navPanel.add(right);			
 	}
 	
@@ -636,18 +656,22 @@ public class ChronoGui extends JFrame{
 		sensorChannels.add(label_7);
 		
 		s1 = new JRadioButton("");
+		s1.setEnabled(false);
 		s1.setForeground(new Color(25, 25, 112));
 		s1.setHorizontalAlignment(SwingConstants.CENTER);
 		sensorChannels.add(s1);
 		s3 = new JRadioButton("");
+		s3.setEnabled(false);
 		s3.setForeground(new Color(25, 25, 112));
 		s3.setHorizontalAlignment(SwingConstants.CENTER);
 		sensorChannels.add(s3);
 		s5 = new JRadioButton("");
+		s5.setEnabled(false);
 		s5.setForeground(new Color(25, 25, 112));
 		s5.setHorizontalAlignment(SwingConstants.CENTER);
 		sensorChannels.add(s5);
 		s7 = new JRadioButton("");
+		s7.setEnabled(false);
 		s7.setForeground(new Color(25, 25, 112));
 		s7.setHorizontalAlignment(SwingConstants.CENTER);
 		sensorChannels.add(s7);
@@ -677,18 +701,22 @@ public class ChronoGui extends JFrame{
 		sensorChannels.add(label_8);
 		
 		s2 = new JRadioButton("");
+		s2.setEnabled(false);
 		s2.setForeground(new Color(25, 25, 112));
 		s2.setHorizontalAlignment(SwingConstants.CENTER);
 		sensorChannels.add(s2);
 		s4 = new JRadioButton("");
+		s4.setEnabled(false);
 		s4.setForeground(new Color(25, 25, 112));
 		s4.setHorizontalAlignment(SwingConstants.CENTER);
 		sensorChannels.add(s4);
 		s6 = new JRadioButton("");
+		s6.setEnabled(false);
 		s6.setForeground(new Color(25, 25, 112));
 		s6.setHorizontalAlignment(SwingConstants.CENTER);
 		sensorChannels.add(s6);
 		s8 = new JRadioButton("");
+		s8.setEnabled(false);
 		s8.setForeground(new Color(25, 25, 112));
 		s8.setHorizontalAlignment(SwingConstants.CENTER);
 		sensorChannels.add(s8);
@@ -725,20 +753,65 @@ public class ChronoGui extends JFrame{
 	 * Adds the key bindings.
 	 */
 	private void addBindings(){
-		InputMap inputMap = displayText.getInputMap();
-		ActionMap actionMap = displayText.getActionMap();
+		InputMap inputMap = displayView.getInputMap();
+		ActionMap actionMap = displayView.getActionMap();
 		
 		KeyStroke key = KeyStroke.getKeyStroke("UP");
-		actionMap.put(inputMap.get(key), setMenuKeyBinding(KeyEvent.VK_UP));
+		actionMap.put(inputMap.get(key), setKeyAction(KeyEvent.VK_UP));
 		key = KeyStroke.getKeyStroke("DOWN");
-		actionMap.put(inputMap.get(key), setMenuKeyBinding(KeyEvent.VK_DOWN));
+		actionMap.put(inputMap.get(key), setKeyAction(KeyEvent.VK_DOWN));
 		key = KeyStroke.getKeyStroke("LEFT");
-		actionMap.put(inputMap.get(key), setMenuKeyBinding(KeyEvent.VK_LEFT));
+		actionMap.put(inputMap.get(key), setKeyAction(KeyEvent.VK_LEFT));
 		key = KeyStroke.getKeyStroke("RIGHT");
-		actionMap.put(inputMap.get(key), setMenuKeyBinding(KeyEvent.VK_RIGHT));		
+		actionMap.put(inputMap.get(key), setKeyAction(KeyEvent.VK_RIGHT));	
+		
+		//keyboard & numpad bindings
+		for(int i=48, loop=0, numpad=96; loop<10; i++,loop++,numpad++){
+			key = KeyStroke.getKeyStroke(i,0);
+			actionMap.put(inputMap.get(key), setKeyAction(i));
+			key = KeyStroke.getKeyStroke(numpad,0);
+			actionMap.put(inputMap.get(key), setKeyAction(numpad));
+		} 
+		
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER,0);
+		actionMap.put(inputMap.get(key), setKeyAction(KeyEvent.VK_ENTER));
+		key = KeyStroke.getKeyStroke(KeyEvent.VK_NUMBER_SIGN,0);
+		actionMap.put(inputMap.get(key), setKeyAction(KeyEvent.VK_NUMBER_SIGN));
 	}
 
-
+	/**
+	 * Sets the key binding for menu navigation & keypad.
+	 *
+	 * @param key the key
+	 * @return the action
+	 */
+	private Action setKeyAction(int key) {
+		Action action = new AbstractAction(){
+	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO implement this for R key in private method
+				if(key==KeyEvent.VK_LEFT || key==KeyEvent.VK_RIGHT 
+						|| key==KeyEvent.VK_UP || key==KeyEvent.VK_DOWN){
+					menuResponse(key);
+				} 
+				for(int i=48, actualNum=0, numpad=96; actualNum<10; i++, actualNum++, numpad++){
+					if(key == i || key == numpad)
+						keyPadAction(actualNum);
+				} 
+				if(key == KeyEvent.VK_ENTER){
+					keyPadAction(10);
+				} if(key == KeyEvent.VK_BACK_SPACE){
+					if(!isfcnBtnOn && tempRacer.length()>0)
+						tempRacer.substring(0, tempRacer.length()-1);
+				}
+				
+			}
+			
+		};
+		
+		return action;
+	}
 
 	/**
 	 * Sends command to Console
@@ -746,21 +819,23 @@ public class ChronoGui extends JFrame{
 	 * @param command
 	 */
 	private void sendCommand(String command) {
-//		debug(command);
+		//debug(command);
 		String formatted = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.S")) + "\t" + command;
-		if (c.isOn() || command == "POWER") {
-			// TODO - it will set a time but then when you try to 
-			if(c.checkChronotimer())
-				formatted = c.getTime()+ "\t" + command;
-			c.input(formatted);
-			c.display(displayText);
+		if (console.isOn() || command == "POWER") {
+			formatted = console.getTime()+ "\t" + command;
+			debug(formatted);
+			console.input(formatted);
+			console.display();
 		}
-		if (p.isActive())
-			p.printGUI(formatted, printerText);
-		if (!c.isOn()) {
+		if (printer.isOn() && console.isOn()){
+			// update the printerView
+			String temp = printerView.getText();
+			printerView.setText(temp+"\n"+formatted);
+		}
+		if (!console.isOn()) {
+			offWarning();
 			if(timer!=null)
 				timer.stop();
-			offWarning();
 			if(sensorGui!=null)
 				sensorGui.close();
 			radioChannel1.setSelected(false);
@@ -789,92 +864,130 @@ public class ChronoGui extends JFrame{
 	 * @param i
 	 * @param command
 	 */
-	private void setTriggerListener(AbstractButton i, String command) {
-		i.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				trigListener(command);
-				menu = null;
-				isfcnBtnOn = false;
-			}
-		});
-	}
-
-
-
-	/**
-	 * Sets ActionListener for navigation button
-	 * 
-	 * @param i
-	 * @param command
-	 */
-	private void setNavListener(AbstractButton i, int key){
-		i.addActionListener(new ActionListener()
-        {
-            @Override
-			public void actionPerformed(ActionEvent e)
-            {// TODO - implement arrow navigation for right in private method
-            	menuResponse(key);
-            }
-        });
-	}
-	
-	
-	/**
-	 * Sets the key binding for menu navigation.
-	 *
-	 * @param key the key
-	 * @return the action
-	 */
-	private Action setMenuKeyBinding(int key) {
-		Action action = new AbstractAction(){
+	private void setBtnListener(AbstractButton i, String command, String buttontype) {
+		i.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO implement this for R key in private method
-				menuResponse(key);
+				// TODO Auto-generated method stub
+				String className = e.getSource().getClass().getSimpleName();
+				if(!console.isOn()){
+	            	offWarning();
+	            	if(className=="JRadioButton"){
+	            		((JRadioButton)e.getSource()).setSelected(false);
+	            	}
+	            }else {
+	            	if(buttontype=="trigger"){
+	        			debug("trigger");
+	        			trigListener(command);
+	        			menu = null;
+	        			isfcnBtnOn = false;
+	        		} if(buttontype=="toggle"){
+        				debug("toggle");
+        				sendCommand(command);
+        				((JRadioButton)e.getSource()).setSelected(true);
+        			} if (command.split(" ").length ==1){
+	        			int num = Integer.valueOf(command);
+	        			debug(command+" "+buttontype);
+	        			if(buttontype =="nav"){
+	        				debug("nav");
+	        				menuResponse(num);
+	        			} if(buttontype=="keypad"){
+	        				keyPadAction(num);
+	        			} if(buttontype=="sensor"){
+	        				if(console.isOn() && !sensorActive[num - 1]){
+	        					Object[] options = { "EYE", "GATE", "PAD" };
+	        					ImageIcon icon = null;
+	        					String s = (String) JOptionPane.showInputDialog(null, "Select a sensor below.", "Sensor Selection",
+	        							JOptionPane.PLAIN_MESSAGE, icon, options, options[0]);
+	        		
+	        					// If a string was returned, set a sensor.
+	        					if ((s != null) && (s.length() > 0)) {
+	        						sendSensor(s,num,true);
+	        					}
+	        				}else if(console.isOn()){
+	        					sendSensor("",num,false);
+	        				}
+	        			}
+	        		}
+	            }
 			}
 			
-		};
-		
-		return action;
-	}
-	
-	/**
-	 * Sets up actionPerformed for keypad button.
-	 *
-	 * @param b the b
-	 * @param i the i
-	 */
-	private void setKeypadAction(JButton b, int i) {
-		b.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (c.isOn() && i >= 0){
-					isfcnBtnOn=false;
-					tempRacer += i;
-					String intro="SETTING RACER NAME: " + tempRacer;
-					if(isClearOn){
-						intro="RACER TO BE CLEARED: " + tempRacer;
-					} else if(isTimeOn){
-						char[]temp = tempRacer.toCharArray();
-						intro = String.format("SETTING <%s%s:%s%s:%s%s>", 
-										temp.length>0?tempRacer.charAt(0):"H",
-										temp.length>1?tempRacer.charAt(1):"H",
-										temp.length>2?tempRacer.charAt(2):"M",
-										temp.length>3?tempRacer.charAt(3):"M",
-										temp.length>4?tempRacer.charAt(4):"S",
-										temp.length>5?tempRacer.charAt(5):"S");
-					}
-					displayText.setText(intro+"\n\nPRESS # BUTTON TO SUBMIT!");
-				} else if (!c.isOn()){
-					offWarning();
-				}
-			}
 		});
 	}
 
+//	/**
+//	 * Sets ActionListener for navigation button
+//	 * 
+//	 * @param i
+//	 * @param command
+//	 */
+//	private void setNavListener(AbstractButton i, int key){
+//		i.addActionListener(new ActionListener()
+//        {
+//            @Override
+//			public void actionPerformed(ActionEvent e)
+//            {// TODO - implement arrow navigation for right in private method
+//            	menuResponse(key);
+//            }
+//        });
+//	}
+//	
+//	/**
+//	 * Sets up actionPerformed for keypad button.
+//	 *
+//	 * @param b the b
+//	 * @param i the i
+//	 */
+//	private void setKeypadListener(JButton b, int i) {
+//		b.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				keyPadAction(i);
+//			}
+//		});
+//	}
 
+	private void keyPadAction(int realNum) {
+		// TODO Auto-generated method stub
+				if(!console.isOn()){
+					offWarning();
+				} else if(console.isOn()){
+					if(realNum >= 0 && realNum<10){
+						isfcnBtnOn=false;
+						tempRacer += realNum;
+						String intro="SETTING RACER NAME: " + tempRacer;
+						if(isClearOn){
+							intro="RACER TO BE CLEARED: " + tempRacer;
+						} else if(isTimeOn){
+							char[]temp = tempRacer.toCharArray();
+							intro = String.format("SETTING <%s%s:%s%s:%s%s>", 
+											temp.length>0?tempRacer.charAt(0):"H",
+											temp.length>1?tempRacer.charAt(1):"H",
+											temp.length>2?tempRacer.charAt(2):"M",
+											temp.length>3?tempRacer.charAt(3):"M",
+											temp.length>4?tempRacer.charAt(4):"S",
+											temp.length>5?tempRacer.charAt(5):"S");
+						}
+						displayView.setText(intro+"\n\nPRESS # BUTTON TO SUBMIT!");
+					} else if (tempRacer.length() > 0 && realNum==10) {
+						if(isClearOn){
+					//		debug("clr " + tempRacer);
+							sendCommand("clr " + tempRacer);
+							isClearOn = false;
+						} else{
+							debug("is time on? "+isTimeOn);
+							debug("sending: NUM " + tempRacer);
+							sendCommand("NUM " + tempRacer);
+							tempRacer = "";
+						}
+							
+						tempRacer = "";
+					}
+				} else {
+					System.out.println("Enter a number, then press #.");
+				}
+	}
 
 	/**
 	 * Sets the sensor listener.
@@ -886,7 +999,7 @@ public class ChronoGui extends JFrame{
 		i.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(c.isOn() && !sensorActive[num - 1]){
+				if(console.isOn() && !sensorActive[num - 1]){
 					Object[] options = { "EYE", "GATE", "PAD" };
 					ImageIcon icon = null;
 					String s = (String) JOptionPane.showInputDialog(null, "Select a sensor below.", "Sensor Selection",
@@ -896,7 +1009,7 @@ public class ChronoGui extends JFrame{
 					if ((s != null) && (s.length() > 0)) {
 						sendSensor(s,num,true);
 					}
-				}else if(c.isOn()){
+				}else if(console.isOn()){
 					sendSensor("",num,false);
 				}else{
 					offWarning();
@@ -912,7 +1025,7 @@ public class ChronoGui extends JFrame{
 				sensorActive[num - 1] = !sensorActive[num - 1];
 				sendCommand(String.format("CONN %s %d", s,num));
 				if(sensorGui==null){
-					sensorGui=new SensorGui(c,displayText);
+					sensorGui=new SensorGui(console,displayView);
 					System.out.println("adding "+num+" "+s);
 					sensorGui.addSensorButton(s,num);
 				}else{
@@ -926,7 +1039,7 @@ public class ChronoGui extends JFrame{
 			}
 		} else { //disconnect
 			if(sensorActive[num - 1] && sensorGui!=null){
-//				debug("disconnecting sensor...");
+			//	debug("disconnecting sensor...");
 				sensorActive[num - 1] = !sensorActive[num - 1];
 				sendCommand(String.format("DISC %d", num));
 				System.out.println("disconnecting "+num);
@@ -955,36 +1068,38 @@ public class ChronoGui extends JFrame{
 	 */
 	private void setFcnListener() {
 		isfcnBtnOn = !isfcnBtnOn;
-		if(isfcnBtnOn && c.isOn()){
-			displayText.setText(menu.getMenu());
+		if(isfcnBtnOn && console.isOn()){
+			displayView.setText(menu.getMenu());
 		}
 		else{
-			if(c.isOn()){
-				displayText.setText("");
+			if(console.isOn()){
+				boolean check=false;
+				if(console.getCurrentRacers()!=null){
+					for(Racer r: console.getCurrentRacers()){
+						if(r.getStart()>0)
+							check=true;
+							break;
+					}
+				}
+				if(check)
+					console.display();
+				else
+					displayView.setText("");
 			}else
 				offWarning();
 		}
 	}
-
-
-
+	
 	/**
 	 * Trigger listener.
 	 *
 	 * @param command the command
 	 */
 	private void trigListener(String command) {
-		String[] temp = command.split(" ");
-		if(c.isOn() && temp[0].equalsIgnoreCase("trig") && !c.isChannelActive(Integer.valueOf(temp[1]))){				
-			System.out.println("SORRY, PLEASE TOGGLE "+temp[1]);
-			displayText.setText("SORRY, PLEASE TOGGLE "+temp[1]);
-		} else {
-			isfcnBtnOn=false;
-			sendCommand(command);
-		}
+		isfcnBtnOn=false;
+		sendCommand(command);
+		console.display();
 	}
-
-
 
 	/**
 	 * Menu response.
@@ -993,23 +1108,29 @@ public class ChronoGui extends JFrame{
 	 */
 	private void menuResponse(int key){
 		// TODO implement this for R key
-		if(c.isOn() && isfcnBtnOn && menu!=null){
+		if(console.isOn() && isfcnBtnOn && menu!=null){
 			String selected = menu.getSelected();
 			if(key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN){
 				menu.setSelected(key);
 			}
 			if(key == KeyEvent.VK_LEFT){
 				tempRacer="";
-				menu.pressLeft();
+				if(menu.getPrevious()!="")
+					menu.pressLeft();
+				else{
+					displayView.setText("");
+					isfcnBtnOn = false;
+					menu = null;
+				}
 			}
 			if(key == KeyEvent.VK_RIGHT){
-//				debug("pressed right key");
+				//debug("pressed right key");
 				
 				if(nameCommandMap.containsKey(selected)){
-//					debug("contains "+selected);
+					//debug("contains "+selected);
 					String previous = "Main Menu";
 					menu = new Menu(previous, selected, nameCommandMap.get(selected));
-					displayText.setText(menu.getMenu());
+					displayView.setText(menu.getMenu());
 					menuGuiUpdate(selected);
 				}else{
 					// TODO implement for every command & GUI response!!!
@@ -1023,27 +1144,27 @@ public class ChronoGui extends JFrame{
 						command = menuName + " " + selected;
 					}
 					if(selected!="NUM" && selected!="START" && selected!="FINISH" && selected!="CLR"
-							&& selected!="EYE"&& selected!="PAD"&& selected!="GATE"){
+							&& selected!="EYE"&& selected!="PAD"&& selected!="GATE"&& selected!="PRINT"){
 						sendCommand(command);
 					}
 					menuGuiUpdate(command);
 				}
 			}
-			if(menu!=null)
-				displayText.setText(menu.getMenu());
+			else if(menu!=null)//set the menu after pressing fcn button!
+				displayView.setText(menu.getMenu());
 		}
 		else {
-    		if(!c.isOn())
+    		if(!console.isOn())
     			offWarning();
     		else
-    			displayText.setText("Press function button to use arrow keys.");
+    			displayView.setText("Press function button to use arrow keys.");
     	}
+		
 	}
-
-
 	public void menuGuiUpdate(String command) {
 		// TODO implement export
-//		debug("menuGuiUpdate");
+		//debug("menuGuiUpdate");
+		
 		String[]split = null;
 		if(command.contains(" ")){
 			split=command.split(" ");
@@ -1072,69 +1193,77 @@ public class ChronoGui extends JFrame{
 			s6.setSelected(false);
 			s7.setSelected(false);
 			s8.setSelected(false);
-			displayText.setText("");
+			displayView.setText("");
 		}if(command == "CLOSE"){
+			isfcnBtnOn=false;
 			setFcnListener();
 			menu = null;
 		}if(command == "NUM"){
-			String temp="PRESS NUMBERS ON THE KEYPAD TO ENTER YOUR RACER NAME! PRESS # TO SUBMIT!";
-//			debug(temp);
 			isfcnBtnOn=false;
+			String temp="PRESS NUMBERS ON THE KEYPAD TO ENTER YOUR RACER NAME! PRESS # TO SUBMIT!";
+			//debug(temp);
 			menu = null;
-			displayText.setText(temp);
-		}if(split!=null && split[0].equals("TOG")){
-			int index = Integer.valueOf(split[1]);
-			menuToggleRadio(index);
+			displayView.setText(temp);
 		}if(command == "START"){
+			isfcnBtnOn=false;
 			trigListener("TRIG 1");
-			displayText.setText("");
+			displayView.setText("");
 		}if(command == "FINISH"){
+			isfcnBtnOn=false;
 			trigListener("TRIG 2");
-			displayText.setText("");
-		}if(split!=null && split[0].equals("TRIG")){
-			trigListener(command);
-			displayText.setText("");
+			displayView.setText("");
+		}if(split!=null){
+			if(split[0].equals("TRIG")){
+				trigListener(command);
+			} if(split[0].equals("TOG")){
+				int index = Integer.valueOf(split[1]);
+				menuToggleRadio(index);
+			} if(split[0].equals("EYE")||split[0].equals("PAD")||split[0].equals("GATE")){
+				int num = Integer.valueOf(split[1]);
+				if(!sensorActive[num-1]){
+					sendSensor(split[0], num, true);
+					menuToggleSensorRadio(num, true);
+				}else{
+					displayView.setText(num + " is already connected!");
+				}
+			} if(split[0].equals("DISC")){
+				int num = Integer.valueOf(split[1]);
+				if(sensorActive[num-1]){
+					sendSensor(split[0], num, false);
+					menuToggleSensorRadio(num, false);
+				}else{
+					displayView.setText(num + " is already disconnected!");
+				}if(command.equals("NEWRUN")){
+					displayView.setText("NEW RUN CREATED");
+				}if(command.equals("ENDRUN")){
+					displayView.setText("RUN ENDED");
+				}
+			}
 		}if(command == "CLR"){
+			isfcnBtnOn=false;
 			String temp="PRESS NUMBERS ON THE KEYPAD TO CLEAR RACER! PRESS # TO SUBMIT!";
 			menu = null;
 			isClearOn = true;
-//			debug(temp);
-			displayText.setText(temp);
-		}if(command == "SWAP" && c.getEventType()=="IND" && c.getRacerListSize()>=2){
+			displayView.setText(temp);
+		}if(command == "SWAP"){
+			isfcnBtnOn=false;
 			menu = null;
 		}if(command == "TIME"){
-			String temp="SETTING: <##:##:##>";
+			isfcnBtnOn=false;
+			String temp="SETTING: <HH:MM:SS>";
 			menu = null;
 			isTimeOn = true;
-//			debug(temp);
-			displayText.setText(temp);
-		}if(split!=null && (split[0].equals("EYE")||split[0].equals("PAD")||split[0].equals("GATE"))){
-			int num = Integer.valueOf(split[1]);
-			if(!sensorActive[num-1]){
-				sendSensor(split[0], num, true);
-				menuToggleSensorRadio(num, true);
+			displayView.setText(temp);
+		}if(command == "PRINT"){
+			isfcnBtnOn=false;
+			if(!console.runExist()){
+				displayView.setText("Cannot print. A run does not exist.");
 			}else{
-				System.out.println(num + " is already connected!");
-//				isfcnBtnOn=false;
-				displayText.setText(num + " is already connected!");
+				String temp="ENTER THE RUN NUMBER ON THE KEYPAD AND PRESS # TO SUBMIT!";
+				displayView.setText(temp);
 			}
-		}if(split!=null && split[0].equals("DISC")){
-			int num = Integer.valueOf(split[1]);
-			if(sensorActive[num-1]){
-				sendSensor(split[0], num, false);
-				menuToggleSensorRadio(num, false);
-			}else{
-				System.out.println(num + " is already disconnected!");
-//				isfcnBtnOn=false;
-				displayText.setText(num + " is already disconnected!");
-			}if(command.equals("NEWRUN")){
-				isfcnBtnOn=false;
-				displayText.setText("NEW RUN CREATED");
-			}if(command.equals("ENDRUN")){
-				isfcnBtnOn=false;
-				displayText.setText("RUN ENDED");
-				
-			}
+			menu = null;
+			isPrintOn=true;
 		}
 	}
 
@@ -1196,6 +1325,12 @@ public class ChronoGui extends JFrame{
 		}
 	}
 	
+	/**
+	 * Menu toggle sensor radio.
+	 *
+	 * @param num the num
+	 * @param on the on
+	 */
 	private void menuToggleSensorRadio(int num, boolean on) {
 		switch(num){
 			case 1:
@@ -1248,20 +1383,58 @@ public class ChronoGui extends JFrame{
 				break;
 		}
 	}
-
+	
+	/**
+	 * Enable/disable all. Done at startup/shutdown.
+	 *
+	 * @param enable whether to enable or disable
+	 */
+	private void enableAll(boolean enable){
+		if(enable){
+			radioChannel1.setEnabled(true);
+			radioChannel3.setEnabled(true);
+			radioChannel5.setEnabled(true);
+			radioChannel7.setEnabled(true);
+			radioChannel2.setEnabled(true);
+			radioChannel4.setEnabled(true);
+			radioChannel6.setEnabled(true);
+			radioChannel8.setEnabled(true);
+			s1.setEnabled(true);
+			s2.setEnabled(true);
+			s3.setEnabled(true);
+			s4.setEnabled(true);
+			s5.setEnabled(true);
+			s6.setEnabled(true);
+			s7.setEnabled(true);
+			s8.setEnabled(true);
+		}else{
+			radioChannel1.setEnabled(false);
+			radioChannel3.setEnabled(false);
+			radioChannel5.setEnabled(false);
+			radioChannel7.setEnabled(false);
+			radioChannel2.setEnabled(false);
+			radioChannel4.setEnabled(false);
+			radioChannel6.setEnabled(false);
+			radioChannel8.setEnabled(false);
+			s1.setEnabled(false);
+			s2.setEnabled(false);
+			s3.setEnabled(false);
+			s4.setEnabled(false);
+			s5.setEnabled(false);
+			s6.setEnabled(false);
+			s7.setEnabled(false);
+			s8.setEnabled(false);
+		}
+	}
 	/**
 	 * If console is off, print off warning
 	 */
 	private void offWarning() {
-		displayText.setText(offWarning);
+		displayView.setText(offWarning);
 	}
 
 	private void debug(String str) {
 		System.out.println("DEBUG: " + str);
-	}
-	
-	public void setDisplay(String str){
-		displayText.setText(str);
 	}
 
 	/**

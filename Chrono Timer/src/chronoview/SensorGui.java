@@ -1,8 +1,6 @@
-package gui;
+package chronoview;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-
-import chronotimer.Console;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -11,10 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.border.EtchedBorder;
 
+import chronotimer.ChronoTimer;
+
 @SuppressWarnings("serial")
 public class SensorGui extends JFrame{
 	private JPanel p1,p2,p3,p4,p5,p6,p7,p8;
-	private Console mainGui;
+	private ChronoTimer mainGui;
 	private JTextArea display;
 	
 	/**
@@ -29,7 +29,7 @@ public class SensorGui extends JFrame{
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
-	public SensorGui(Console c, JTextArea displayText) {
+	public SensorGui(ChronoTimer c, JTextArea displayText) {
 		mainGui = c;
 		display = displayText;
 		setSize(500, 500);
@@ -135,7 +135,6 @@ public class SensorGui extends JFrame{
 		}
 		display.setText("SENSOR: Added Sensor " + type +" "+i);
 		revalidate();
-		
 	}
 
 	public void removeSensorButton(int i){

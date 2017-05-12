@@ -4,17 +4,17 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
-import chronotimer.Console;
+import chronotimer.ChronoTimer;
 import chronotimer.GroupTimed;
 import chronotimer.Run;
 
 public class GRP_test {
-	static Console c;
+	static ChronoTimer c;
 	static GroupTimed event;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		c = new Console();
+		c = new ChronoTimer();
 		c.setOn(true);
 		c.input(c.addTimestamp("POWER"));
 		c.input(c.addTimestamp("EVENT GRP"));
@@ -170,8 +170,8 @@ public class GRP_test {
 		c.input(c.addTimestamp("PRINT"));//should have dnf on record
 		
 		event.trigger(1);
-		event.dnf();
-		System.out.println(event.getRecord());
+		event.didNotFinish();
+		event.print();
 	}
 
 	@Test
@@ -211,7 +211,7 @@ public class GRP_test {
 	@Test
 	public void testToString() {
 		println("GroupTimed ==" + event.getClass().toString());
-		println("Console ==" + c.getClass().toString());
+		println("ChronoTimer ==" + c.getClass().toString());
 	}
 
 }

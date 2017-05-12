@@ -1,11 +1,12 @@
 package chronoserver;
 
-import chronotimer.Racer;
 import com.google.gson.*;
 import com.google.gson.reflect.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+
+import chronotimer.Racer;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -24,8 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import javax.imageio.ImageIO;
-
 /**
  * Created by Evan on 5/6/2017.
  *
@@ -42,10 +41,10 @@ public class ChronoServer {
 		// create a context to get the request to display the results
 		server.createContext("/displayresults", new DisplayHandler());
 
-		// create a context to get the request to display the results
+		// create a context to get css
 		server.createContext("/style.css", new cssHandler());
 		
-		// create a context to get the request to display the results
+		// create a context to get background image
 		server.createContext("/bgd.png", new imageHandler());
 
         server.start();
@@ -95,7 +94,7 @@ public class ChronoServer {
             	htmlStringBuilder.append("<h3>Press refresh to get the most recent additions and results.</h3>");
             	refreshTime=100;
             }else{
-            	refreshTime=5;
+            	refreshTime=2;
             }
             htmlStringBuilder.append("<div></body></html>");
             response+=htmlStringBuilder.toString();

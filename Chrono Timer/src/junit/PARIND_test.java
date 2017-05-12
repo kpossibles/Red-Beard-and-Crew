@@ -4,25 +4,25 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
-import chronotimer.Console;
+import chronotimer.ChronoTimer;
 import chronotimer.ParallelTimed;
 import chronotimer.Racer;
 import chronotimer.Run;
 import chronotimer.Timer;
 
 public class PARIND_test {
-	static Console c;
+	static ChronoTimer c;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		c = new Console();
+		c = new ChronoTimer();
 		c.setOn(true);
 		c.input(c.addTimestamp("POWER"));
 	}
 	
 	@Before
 	public void setUpBeforeEach() throws Exception {
-		c.reset();
+		c.addTimestamp("RESET");
 		c.setOn(true);
 		c.input(c.addTimestamp("EVENT PARIND"));
 		

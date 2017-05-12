@@ -7,6 +7,7 @@ package chronotimer;
 public class Channel {
 	private ChronoTimer chronotimer;
 	public int id;
+	private Racer racer;
 	private boolean on;
 	Sensor sensor=null;
 	
@@ -80,6 +81,12 @@ public class Channel {
 		}else{ //extra check if something goes wrong
 			System.out.println("Channel "+id+" is not on");
 		}
+	}
+	
+	public Racer getRacer(int id){
+		if(racer.getId()==id)
+			return racer;
+		return null;
 	}
 	
 }

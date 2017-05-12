@@ -14,19 +14,17 @@ import chronotimer.*;
 
 public class IND_test {
 
-	static Console c;
+	static ChronoTimer c;
 	static IndividualTimed event;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		c = new Console();
+		c = new ChronoTimer();
 		c.setOn(true);
 		c.input(c.addTimestamp("POWER"));
 		c.input(c.addTimestamp("EVENT IND"));
 		c.input(c.addTimestamp("NEWRUN"));
-		Timer timer = new Timer();
-		Printer printer = new Printer();
-		event = new IndividualTimed(timer, printer);
+		event = new IndividualTimed();
 	}
 	
 	private void println(String str){
@@ -87,7 +85,7 @@ public class IND_test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		event.discard();
+		event.cancel();
 	}
 	private void dnf()
 	{
@@ -100,7 +98,7 @@ public class IND_test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		event.dnf();
+		event.didNotFinish();
 	}
 
 	

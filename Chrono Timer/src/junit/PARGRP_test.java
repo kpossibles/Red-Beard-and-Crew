@@ -4,17 +4,17 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
-import chronotimer.Console;
+import chronotimer.ChronoTimer;
 import chronotimer.ParallelGroupTimed;
 import chronotimer.Run;
 
 public class PARGRP_test {
-	static Console c;
+	static ChronoTimer c;
 	static ParallelGroupTimed event;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		c = new Console();
+		c = new ChronoTimer();
 		c.setOn(true);
 		c.input(c.addTimestamp("POWER"));
 		c.input(c.addTimestamp("EVENT PARGRP"));
@@ -182,8 +182,8 @@ public class PARGRP_test {
 		event.trigger(1);
 		event.trigger(3);
 		event.trigger(4);
-		event.dnf();
-		System.out.println(event.getRecord());
+		event.didNotFinish();
+		event.print();
 	}
 
 	@Test
@@ -223,7 +223,7 @@ public class PARGRP_test {
 	@Test
 	public void testToString() {
 		println("ParallelGroupTimed ==" + event.getClass().toString());
-		println("Console ==" + c.getClass().toString());
+		println("ChronoTimer ==" + c.getClass().toString());
 		//			fail("Not yet implemented"); // TODO
 	}
 

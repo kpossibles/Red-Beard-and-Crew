@@ -1,4 +1,4 @@
-package gui;
+package chronoview;
 
 public class Command {
 	private final String name;

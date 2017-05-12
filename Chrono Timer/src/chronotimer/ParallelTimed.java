@@ -12,7 +12,7 @@ public class ParallelTimed extends Event {
 	private Run currentRun;
 	private String channelMode[];
 	private Timer timer;
-	private Printer print;
+	private Printer printer;
 
 	/**
 	 * Instantiates a new parallel timed with a new Timer and Printer
@@ -23,7 +23,7 @@ public class ParallelTimed extends Event {
 	public ParallelTimed() {
 		racing = new LinkedList<>();
 		timer = new Timer();
-		print = new Printer();
+		printer = new Printer();
 		channelMode = new String[8];
 		channelMode[0] = "START1";
 		channelMode[1] = "FINISH1";
@@ -40,7 +40,7 @@ public class ParallelTimed extends Event {
 	public ParallelTimed(Timer _timer, Printer _print){
 		racing = new LinkedList<>();
 		timer = _timer;
-		print = _print;
+		printer = _print;
 		channelMode = new String[8];
 		channelMode[0] = "START1";
 		channelMode[1] = "FINISH1";
@@ -54,28 +54,29 @@ public class ParallelTimed extends Event {
 			Racer racer = new Racer(r);
 			currentRun.add(racer);
 			racing.add(racer);
-			print.print(String.format("Racer %d added.", r));
+			printer.feedback(String.format("Racer %d added.", r));
 		}
 		else {
-			print.print("Could not add racer. Either the current run is not active, or there is currently no run. ");
+			printer.feedback("Could not add racer. Either the current run is not active, or there is currently no run. ");
 		}
 	}
 
 	@Override
-	public void discard() {
+	public void cancel() {
 		racing.peek().reset();
-		print.print("Start was not valid. Racer will retry.");
+		printer.feedback("Start was not valid. Racer will retry.");
 	}
 
 	@Override
-	public void dnf() {
+	public void didNotFinish() {
 		Racer racer = racing.poll();
 		if (racer != null && racer.getStart() != 0){
-			racer.didNotFinish();;
-			print.print(String.format("Racer %d marked as Did Not Finish.", racer.getId()));
+			racer.didNotFinish();
+			if(ChronoTimer.consoleMode)
+				printer.feedback(String.format("Racer %d marked as Did Not Finish.", racer.getId()));
 		}
 		else
-			print.print("No racer queued to finish.");
+			printer.feedback("No racer queued to finish.");
 	}
 
 	@Override
@@ -89,7 +90,7 @@ public class ParallelTimed extends Event {
 		if(currentRun.isActive()){
 			for(Racer r : racing){
 				if(r.getId() == racerId && racing.size()>0){
-					print.print(String.format("Racer %d removed.", r.getId()));
+					printer.feedback(String.format("Racer %d removed.", r.getId()));
 					racing.remove(racerId);
 					currentRun.remove(racerId);
 				}
@@ -97,9 +98,9 @@ public class ParallelTimed extends Event {
 		}
 		if(size==currentRun.size()){//couldn't find racer id
 			if(currentRun.size()==0)
-				print.print("WARNING: Queue is empty.");
+				printer.feedback("WARNING: Queue is empty.");
 			else
-				print.print("WARNING: "+racerId+" is not in the queue.");
+				printer.feedback("WARNING: "+racerId+" is not in the queue.");
 		}
 	}
 
@@ -115,7 +116,7 @@ public class ParallelTimed extends Event {
 
 	@Override
 	public void swap() {
-		print.print("WARNING: Cannot swap for this type of event.");
+		printer.feedback("WARNING: Cannot swap for this type of event.");
 	}
 
 	@Override
@@ -128,10 +129,15 @@ public class ParallelTimed extends Event {
 				finish(Integer.parseInt(channelMode[id-1].substring(6,7))); // trig 4 => FINISH2 finish(2)
 		}
 		else{
-			System.out.println(String.format("Sorry, Channel %d is not active", id));
+			printer.feedback(String.format("Sorry, Channel %d is not active", id));
 			if(racing.size() == 0)
-				print.print("No racer queued to start.");
+				printer.feedback("No racer queued to start.");
 		}
+	}
+
+	@Override
+	public Run getRun() {
+		return currentRun;
 	}
 
 	/**
@@ -151,12 +157,12 @@ public class ParallelTimed extends Event {
 				}
 			}
 			if (started != null)
-				print.print(String.format("Racer %d\t%s", started.getId(), timer.getTimeString()));
+				printer.feedback(String.format("Racer %d\t%s", started.getId(), timer.getTimeString()));
 			else
-				print.print("No racer queued to start.");
+				printer.feedback("No racer queued to start.");
 		}
 		else
-			print.print("Current Run is not active. ");
+			printer.feedback("Current Run is not active.");
 	}
 
 	/**
@@ -175,11 +181,11 @@ public class ParallelTimed extends Event {
 			if(racer != null && racing.size()>0){
 				racer.setFinish(timer.getTime());
 	//			print.print(String.format("Racer %d\t%s", racer.getId(), timer.getTimeString()));
-				print.print(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
+				printer.feedback(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
 				racing.remove(racer);
 			}
 			else
-				print.print("No racer queued to finish.");
+				printer.feedback("No racer queued to finish.");
 		}
 
 	/**
@@ -199,17 +205,14 @@ public class ParallelTimed extends Event {
 	public int getRacingSize(){
 		return racing.size();
 	}
-
-	/**
-	 * Gets the record.
-	 *
-	 * @return the record
-	 */
-	public String getRecord(){
-		return print.getRecord();
-	}
 	
-	public String getTime(){
-		return timer.getTimeString();
+	/**
+	 * Prints the record so far.
+	 */
+	public void print() {
+		if(currentRun!=null)
+			for(Racer r:currentRun.getRacers()){
+				System.out.println(r.toString());
+			}
 	}
 }

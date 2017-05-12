@@ -1,4 +1,5 @@
 package chronotimer;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -8,11 +9,11 @@ import java.util.Queue;
  * @author Red Beard & Crew
  */
 public class ParallelGroupTimed extends Event {
-	private Queue<Racer> racing;
+	private ArrayList<Racer> racing;
 	private Run currentRun;
 	private String channelMode[];
 	private Timer timer;
-	private Printer print;
+	private Printer printer;
 	
 	/**
 	 * Instantiates a new parallel group timed with a new Timer and Printer
@@ -21,9 +22,9 @@ public class ParallelGroupTimed extends Event {
 	 * @param _print the printer
 	 */
 	public ParallelGroupTimed(){
-		racing = new LinkedList<>();
+		racing = new ArrayList<>();
 		timer = new Timer();
-		print = new Printer();
+		printer = new Printer();
 		channelMode = new String[8];
 		for(int i=0;i<8;i++){
 			channelMode[i]="START"+i;
@@ -37,9 +38,9 @@ public class ParallelGroupTimed extends Event {
 	 * @param _print the printer
 	 */
 	public ParallelGroupTimed(Timer _timer, Printer _print){
-		racing = new LinkedList<>();
+		racing = new ArrayList<>();
 		timer = _timer;
-		print = _print;
+		printer = _print;
 		channelMode = new String[8];
 		for(int i=0;i<8;i++){
 			channelMode[i]="START"+i;
@@ -50,39 +51,41 @@ public class ParallelGroupTimed extends Event {
 	public void addRacer(int r) {
 		// TODO check if working correctly -KP
 		if(currentRun!=null && currentRun.isActive()){
-			if(currentRun.size()<=8){
+			if(currentRun.size()<8){
 				int tempLane=currentRun.size();
 				Racer racer = new Racer(r);
 				racer.setLane(tempLane);
 				currentRun.add(racer);
 				racing.add(racer);
-				print.print(String.format("Racer %d added in lane %d.", r, tempLane+1));
+				printer.feedback(String.format("Racer %d added in lane %d.", r, tempLane+1));
 			}
-			else
-				print.print("Only can add maximum 8 racers.");
+			else{
+				printer.feedback("Only can add maximum 8 racers.");
+			}
 		}
 		else {
-			print.print("Could not add racer. Either the current run is not active, or there is currently no run.");
+			printer.feedback("Could not add racer. Either the current run is not active, or there is currently no run.");
 		}
 	}
 
 	@Override
-	public void discard() {
+	public void cancel() {
 		// TODO check if working correctly -KP
-		racing.peek().reset();
-		print.print("Start was not valid. Racer will retry.");
+		racing.get(0).reset();
+		printer.feedback("Start was not valid. Racer will retry.");
 	}
 
 	@Override
-	public void dnf() {
+	public void didNotFinish() {
 		// TODO check if working correctly -KP
-		Racer racer = racing.poll();
+		Racer racer = racing.get(0);
 		if (racer != null && racer.getStart() != 0){
-			racer.didNotFinish();;
-			print.print(String.format("Racer %d marked as Did Not Finish.", racer.getId()));
+			racer.didNotFinish();
+			currentRun.getRacer(racer.getId()).didNotFinish();
+			printer.feedback(String.format("Racer %d marked as Did Not Finish.", racer.getId()));
 		}
 		else
-			print.print("No racer queued to finish.");
+			printer.feedback("No racer queued to finish.");
 	}
 
 	@Override
@@ -96,7 +99,7 @@ public class ParallelGroupTimed extends Event {
 		if(currentRun.isActive()){
 			for(Racer r : racing){
 				if(r.getId() == index && racing.size()>0){
-					print.print(String.format("Racer %d removed.", r.getId()));
+					printer.feedback(String.format("Racer %d removed.", r.getId()));
 					racing.remove(index);
 					currentRun.remove(index);
 				}
@@ -129,13 +132,14 @@ public class ParallelGroupTimed extends Event {
 					channelMode[i] = "FINISH"+i;
 				}
 			}
-			else if (channelMode[id-1].startsWith("FINISH"))
-				finish(id); 
+			else if (channelMode[id-1].startsWith("FINISH")){
+				finish(id-1); 
+			}
 		}
 		else{
 			System.out.println(String.format("Sorry, Channel %d is not active", id));
 			if(racing.size() == 0)
-				print.print("No racer queued to start.");
+				printer.feedback("No racer queued to start.");
 		}
 	}
 	private void finish(int lane) {
@@ -149,14 +153,18 @@ public class ParallelGroupTimed extends Event {
 		}
 		if(racer != null){
 			racer.setFinish(timer.getTime());
-			print.print(String.format("Racer %d\t%s", racer.getId(), racer.getFinishTime()));
-			print.print(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
+			printer.feedback(String.format("Racer %d\t%s", racer.getId(), racer.getFinishTime()));
+			printer.feedback(String.format("Racer %d\t%s", racer.getId(), racer.getTime()));
 			racing.remove(racer);
 			channelMode[racer.getId()] = "START"+racer.getId();
 		}
 		else
-			print.print(String.format("No racer queued to finish in lane %d.", lane));
+			printer.feedback(String.format("No racer queued to finish in lane %d.", lane));
 	}
+	
+	/**
+	 * Starts the race.
+	 */
 	private void start() {
 		// TODO check if working correctly -KP
 		// Upon a start (trigger on channel 1), the times for all racers begin.
@@ -167,14 +175,14 @@ public class ParallelGroupTimed extends Event {
 					r.setStart(timer.getTime());
 					started = r;
 					if (started != null)
-						print.print(String.format("Racer %d\t%s", started.getId(), started.getStartTime()));
+						printer.feedback(String.format("Racer %d\t%s", started.getId(), started.getStartTime()));
 				}
 			}
 			if (started == null)
-				print.print("No racer queued to start.");
+				printer.feedback("No racer queued to start.");
 		}
 		else
-			print.print("Current Run is not active.");
+			printer.feedback("Current Run is not active.");
 	}
 
 	/**
@@ -195,7 +203,19 @@ public class ParallelGroupTimed extends Event {
 		return racing.size();
 	}
 
-	public String getRecord(){
-		return print.getRecord();
+	/**
+	 * Prints the record so far.
+	 */
+	public void print() {
+		if(currentRun!=null)
+			for(Racer r:currentRun.getRacers()){
+				System.out.println(r.toString());
+			}
 	}
+
+	@Override
+	public Run getRun() {
+		return currentRun;
+	}
+
 }

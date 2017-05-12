@@ -7,8 +7,7 @@ package chronotimer;
  *
  * @author Red Beard & Crew
  */
-public abstract class Event{
-
+public abstract class Event {
 	
 	/**
 	 * Adds the racer.
@@ -34,7 +33,7 @@ public abstract class Event{
 	/**
 	 * For CANCEL: Start isn't valid, competitor still in queue to start.
 	 */
-	abstract public void discard();
+	abstract public void cancel();
 	
 	/**
 	 * Removes the racer.
@@ -46,7 +45,7 @@ public abstract class Event{
 	/**
 	 * For DNF: The next competitor to finish did not finish.
 	 */
-	abstract public void dnf();
+	abstract public void didNotFinish();
 	
 	/**
 	 * Sets the run.
@@ -66,4 +65,11 @@ public abstract class Event{
 	 * Swap.
 	 */
 	abstract public void swap();
+
+	/**
+	 * Gets the run to save to record.
+	 *
+	 * @return the run
+	 */
+	abstract public Run getRun();
 }

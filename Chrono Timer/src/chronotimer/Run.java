@@ -7,9 +7,9 @@ import java.util.ArrayList;
  * @author Red Beard & Crew
  */
 public class Run {
-	private int number;
-	ArrayList<Racer> racers;
-	boolean active; //Whether a run has been ended
+	private int id;
+	private ArrayList<Racer> racers;
+	private boolean active; //Whether a run has been ended
 	
 	/**
 	 * Instantiates a new run.
@@ -17,7 +17,7 @@ public class Run {
 	 * @param _number the number
 	 */
 	public Run(int _number){
-		setNumber(_number);
+		setId(_number);
 		racers = new ArrayList<Racer>();
 		active = true;
 	}
@@ -35,13 +35,24 @@ public class Run {
 	}
 	 
 	/**
-	 * Ends the run.
+	 * End.
 	 *
-	 * @return the int
+	 * @return true, if successful
 	 */
-	public int end(){
+	public boolean end(){
+		if(!active){
+			return false;
+		}
+			
 		active = false;
-		return getNumber();
+		for(Racer r:racers){
+			if(r.getStart()==0){
+				r.didNotFinish();
+			} else if(r.getFinish()==0 && !r.DNF()){
+				r.didNotFinish();
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -89,13 +100,26 @@ public class Run {
 	}
 	
 	/**
-	 * Gets the racer.
+	 * Gets the first racer.
 	 *
 	 * @return the racer
 	 */
 	public Racer getRacer(){
 		if(racers.size()>0)
 			return racers.get(0);
+		else
+			return null;
+	}
+	
+	/**
+	 * Gets the racer.
+	 *
+	 * @param index the index
+	 * @return the racer
+	 */
+	public Racer getRacer(int index){
+		if(racers.size()>0)
+			return racers.get(index);
 		else
 			return null;
 	}
@@ -135,15 +159,24 @@ public class Run {
 	/**
 	 * @return the number
 	 */
-	public int getNumber() {
-		return number;
+	public int getId() {
+		return id;
 	}
 
 	/**
-	 * @param number the number to set
+	 * @param _id the number to set
 	 */
-	public void setNumber(int number) {
-		this.number = number;
+	public void setId(int _id) {
+		id = _id;
+	}
+	
+	public String toString(){
+		String str="";
+		for(Racer r:racers){
+			str+=r.toString();
+			str+="\n";
+		}
+		return str;
 	}
 
 }

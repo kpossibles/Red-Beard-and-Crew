@@ -5,65 +5,64 @@ import java.io.PrintWriter;
 import java.util.*;
 import javax.swing.*;
 
+import com.google.gson.Gson;
+
 /**
  * The Class Printer.
  *
  * @author Red Beard & Crew
  */
 public class Printer {
-	private Queue<String> record;
+	private ArrayList<Run> record;
 	private PrintWriter writer = null;
 	private boolean active;
-	private JTextArea displayText;
+	private JTextArea displayView, printerView;
 	
 	/**
-	 * Instantiates a new printer.
+	 * Instantiates a new printer without a display.
 	 */
 	public Printer(){
-		record = new LinkedList<String>();
+		record = new ArrayList<Run>();
 		setActive(false);
 	}
 	
-	public Printer(JTextArea _display){
-		record = new LinkedList<String>();
-		displayText = _display;
-		System.out.println(_display.getName());
+	/**
+	 * Instantiates a new printer with 2 displays.
+	 *
+	 * @param _displayView the display view
+	 * @param _printerView the printer view
+	 */
+	public Printer(JTextArea _displayView, JTextArea _printerView){
+		record = new ArrayList<Run>();
+		displayView  = _displayView;
+		printerView  = _printerView;
+		
 	}
 	
 	/**
-	 * Adds the event changes to record.
+	 * Adds the completed run to record.
 	 *
-	 * @param str the str
+	 * @param newRun the new run
 	 */
-	public void addToRecord(String str){
-		record.add(str);
+	public void addToRecord(Run newRun){
+		record.add(newRun);
 	}
 
 	/**
-	 * Prints to the Console and adds to record.
+	 * Convert to record.
 	 *
-	 * @param str the str
+	 * @param run the run
+	 * @return the string
 	 */
-	public void print(String str) {
-		System.out.println(str);
-		addToRecord(str);
-		if(displayText!=null){
-			displayText.setText(str);
+	public String convertToRecord(Run run) {
+		String ret = "\nRUN "+run.getId()+" RECORD\n"
+				+ "======================================================\n"
+				+ "Racer\t|| Start time\t|| Finish time\t|| Total time\n"
+				+ "------------------------------------------------------\n";
+		for(Racer r:run.getRacers()){
+			ret+=r.toString()+'\n';
 		}
-	}
-
-	/**
-	 * Gets the record for printing.
-	 *
-	 * @return the record
-	 */
-	public String getRecord(){
-		String ret = "\n***CHRONOTIMER RECORD:\n";
-		for(String str:record){
-			ret+=str+'\n';
-		}
-		ret+="***END RECORD\n";
-		return ret;
+		return ret;	
 	}
 	
 	/**
@@ -71,11 +70,11 @@ public class Printer {
 	 *
 	 * @param runNum the run number
 	 */
-	public void saveData(int runNum){
-		// TODO: Might have to add timestamp?
-		String data = getRecord();
+	public void export(Run r){
+		Gson g = new Gson();
+		String data = g.toJson(r);
 		try{
-			File saveFile = new File(filename(runNum));
+			File saveFile = new File(filename(r.getId()));
 		    writer = new PrintWriter(saveFile);
 		    writer.println(data);
 		    writer.flush();
@@ -84,25 +83,22 @@ public class Printer {
 		}
 	}
 	
+	/**
+	 * Filename.
+	 *
+	 * @param runNum the run number
+	 * @return the string
+	 */
 	private String filename(int runNum){
 		return String.format("Run%03d.txt", runNum);
 	}
-	
-	/**
-	 * Prints to the GUI.
-	 *
-	 * @param str the str
-	 * @param text the text
-	 */
-	public void printGUI(String str, JTextArea text){
-		text.setText(text.getText()+'\n'+str);
-		addToRecord(str);
-	}
 
 	/**
-	 * @return the active
+	 * Checks if the printer is on.
+	 *
+	 * @return true, if is on
 	 */
-	public boolean isActive() {
+	public boolean isOn() {
 		return active;
 	}
 
@@ -111,6 +107,32 @@ public class Printer {
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	/**
+	 * Updates the printer display with newly entered command.
+	 *
+	 * @param formatted the formatted string
+	 */
+	public void updatePrinterDisplay(String formatted){
+		if(printerView!=null){
+			String old = printerView.getText();
+			printerView.setText(old+formatted);
+		}
+	}
+	
+	/**
+	 * Feedback - prints to console or displayView.
+	 *
+	 * @param message the message
+	 */
+	public void feedback(String message){
+		if(ChronoTimer.consoleMode){
+			System.out.println(message);
+		}
+		if(displayView!=null){
+			displayView.setText(message);
+		}
 	}
 
 }

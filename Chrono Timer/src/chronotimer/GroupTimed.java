@@ -12,7 +12,7 @@ public class GroupTimed extends Event {
 	private Run currentRun;
 	private String channelMode[];
 	private Timer timer;
-	private Printer print;
+	private Printer printer;
 	private long startTime;
 	private int raceCount;
 
@@ -24,7 +24,7 @@ public class GroupTimed extends Event {
 	 */
 	public GroupTimed(){
 		timer = new Timer();
-		print = new Printer();
+		printer = new Printer();
 		channelMode = new String[8];
 		channelMode[0] = "START";
 		channelMode[1] = "FINISH";
@@ -38,7 +38,7 @@ public class GroupTimed extends Event {
 	 */
 	public GroupTimed(Timer _timer, Printer _print){
 		timer = _timer;
-		print = _print;
+		printer = _print;
 		channelMode = new String[8];
 		channelMode[0] = "START";
 		channelMode[1] = "FINISH";
@@ -52,11 +52,11 @@ public class GroupTimed extends Event {
 			else if (channelMode[id-1].startsWith("FINISH"))
 				finish();
 			else {
-				print.print("Channel is inactive.");
+				printer.feedback("Channel is inactive.");
 			}
 		}
 		else {
-			print.print("Channel is invalid.");
+			printer.feedback("Channel is invalid.");
 		}
 	}
 
@@ -67,13 +67,13 @@ public class GroupTimed extends Event {
 		if (currentRun != null && currentRun.isActive()) {
 			if (startTime == 0) {
 				startTime = timer.getTime();
-				print.print(String.format("Current run started at %s. ", timer.getTimeString()));
+				printer.feedback(String.format("Current run started at %s.", timer.getTimeString()));
 			} else {
-				print.print("Current run already started. ");
+				printer.feedback("Current run already started.");
 			}
 		}
 		else
-			print.print("The current run is already complete or no run has been started. ");
+			printer.feedback("The current run is already complete or no run has been started. ");
 	}
 
 	/**
@@ -88,36 +88,36 @@ public class GroupTimed extends Event {
 				finishedRacer.setFinish(timer.getTime());
 				currentRun.add(finishedRacer);
 				unnamed.add(finishedRacer);
-				print.print(String.format("Racer %05d has finished at %s.", raceCount, timer.getTimeString()));
-				print.print(String.format("Racer %05d's time was %s. ", raceCount, finishedRacer.getTime()));
+				printer.feedback(String.format("Racer %05d has finished at %s.", raceCount, timer.getTimeString()));
+				printer.feedback(String.format("Racer %05d's time was %s. ", raceCount, finishedRacer.getTime()));
 			} else {
-				print.print("Current run has not been started. ");
+				printer.feedback("Current run has not been started. ");
 			}
 		}
 		else {
-			print.print("The current run is already complete or no run has been started. ");
+			printer.feedback("The current run is already complete or no run has been started. ");
 		}
 	}
 
 	@Override
-	public void discard() {
+	public void cancel() {
 		if(currentRun != null && currentRun.isActive()) {
 			if (!currentRun.isEmpty())
 				currentRun.removeLast();
 			else
-				print.print("No racer has finished yet!");
+				printer.feedback("No racer has finished yet!");
 		}
 		else {
-			print.print("The current run is already complete or no run has been started. ");
+			printer.feedback("The current run is already complete or no run has been started. ");
 		}
 	}
 
 	public void removeRacer(int index){
-		print.print("CLEAR is not a valid command for this type of race");
+		printer.feedback("CLEAR is not a valid command for this type of race");
 	}
 
 	@Override
-	public void dnf() {
+	public void didNotFinish() {
 		if (startTime != 0){
 			raceCount++;
 			Racer finishedRacer = new Racer();
@@ -125,9 +125,9 @@ public class GroupTimed extends Event {
 			finishedRacer.didNotFinish();
 			currentRun.add(finishedRacer);
 			unnamed.add(finishedRacer);
-			print.print(String.format("Racer %1$05d did not finish.", raceCount));
+			printer.feedback(String.format("Racer %1$05d did not finish.", raceCount));
 		} else {
-			print.print("The current run is already complete or no run has been started. ");
+			printer.feedback("The current run is already complete or no run has been started.");
 		}
 	}
 
@@ -137,7 +137,7 @@ public class GroupTimed extends Event {
 		raceCount = 0;
 		unnamed = new LinkedList<>();
 		currentRun = _run;
-		print.print(String.format("Run %1$02d started. ", _run.getNumber()));
+		printer.feedback(String.format("Run %1$02d started.", _run.getId()));
 	}
 
 	@Override
@@ -146,10 +146,10 @@ public class GroupTimed extends Event {
 			Racer toUpdate = unnamed.poll();
 			int oldNumber = toUpdate.getId();
 			toUpdate.setId(r);
-			print.print(String.format("Racer %1$05d was renamed to %2$05d.", oldNumber, r));
+			printer.feedback(String.format("Racer %1$05d was renamed to %2$05d.", oldNumber, r));
 		}
 		else{
-			print.print("No racer has finished that is unnamed.");
+			printer.feedback("No racer has finished that is unnamed.");
 		}
 	}
 
@@ -184,8 +184,20 @@ public class GroupTimed extends Event {
 	public int getRacingSize(){
 		return unnamed.size();
 	}
-
-	public String getRecord(){
-		return print.getRecord();
+	
+	/**
+	 * Prints the record so far.
+	 */
+	public void print() {
+		if(currentRun!=null)
+			for(Racer r:currentRun.getRacers()){
+				System.out.println(r.toString());
+			}
 	}
+
+	@Override
+	public Run getRun() {
+		return currentRun;
+	}
+
 }
