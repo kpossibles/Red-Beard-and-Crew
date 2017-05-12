@@ -24,23 +24,24 @@ public class TC00 {
 
 	@Before
 	public void setUp() throws Exception {
+		if(c.isOn())
+			c.input(c.addTimestamp("RESET"));
+		else
+			c.input(c.addTimestamp("POWER"));
 		System.out.println(String.format("\nTC00_%02d", junit_counter++));
 		System.out.println("============");
 	}
 	
 	private void basicSetup(){
-		c.input(c.addTimestamp("POWER"));
-		c.input(c.addTimestamp("RESET"));
-		c.setOn(true);
 		c.input(c.addTimestamp("tog 1"));
 		c.input(c.addTimestamp("tog 2"));
 		assertEquals(c.isChannelActive(1),true);
 		assertEquals(c.isChannelActive(2),true);
+		assertEquals(c.isChannelActive(3),false);
 	}
 
 	@Test
 	public void TC00_01() {
-		c.input(c.addTimestamp("POWER"));
 		assertEquals(c.isOn(),true);
 		assertEquals(c.getEventType(),"IND");
 		c.input(c.addTimestamp("POWER"));
@@ -53,8 +54,9 @@ public class TC00 {
 	@Test
 	public void TC00_02() {
 		c.input(c.addTimestamp("POWER"));
-		c.input(c.addTimestamp("TRIG 1"));//warning
-		assertFalse(c.isChannelActive(1));
+		assertEquals(c.input(c.addTimestamp("TRIG 1")),false);//warning
+		assertFalse(c.isChannelActive(1));//
+		assertFalse(c.isOn());
 	}
 	
 	@Test

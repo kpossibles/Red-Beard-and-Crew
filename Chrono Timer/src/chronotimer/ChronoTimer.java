@@ -393,7 +393,10 @@ public class ChronoTimer  {
 	 * @return true, if is channel active
 	 */
 	public boolean isChannelActive(int i) {
-		return channels[i-1].isOn();
+		if(on)
+			return channels[i-1].isOn();
+		else
+			return false;
 	}
 
 	/**
@@ -561,8 +564,6 @@ public class ChronoTimer  {
 			// RESET Resets the System to initial state
 			if (command.equalsIgnoreCase("RESET")){
 				reset();
-				if(consoleMode)
-					System.out.println("Reset the program!");
 			}
 			// TIME <hour>:<min>:<sec> Set the current time
 			else if (command.equalsIgnoreCase("TIME")){
@@ -638,14 +639,24 @@ public class ChronoTimer  {
 			}
 			// EXPORT <RUN> Export run in XML to file "RUN<RUN>"
 			else if (command.equalsIgnoreCase("EXPORT")){
-				int runNum = Integer.parseInt(argument);
-				for(Run r:runs){
-					if(r.getId()==runNum){
-						new Exporter(r);
+				if(argument.length()==0){
+					feedback("You need to enter a race number!");
+				}
+				else {
+					int runNum = Integer.parseInt(argument);
+					Run temp = null;
+					for(Run r:runs){
+						if(r.getId()==runNum){
+							temp = r;
+						}
+					}
+					if(temp==null){
+						feedback("Run "+argument+" not found.");
+					}
+					else{
+						new Exporter(temp);
 					}
 				}
-				if(consoleMode) 
-					System.out.println("EXPORTED RUN "+runNum);
 				
 			}
 			// NUM <number> Set <number> as the next competitor to start.
@@ -701,7 +712,8 @@ public class ChronoTimer  {
 				return false;
 		}
 			else {
-				System.out.println("The Chronotimer is currently off.  Try 'POWER' to turn it on.");
+				feedback("The Chronotimer is currently off.  Try 'POWER' to turn it on.");
+				return false;
 			}
 		
 		return true;

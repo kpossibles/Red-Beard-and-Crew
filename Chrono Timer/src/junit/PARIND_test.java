@@ -15,7 +15,6 @@ public class PARIND_test {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		new TC00(); //run basic test
 		c = new ChronoTimer();
 		c.setOn(true);
 		c.input(c.addTimestamp("POWER"));
