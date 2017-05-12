@@ -1,0 +1,63 @@
+WELCOME TO CHRONOTIMER
+Start the system by entering POWER or type HELP for list of commands (EXIT to quit):
+> POWER
+POWER ON
+
+Please enter your command:
+> event ind
+Event set to Individual
+
+Please enter your command:
+> newrun
+
+Please enter your command:
+> tog 1
+Toggled 1
+
+Please enter your command:
+> tog 2
+Toggled 2
+
+Please enter your command:
+> num 1
+Racer 1 added.
+
+Please enter your command:
+> num 2
+Racer 2 added.
+
+Please enter your command:
+> num 3
+Racer 3 added.
+
+Please enter your command:
+> trig 1
+Racer 1 started at 16:25:15.7
+
+Please enter your command:
+> trig 1
+Racer 2 started at 16:25:18.8
+
+Please enter your command:
+> trig 1
+Racer 3 started at 16:25:19.9
+
+Please enter your command:
+> finish
+Racer 1 finished at 16:25:22.4
+Racer 1's time was 00:00:06.6
+
+Please enter your command:
+> finish
+Racer 2 finished at 16:25:23.7
+Racer 2's time was 00:00:04.9
+
+Please enter your command:
+> finish
+Racer 3 finished at 16:25:25.8
+Racer 3's time was 00:00:05.9
+
+Please enter your command:
+> export 2
+Reset the system.
+File saved!

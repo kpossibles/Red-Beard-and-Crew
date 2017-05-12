@@ -1,0 +1,68 @@
+WELCOME TO CHRONOTIMER
+Start the system by entering POWER or type HELP for list of commands (EXIT to quit):
+> power
+POWER ON
+ 
+Please enter your command:
+> event group
+
+Please enter your command:
+> tog 1
+Toggled 1
+
+Please enter your command:
+> tog 2
+Toggled 2
+
+Please enter your command:
+> newrun
+
+Please enter your command:
+> num 1
+Racer 1 added.
+
+Please enter your command:
+> num 2
+Racer 2 added.
+
+Please enter your command:
+> num 3
+Racer 3 added.
+
+Please enter your command:
+> start 1
+Racer 1 started at 16:04:53.2
+
+Please enter your command:
+> start 2
+Racer 2 started at 16:04:57.5
+
+Please enter your command:
+> start 3
+Racer 3 started at 16:04:59.4
+
+Please enter your command:
+> finish 1
+Racer 1 finished at 16:05:01.6
+Racer 1's time was 00:00:08.4
+
+Please enter your command:
+> finish 2
+Racer 2 finished at 16:05:03.3
+Racer 2's time was 00:00:05.8
+
+Please enter your command:
+> finish 3
+Racer 3 finished at 16:05:04.7
+Racer 3's time was 00:00:05.3
+
+Please enter your command:
+> print 1
+
+RUN 1 RECORD
+======================================================
+Racer	|| Start time	|| Finish time	|| Total time
+------------------------------------------------------
+1	|| 16:04:53.2	|| 16:05:01.6	|| 00:00:08.4	
+2	|| 16:04:57.5	|| 16:05:03.3	|| 00:00:05.8	
+3	|| 16:04:59.4	|| 16:05:04.7	|| 00:00:05.3

@@ -1,0 +1,67 @@
+WELCOME TO CHRONOTIMER
+Start the system by entering POWER or type HELP for list of commands (EXIT to quit):
+> power
+POWER ON
+
+Please enter your command:
+> event pargrp
+Event Set to Parallel Group
+
+Please enter your command:
+> newrun
+
+Please enter your command:
+> tog 1
+Toggled 1
+
+Please enter your command:
+> tog 2
+Toggled 2
+
+Please enter your command:
+> num 1
+Racer 1 added in lane 1.
+
+Please enter your command:
+> num 2
+Racer 2 added in lane 2.
+
+Please enter your command:
+> num 3
+Racer 3 added in lane 3.
+
+Please enter your command:
+> trig 1
+Racer 1	16:36:39.2
+Racer 2	16:36:39.2
+Racer 3	16:36:39.2
+No racer queued to start.
+No racer queued to start.
+No racer queued to start.
+No racer queued to start.
+No racer queued to start.
+No racer queued to start.
+No racer queued to start.
+
+Please enter your command:
+> finish
+Racer 2	16:36:41.9
+Racer 2	00:00:02.7
+
+Please enter your command:
+> export 2
+Reset the system.
+File saved!
+
+XML DOM Created Successfully.
+
+Please enter your command:
+> print 2
+
+RUN 2 RECORD
+======================================================
+Racer	|| Start time	|| Finish time	|| Total time
+------------------------------------------------------
+1	|| 16:36:39.2	|| 18:00:00.0	|| -2	
+2	|| 16:36:39.2	|| 16:36:41.9	|| 00:00:02.7	
+3	|| 16:36:39.2	|| 18:00:00.0	|| -2	
