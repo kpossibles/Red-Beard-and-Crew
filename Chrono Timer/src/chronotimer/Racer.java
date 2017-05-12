@@ -206,6 +206,6 @@ public class Racer {
 	 * @return the Racer in formatted form
 	 */
 	public String toString(){
-		return String.format("%d\t|| %s\t|| %s\t|| %s\t", id, getStartTime(), getFinishTime(), getTime());
+		return String.format("%d\t|| %s\t|| %s\t|| %s\t", id, getStartTime(), getFinishTime(), getTime()=="-2" ? "00:00:00.0" : getTime());
 	}
 }

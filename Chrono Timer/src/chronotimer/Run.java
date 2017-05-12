@@ -1,5 +1,6 @@
 package chronotimer;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * The Class Run.
@@ -171,12 +172,41 @@ public class Run {
 	}
 	
 	public String toString(){
+		sort();
 		String str="";
+		int i=1;
 		for(Racer r:racers){
+			System.out.println("print");
+			str+=(i+"\t|| ");
 			str+=r.toString();
 			str+="\n";
+			i++;
 		}
 		return str;
+	}
+
+	public void sort() {
+		ArrayList<Racer> finishedRacers = new ArrayList<>();
+        ArrayList<Racer> DNFandIncompleteRacers = new ArrayList<>();
+        for(Racer r: racers){
+            if (r.getFinish() > 0){
+                int i;
+                for(i = 0; i<finishedRacers.size(); i++){
+                    if(r.getTimeAsLong() < finishedRacers.get(i).getTimeAsLong()){
+                        break;
+                    }
+                }
+                finishedRacers.add(i, r);
+            } else {
+                if (r.DNF()) { // Put the racers that have not finished before the racers that DNF!
+                    DNFandIncompleteRacers.add(r);
+                } else{
+                    DNFandIncompleteRacers.add(0, r);
+                }
+            }
+        }
+        finishedRacers.addAll(DNFandIncompleteRacers);
+        racers=finishedRacers;
 	}
 
 }

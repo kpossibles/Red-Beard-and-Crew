@@ -192,19 +192,21 @@ public class ChronoTimer  {
 	 * @param id the id
 	 * @see #input(String)
 	 */
-	private void trigger(String id){
+	private boolean trigger(String id){
 		if(runExist() && event.getRun().isActive() && getRacerListSize()>0){
 			int index = Integer.valueOf(id);
-			if (index < channels.length && channels[index-1].isOn()){
-				channels[index-1].trigger();
+			if (index < channels.length && index >0 && channels[index-1].isOn()){
+				return trigger(index);
 			}else{
 				feedback("WARNING: Invalid port "+id+" to trigger. Toggle it on!");
+				return false;
 			}
 		}else{
 			if(getRacerListSize()==0)
 				feedback("WARNING: No racers in the run.");
 			else
 				feedback("WARNING: Run does not exist. Cannot trigger.");
+			return false;
 		}
 	}
 	/**
@@ -212,14 +214,16 @@ public class ChronoTimer  {
 	 *
 	 * @param id the id
 	 */
-	protected void trigger(int id) {
+	protected boolean trigger(int id) {
 		if(channels[id-1].isOn()){
 			event.trigger(id);
+			return true;
 		}else{ // TODO check if PARGRP check implemented correctly -KP
 			feedback(String.format("Channel %d is not active.", id));
 			// for PARGRP, marks runner in queue as DNF since channel isn't active
 			if(event.getType()=="PARGRP")
 				event.didNotFinish();
+			return false;
 		}
 	}
 	
@@ -663,12 +667,13 @@ public class ChronoTimer  {
 			else if (command.equalsIgnoreCase("NUM")){
 				if(!argument.startsWith("0") && runExist() && argument.length()<=6){
 					addToQueue(Integer.valueOf(argument));
-			}else{
+				}else{
 					if(!runExist()){
 						feedback("A run does not exist. Cannot accept "+argument+".\nTry NEWRUN.");
 					}
 					else
 						feedback("Cannot accept "+argument);
+					return false;
 				}
 			}
 			// CLR <number> Clear <number> the competitor from queue
@@ -698,7 +703,7 @@ public class ChronoTimer  {
 			}
 			// TRIG <num> Trigger channel <num>
 			else if (command.equalsIgnoreCase("TRIG")){
-				trigger(argument);
+				return trigger(argument);
 			}
 			// START Start trigger channel 1 (shorthand for trig 1)
 			else if (command.equalsIgnoreCase("START")){

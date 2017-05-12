@@ -30,8 +30,11 @@ public class Exporter extends ChronoTimer{
 	        doc.appendChild(mainRootElement);
 	
 	        // append child elements to root element
+	        run.sort();
+	        int i=1;
 	        for(Racer racer:run.getRacers()){
-	        	mainRootElement.appendChild(getRacer(doc, racer));
+	        	mainRootElement.appendChild(getRacer(doc, racer, i));
+	        	i++;
 	        }
 	        
 	        // write the content into xml file
@@ -55,7 +58,7 @@ public class Exporter extends ChronoTimer{
 	    }
     }
 	
-	private Node getRacer(Document doc, Racer racer) {
+	private Node getRacer(Document doc, Racer racer, int rank) {
 	    Element exportedRacer = doc.createElement("Racer");
 	    Long totalTime=racer.getTimeAsLong();
 	    String totalTimeStr=racer.getTime();
@@ -72,6 +75,7 @@ public class Exporter extends ChronoTimer{
 	    }
 	    String idName = String.format("%03d_lane%02d", run.getId(), racer.getLane());
 	    exportedRacer.setAttribute("id", idName);
+	    exportedRacer.appendChild(getRacerElements(doc, exportedRacer, "Rank", ""+rank));
 	    exportedRacer.appendChild(getRacerElements(doc, exportedRacer, "Racer", ""+racer.getId()));
 	    exportedRacer.appendChild(getRacerElements(doc, exportedRacer, "Start", racer.getStartTime()));
 	    exportedRacer.appendChild(getRacerElements(doc, exportedRacer, "Finish", racer.getFinishTime()));

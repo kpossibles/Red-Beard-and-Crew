@@ -57,11 +57,9 @@ public class Printer {
 	public String convertToRecord(Run run) {
 		String ret = "\nRUN "+run.getId()+" RECORD\n"
 				+ "======================================================\n"
-				+ "Racer\t|| Start time\t|| Finish time\t|| Total time\n"
+				+ "Rank\t|| #\t|| Start time\t|| Finish time\t|| Total time\n"
 				+ "------------------------------------------------------\n";
-		for(Racer r:run.getRacers()){
-			ret+=r.toString()+'\n';
-		}
+		ret+=run.toString();
 		return ret;	
 	}
 	

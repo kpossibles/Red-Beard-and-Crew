@@ -53,10 +53,9 @@ public class TC00 {
 	
 	@Test
 	public void TC00_02() {
-		c.input(c.addTimestamp("POWER"));
 		assertEquals(c.input(c.addTimestamp("TRIG 1")),false);//warning
 		assertFalse(c.isChannelActive(1));//
-		assertFalse(c.isOn());
+		assertTrue(c.isOn());
 	}
 	
 	@Test
@@ -67,6 +66,28 @@ public class TC00 {
 	@Test
 	public void TC00_04() {
 		basicSetup();
+		assertEquals(c.input(c.addTimestamp("NUM 1")),false);
+		c.input(c.addTimestamp("NEWRUN"));
+		c.input(c.addTimestamp("NUM 1"));
+		c.input(c.addTimestamp("NUM 2"));
+		assertEquals(c.getRacerListSize(), 2);
+		assertEquals(c.input(c.addTimestamp("NUM 0")), false);
+		assertEquals(c.input(c.addTimestamp("NUM 11111111111111")),false);
+	}
+	
+	@Test
+	public void TC00_05() {
+		basicSetup();
+		c.input(c.addTimestamp("NEWRUN"));
+		c.input(c.addTimestamp("NUM 1"));
+		c.input(c.addTimestamp("NUM 2"));
+		c.input(c.addTimestamp("TRIG 1"));
+		c.input(c.addTimestamp("TRIG 2",2));
+		c.input(c.addTimestamp("TRIG 1",5));
+		c.input(c.addTimestamp("TRIG 2",10));
+		c.input(c.addTimestamp("PRINT 1"));
+		c.input(c.addTimestamp("SWAP"));
+		c.input(c.addTimestamp("PRINT 1"));
 	}
 
 }
